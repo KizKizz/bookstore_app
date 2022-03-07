@@ -13,10 +13,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.white,
-      body: Center(child: SingleChildScrollView(
+        //backgroundColor: Colors.white,
+        body: Center(
+      child: SingleChildScrollView(
         child: Column(
-          //mainAxisSize: MainAxisSize.min, 
+          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
 //Logo
             Container(
