@@ -250,10 +250,27 @@ class BookDatabase extends DataTableSource {
   }
 
   //Custom dialog handles
-
   _showDialog(context, Book curBook) async {
     TextEditingController _titleTextcontroller =
         TextEditingController(text: curBook.title);
+    TextEditingController _idTextcontroller =
+        TextEditingController(text: curBook.id);
+    TextEditingController _authorTextcontroller =
+        TextEditingController(text: curBook.author);
+    TextEditingController _publisherTextcontroller =
+        TextEditingController(text: curBook.publisher);
+    TextEditingController _publishDateTextcontroller =
+        TextEditingController(text: curBook.publishDate.toString());
+    TextEditingController _editionTextcontroller =
+        TextEditingController(text: curBook.edition.toString());
+    TextEditingController _costTextcontroller =
+        TextEditingController(text: curBook.cost.toString());
+    TextEditingController _retailPriceTextcontroller =
+        TextEditingController(text: curBook.retailPrice.toString());
+    TextEditingController _conditionTextcontroller =
+        TextEditingController(text: curBook.condition);
+    TextEditingController _soldTextcontroller =
+        TextEditingController(text: curBook.sold);
 
     await showDialog<String>(
         context: context,
@@ -276,69 +293,60 @@ class BookDatabase extends DataTableSource {
                               labelText: 'Title',
                               hintText: 'Title of the book')),
                       TextField(
-                        controller: TextEditingController()..text = curBook.id,
+                        controller: _idTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'ID', hintText: 'ID of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.author,
+                        controller: _authorTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Author',
                             hintText: 'Author of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.publisher,
+                        controller: _publisherTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Publisher',
                             hintText: 'Publisher of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.publishDate.toString(),
+                        controller: _publishDateTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Publish Date',
                             hintText: 'Publish date of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.edition.toString(),
-                        autofocus: true,
+                        controller: _editionTextcontroller,
                         decoration: const InputDecoration(
                             labelText: 'Edition',
                             hintText: 'Edition of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.cost.toString(),
+                        controller: _costTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Cost', hintText: 'Cost of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.retailPrice.toString(),
+                        controller: _retailPriceTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Retail Price',
                             hintText: 'Retail Price of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.condition,
+                        controller: _conditionTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Condition',
                             hintText: 'Condition of the book'),
                       ),
                       TextField(
-                        controller: TextEditingController()
-                          ..text = curBook.sold,
+                        controller: _soldTextcontroller,
                         autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Sold status',
@@ -358,6 +366,27 @@ class BookDatabase extends DataTableSource {
                     child: const Text('SAVE'),
                     onPressed: () {
                       curBook.title = _titleTextcontroller.text;
+                      curBook.id = _idTextcontroller.text;
+                      curBook.author = _authorTextcontroller.text;
+                      curBook.publisher = _publisherTextcontroller.text;
+                      var pubDate = int.parse(_publishDateTextcontroller.text);
+                      assert(pubDate is int);
+                      curBook.publishDate = pubDate;
+                      var editionConvert =
+                          double.parse(_editionTextcontroller.text);
+                      assert(editionConvert is double);
+                      curBook.edition = editionConvert;
+                      var costConvert =
+                          double.parse(_costTextcontroller.text);
+                      assert(costConvert is double);
+                      curBook.cost = costConvert;
+                      var retailConvert =
+                          double.parse(_retailPriceTextcontroller.text);
+                      assert(retailConvert is double);
+                      curBook.retailPrice = retailConvert;
+                      curBook.condition = _conditionTextcontroller.text;
+                      curBook.sold = _soldTextcontroller.text;
+
                       notifyListeners();
                       Navigator.pop(context);
                     })
