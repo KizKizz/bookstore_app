@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Login ID',
-                  hintText: 'Enter your ID to login',
+                  hintText: 'Enter your ID',
                 ),
               ),
             ),
