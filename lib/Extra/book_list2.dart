@@ -101,7 +101,7 @@ class _BookListState extends State<BookList> {
   }
 
   DataCell _createTitleCell(var editField) {
-    return DataCell(context.watch<tableEdit>().isEditMode
+    return DataCell(context.watch<tableAdderSwitch>().isAddingMode
         ? Stack(
                   children: [Container(
                     padding: const EdgeInsets.only(left: 10, bottom: 5),

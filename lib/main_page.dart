@@ -1,3 +1,4 @@
+import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:bookstore_project/InfoScreens/author_list.dart';
 import 'package:bookstore_project/InfoScreens/customer_list.dart';
 import 'package:bookstore_project/InfoScreens/order_list.dart';
@@ -14,7 +15,6 @@ import 'main_drawer.dart';
 import 'login_page.dart';
 import 'InfoScreens/book_list.dart';
 import 'InfoScreens/employee_list.dart';
-
 
 
 class MainPage extends StatefulWidget {
@@ -34,12 +34,12 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppbar(
-        title: Text(appBarName),
-        appBar: AppBar(),
-        widgets: <Widget>[_editTableButton()],
-      ),
-      drawer: const MainDrawer(),
+      // appBar: MainAppbar(
+      //   title: Text(appBarName),
+      //   appBar: AppBar(),
+      //   widgets: <Widget>[_editTableButton()],
+      // ),
+      //drawer: const MainDrawer(),
       body: Row(
         children: <Widget>[
           LayoutBuilder(
@@ -143,15 +143,14 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  
   Widget _editTableButton() {
     return MaterialButton(                            
       onPressed: () => [ 
-        if (context.read<tableEdit>().isEditMode == false) {
-          context.read<tableEdit>().editModeOn()
+        if (context.read<tableAdderSwitch>().isAddingMode == false) {
+          context.read<tableAdderSwitch>().addingModeOn()
         }
         else {
-          context.read<tableEdit>().editModeOff()
+          context.read<tableAdderSwitch>().addingModeOff()
         }
       ],                           
       child: Column(

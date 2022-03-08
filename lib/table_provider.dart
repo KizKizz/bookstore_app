@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 
-class tableEdit with ChangeNotifier {
-  bool _isEditMode = false;
+class tableAdderSwitch with ChangeNotifier {
+  bool _isAddingMode = false;
 
-  bool get isEditMode => _isEditMode;
+  bool get isAddingMode => _isAddingMode;
 
-  void editModeOn() {
-    _isEditMode = true;
+  void addingModeOn() {
+    _isAddingMode = true;
     notifyListeners();
   }
 
-  void editModeOff() {
-    _isEditMode = false;
+  void addingModeOff() {
+    _isAddingMode = false;
     notifyListeners();
   }
 }

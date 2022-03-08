@@ -8,7 +8,7 @@ import 'main_page.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => tableEdit()),
+    ChangeNotifierProvider(create: (_) => tableAdderSwitch()),
   ], child: const MyApp()));
 }
 

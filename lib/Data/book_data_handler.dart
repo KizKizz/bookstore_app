@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:provider/provider.dart';
+
+import '../table_provider.dart';
 
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> _books = [];
@@ -14,9 +17,9 @@ List<Book> _books = [];
 // found in the LICENSE file.
 
 // The file was extracted from GitHub: https://github.com/flutter/gallery
-// Changes and modifications by Maxim Saplin, 2021
+// Changes and modifications by Maxim Saplin, 2021 - KizKizz 2022
 
-/// Keeps track of selected rows, feed the data into DesertsDataSource
+/// Keeps track of selected rows, feed the data into DataSource
 class RestorableBookSelections extends RestorableProperty<Set<int>> {
   Set<int> _bookSelections = {};
 
@@ -75,6 +78,110 @@ class Book {
   String sold;
 
   bool selected = false;
+  List editResults = List.filled(10, null);
+
+  List get allInfo {
+    return [
+      title,
+      id,
+      author,
+      publisher,
+      publishDate,
+      edition,
+      cost,
+      retailPrice,
+      condition,
+      sold
+    ];
+  }
+
+  List get allInfoHeaders {
+    return [
+      'Title',
+      'ID',
+      'Author',
+      'Publisher',
+      'Publish Date',
+      'Edition',
+      'Cost',
+      'Retail Price',
+      'Condition',
+      'Sold'
+    ];
+  }
+
+  void setInfo(var info) {
+    if (info == 'Title' && editResults[0] != null)
+      title = editResults[0];
+    else if (info == 'ID' && editResults[1] != null)
+      id = editResults[1];
+    else if (info == 'Author' && editResults[2] != null)
+      author = editResults[2];
+    else if (info == 'Publisher' && editResults[3] != null)
+      publisher = editResults[3];
+    else if (info == 'Publish Date' && editResults[4] != null)
+      publishDate = int.parse(editResults[4]);
+    else if (info == 'Edition' && editResults[5] != null)
+      edition = double.parse(editResults[5]);
+    else if (info == 'Cost' && editResults[6] != null)
+      cost = double.parse(editResults[6]);
+    else if (info == 'Retail Price' && editResults[7] != null)
+      retailPrice = double.parse(editResults[7]);
+    else if (info == 'Condition' && editResults[8] != null)
+      condition = editResults[8];
+    else if (info == 'Sold' && editResults[9] != null)
+      sold = editResults[9];
+  }
+
+  String headerToInfo(var header) {
+    if (header == 'Title')
+      return title;
+    else if (header == 'ID')
+      return id;
+    else if (header == 'Author')
+      return author;
+    else if (header == 'Publisher')
+      return publisher;
+    else if (header == 'Publish Date')
+      return publishDate.toString();
+    else if (header == 'Edition')
+      return edition.toString();
+    else if (header == 'Cost')
+      return cost.toString();
+    else if (header == 'Retail Price')
+      return retailPrice.toString();
+    else if (header == 'Condition')
+      return condition;
+    else if (header == 'Sold')
+      return sold;
+    else
+      return 'error';
+  }
+
+  void infoEdited(var info, var editedVal) {
+    if (info == 'Title')
+      editResults[0] = editedVal;
+    else if (info == 'ID')
+      editResults[1] = editedVal;
+    else if (info == 'Author')
+      editResults[2] = editedVal;
+    else if (info == 'Publisher')
+      editResults[3] = editedVal;
+    else if (info == 'Publish Date')
+      editResults[4] = editedVal;
+    else if (info == 'Edition')
+      editResults[5] = editedVal;
+    else if (info == 'Cost')
+      editResults[6] = editedVal;
+    else if (info == 'RetailPrice')
+      editResults[7] = editedVal;
+    else if (info == 'Condition')
+      editResults[8] = editedVal;
+    else if (info == 'Sold')
+      editResults[9] = editedVal;
+    else
+      editResults[0] = editedVal;
+  }
 
   fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -90,17 +197,17 @@ class Book {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['id'] = this.id;
-    data['author'] = this.author;
-    data['publisher'] = this.publisher;
-    data['publishDate'] = this.publishDate;
-    data['edition'] = this.edition;
-    data['cost'] = this.cost;
-    data['retailPrice'] = this.retailPrice;
-    data['condition'] = this.condition;
-    data['sold'] = this.sold;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['id'] = id;
+    data['author'] = author;
+    data['publisher'] = publisher;
+    data['publishDate'] = publishDate;
+    data['edition'] = edition;
+    data['cost'] = cost;
+    data['retailPrice'] = retailPrice;
+    data['condition'] = condition;
+    data['sold'] = sold;
 
     return data;
   }
@@ -108,7 +215,7 @@ class Book {
 
 /// Data source implementing standard Flutter's DataTableSource abstract class
 /// which is part of DataTable and PaginatedDataTable synchronous data fecthin API.
-/// This class uses static collection of deserts as a data store, projects it into
+/// This class uses static collection of data as a data store, projects it into
 /// DataRows, keeps track of selected items, provides sprting capability
 class BookDatabase extends DataTableSource {
   BookDatabase.empty(this.context) {
@@ -119,12 +226,10 @@ class BookDatabase extends DataTableSource {
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
-    ///readBookData(bookDataJson);
     books = _books;
     if (sortedByName) {
       sort((d) => d.title, true);
     }
-    //notifyListeners();
   }
 
   final BuildContext context;
@@ -163,7 +268,7 @@ class BookDatabase extends DataTableSource {
     // ignore: unused_local_variable
     final format = NumberFormat.decimalPercentPattern(
       locale: 'en',
-      decimalDigits: 0,
+      decimalDigits: 00,
     );
     assert(index >= 0);
     if (index >= books.length) throw 'index > _books.length';
@@ -184,22 +289,6 @@ class BookDatabase extends DataTableSource {
       onTap: hasRowTaps
           ? () => [
                 _showDialog(context, book),
-                notifyListeners()
-                // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //   duration: const Duration(seconds: 1),
-                //   content: Text('Tapped on ${book.title}'),
-                // )),
-
-                // _books[_books.indexOf(book)].author = 'Pending',
-                // notifyListeners(),
-                // _books.forEach((element) {
-                // if (element.id == book.id) {
-                //   debugPrint('Value for field "${element.author}"');
-                //   element.author = 'TestChange';
-
-                // }
-                // notifyListeners();
-                // }),
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -210,7 +299,8 @@ class BookDatabase extends DataTableSource {
               ))
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ? () => //_bookDataAdder()
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 backgroundColor: Theme.of(context).errorColor,
                 content: Text('Right clicked on ${book.title}'),
@@ -251,27 +341,6 @@ class BookDatabase extends DataTableSource {
 
   //Custom dialog handles
   _showDialog(context, Book curBook) async {
-    TextEditingController _titleTextcontroller =
-        TextEditingController(text: curBook.title);
-    TextEditingController _idTextcontroller =
-        TextEditingController(text: curBook.id);
-    TextEditingController _authorTextcontroller =
-        TextEditingController(text: curBook.author);
-    TextEditingController _publisherTextcontroller =
-        TextEditingController(text: curBook.publisher);
-    TextEditingController _publishDateTextcontroller =
-        TextEditingController(text: curBook.publishDate.toString());
-    TextEditingController _editionTextcontroller =
-        TextEditingController(text: curBook.edition.toString());
-    TextEditingController _costTextcontroller =
-        TextEditingController(text: curBook.cost.toString());
-    TextEditingController _retailPriceTextcontroller =
-        TextEditingController(text: curBook.retailPrice.toString());
-    TextEditingController _conditionTextcontroller =
-        TextEditingController(text: curBook.condition);
-    TextEditingController _soldTextcontroller =
-        TextEditingController(text: curBook.sold);
-
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -285,73 +354,18 @@ class BookDatabase extends DataTableSource {
                           child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Edit Book Info'),
-                      TextField(
-                          controller: _titleTextcontroller,
-                          autofocus: true,
-                          decoration: const InputDecoration(
-                              labelText: 'Title',
-                              hintText: 'Title of the book')),
-                      TextField(
-                        controller: _idTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'ID', hintText: 'ID of the book'),
-                      ),
-                      TextField(
-                        controller: _authorTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Author',
-                            hintText: 'Author of the book'),
-                      ),
-                      TextField(
-                        controller: _publisherTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Publisher',
-                            hintText: 'Publisher of the book'),
-                      ),
-                      TextField(
-                        controller: _publishDateTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Publish Date',
-                            hintText: 'Publish date of the book'),
-                      ),
-                      TextField(
-                        controller: _editionTextcontroller,
-                        decoration: const InputDecoration(
-                            labelText: 'Edition',
-                            hintText: 'Edition of the book'),
-                      ),
-                      TextField(
-                        controller: _costTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Cost', hintText: 'Cost of the book'),
-                      ),
-                      TextField(
-                        controller: _retailPriceTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Retail Price',
-                            hintText: 'Retail Price of the book'),
-                      ),
-                      TextField(
-                        controller: _conditionTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Condition',
-                            hintText: 'Condition of the book'),
-                      ),
-                      TextField(
-                        controller: _soldTextcontroller,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Sold status',
-                            hintText: 'Sale status of the book'),
-                      ),
+                      const Text('Edit Book Info'),
+//Edit Popup
+                      for (var item in curBook.allInfoHeaders)
+                        TextField(
+                            controller: TextEditingController()
+                              ..text = curBook.headerToInfo(item),
+                            onChanged: (text) =>
+                                {curBook.infoEdited(item, text)},
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                labelText: item + ':',
+                                hintText: item + ' of the book')),
                     ],
                   )))
                 ],
@@ -365,28 +379,9 @@ class BookDatabase extends DataTableSource {
                 TextButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      curBook.title = _titleTextcontroller.text;
-                      curBook.id = _idTextcontroller.text;
-                      curBook.author = _authorTextcontroller.text;
-                      curBook.publisher = _publisherTextcontroller.text;
-                      var pubDate = int.parse(_publishDateTextcontroller.text);
-                      assert(pubDate is int);
-                      curBook.publishDate = pubDate;
-                      var editionConvert =
-                          double.parse(_editionTextcontroller.text);
-                      assert(editionConvert is double);
-                      curBook.edition = editionConvert;
-                      var costConvert =
-                          double.parse(_costTextcontroller.text);
-                      assert(costConvert is double);
-                      curBook.cost = costConvert;
-                      var retailConvert =
-                          double.parse(_retailPriceTextcontroller.text);
-                      assert(retailConvert is double);
-                      curBook.retailPrice = retailConvert;
-                      curBook.condition = _conditionTextcontroller.text;
-                      curBook.sold = _soldTextcontroller.text;
-
+                      for (var item in curBook.allInfoHeaders) {
+                        curBook.setInfo(item);
+                      }                    
                       notifyListeners();
                       Navigator.pop(context);
                     })
@@ -395,6 +390,58 @@ class BookDatabase extends DataTableSource {
           );
         });
   }
+}
+
+//Add book
+Future<void> bookDataAdder(context) async {
+  Book newBook = Book('', '', '', '', 0000, 00, 00, 00, '', '');
+  await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return _SystemPadding(
+          child: AlertDialog(
+            contentPadding: const EdgeInsets.all(16.0),
+            content: Row(
+              children: <Widget>[
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Add Book'),
+                    for (var item in newBook.allInfoHeaders)
+                      TextField(
+                          // controller: TextEditingController()
+                          //   ..text = item.toString(),
+                          onChanged: (text) => {newBook.infoEdited(item, text)},
+                          autofocus: true,
+                          decoration: InputDecoration(
+                              labelText: item + ':',
+                              hintText: item + ' of the book')),
+                  ],
+                )))
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              TextButton(
+                  child: const Text('ADD'),
+                  onPressed: () {
+                    for (var item in newBook.allInfo) { 
+                      newBook.setInfo(item);
+                    }
+                    _books.add(newBook);
+                    debugPrint(newBook.allInfo.toString());
+                    Navigator.pop(context);
+                  })
+            ],
+          ),
+        );
+      });
 }
 
 //JSON Helper
