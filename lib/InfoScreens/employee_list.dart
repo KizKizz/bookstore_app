@@ -1,5 +1,6 @@
-import 'package:bookstore_project/screen_data_dialog.dart';
 import 'package:flutter/material.dart';
+
+import '../main_appbar.dart';
 
 
 class EmployeeList extends StatefulWidget {
@@ -13,8 +14,16 @@ class _EmployeeListState extends State<EmployeeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-
-    );
+    return Scaffold(
+        //drawer: const MainDrawer(),
+        appBar: MainAppbar(
+            title: const Text('Employee Data'),
+            appBar: AppBar(),
+            widgets: <Widget>[]),
+        body: Center(
+            child: Column(children: const [
+          Text('UNDER CONSTRUCTION',
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 100))
+        ])));
   }
 }

@@ -416,27 +416,78 @@ void convertauthorData(var jsonResponse) {
 
 //Get Authors from Book data
 void getAuthorsFromBook() {
-  List<Author> _tempAuthors = [];
-  for (var book in mainBookList) {
+  if (mainBookList.isNotEmpty) {
+    List<Author> _tempAuthors = [];
+    Author _newAuthor = Author('', '', 0000, 0000, '');
+    bool _nameFound = false;
+    String _temp = '';
     if (_authors.isEmpty) {
-      Author newAuthor = Author('', '', 0000, 0000, '');
-      newAuthor.fullName = book.author;
-      _authors.add(newAuthor);
-      debugPrint('test ${newAuthor.fullName}');
-    }
-    for (var author in _authors) {
-      if (author.fullName != book.author) {
-        Author newAuthor = Author('', '', 0000, 0000, '');
-        newAuthor.fullName = book.author;
-        _tempAuthors.add(newAuthor);
-        debugPrint('test ${newAuthor.fullName}');
-      }
-    }
-  }
-  for (var item in _tempAuthors) {
-    _authors.add(item);
+      _newAuthor.fullName = mainBookList[0].author;
+      _authors.add(_newAuthor);
+    } 
+    // else {
+    //   for (var book in mainBookList) {
+    //     for (var author in _authors) {
+    //       if (author.fullName == book.author) {
+    //         _nameFound = true;
+    //         break;
+    //       } else {
+    //         _temp = book.author;
+    //       }
+    //     }
+    //     if (!_nameFound) {
+    //       _newAuthor.fullName = book.author;
+    //       _tempAuthors.add(_newAuthor);
+    //     } else {
+    //       _nameFound = false;
+    //     }
+    //   }
+    //   if (_tempAuthors.isNotEmpty) {
+    //     for (var item in _tempAuthors) {
+    //       _authors.add(item);
+    //     }
+    //   }
+    //   _authors
+    //       .map(
+    //         (author) => author.toJson(),
+    //       )
+    //       .toList();
+    //   authorDataJson.writeAsStringSync(json.encode(_authors));
+    // }
   }
 }
+
+// List<Author> _tempAuthors = [];
+// for (var book in mainBookList) {
+//   if (_authors.isEmpty) {
+//     Author newAuthor = Author('', '', 0000, 0000, '');
+//     newAuthor.fullName = book.author;
+//     _authors.add(newAuthor);
+//     //debugPrint('test ${newAuthor.fullName}');
+//   } else {
+//     for (var author in _authors) {
+//       if (author.fullName == book.author) {
+//         break;
+//       }
+//       else {
+//         Author newAuthor = Author('', '', 0000, 0000, '');
+//         newAuthor.fullName = book.author;
+//         _tempAuthors.add(newAuthor);
+//         //debugPrint('test ${newAuthor.fullName}');
+//       }
+//     }
+//   }
+//   for (var item in _tempAuthors) {
+//     _authors.add(item);
+//   }
+//   _tempAuthors.clear();
+
+// _authors
+//     .map(
+//       (author) => author.toJson(),
+//     )
+//     .toList();
+// authorDataJson.writeAsStringSync(json.encode(_authors));
 
 // Dialog Helper
 class _SystemPadding extends StatelessWidget {

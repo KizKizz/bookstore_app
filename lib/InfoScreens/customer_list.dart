@@ -1,48 +1,27 @@
 import 'package:flutter/material.dart';
 
-String _skillOne = "You have";
-  String _skillTwo = "not Added";
-  String _skillThree = "any skills yet";
-
+import '../main_appbar.dart';
 
 class CustomerList extends StatefulWidget {
-  CustomerList({ Key? key }) : super(key: key);
-  
-String _skillOne = "You have";
-  String _skillTwo = "not Added";
-  String _skillThree = "any skills yet";
+  const CustomerList({Key? key}) : super(key: key);
+
   @override
   _CustomerListState createState() => _CustomerListState();
 }
 
 class _CustomerListState extends State<CustomerList> {
-  TextEditingController _skillOneController = TextEditingController();
-  TextEditingController _skillTwoController = TextEditingController();
-
-  TextEditingController _skillThreeController = TextEditingController();
-
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(child: ListView(
-          children: <Widget>[
-            TextField(controller: _skillOneController,),
-            TextField(controller: _skillTwoController,),
-            TextField(controller: _skillThreeController,),
-            Row(
-              children: <Widget>[
-                Expanded(child: RaisedButton(onPressed: () {
-                  widget._skillThree = _skillThreeController.text;
-                  widget._skillTwo = _skillTwoController.text;
-                  widget._skillOne = _skillOneController.text;
-                  Navigator.pop(context);
-                }, child: Text("Save"),))
-              ],
-            )
-          ],
-        ), padding: EdgeInsets.symmetric(horizontal: 20.0),)
-    );
+        //drawer: const MainDrawer(),
+        appBar: MainAppbar(
+            title: const Text('Customer Data'),
+            appBar: AppBar(),
+            widgets: <Widget>[]),
+        body: Center(
+            child: Column(children: const [
+          Text('UNDER CONSTRUCTION',
+              textAlign: TextAlign.center, style: TextStyle(fontSize: 100))
+        ])));
   }
 }
