@@ -56,7 +56,7 @@ class _AuthorListState extends State<AuthorList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('author Data'),
+          title: const Text('Author Data'),
           appBar: AppBar(),
           widgets: <Widget>[
             MaterialButton(
