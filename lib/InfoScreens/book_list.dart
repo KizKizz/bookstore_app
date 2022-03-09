@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/table_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:provider/provider.dart';
 
 import '../main_appbar.dart';
-import '../main_drawer.dart';
 
 class BookList extends StatefulWidget {
   const BookList({Key? key}) : super(key: key);
@@ -57,8 +54,9 @@ class _BookListState extends State<BookList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //drawer: const MainDrawer(),
       appBar: MainAppbar(
-        title: Text('Book Data'),
+        title: const Text('Book Data'),
         appBar: AppBar(),
         widgets: <Widget>[
                       MaterialButton(
@@ -89,7 +87,6 @@ class _BookListState extends State<BookList> {
                       ),
         ],
       ),
-      //drawer: const MainDrawer(),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
                 .loadString('assets/jsondatabase/book_data.json'),
@@ -103,7 +100,6 @@ class _BookListState extends State<BookList> {
               return Padding(
                   padding: const EdgeInsets.all(5),
                   child: Stack(children: [
-                    
                       //Data table
                       DataTable2(
                           scrollController: _controller,
@@ -222,7 +218,7 @@ class _BookListState extends State<BookList> {
                               _booksDataSource.rowCount,
                               (index) => _booksDataSource.getRow(index))),
                       _ScrollUpButton(_controller)
-                    ])
+                    ]) 
                   );
             }));
   }

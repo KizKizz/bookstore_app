@@ -6,10 +6,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:bookstore_project/Data/book_data_handler.dart';
 
+final File authorDataJson = File('assets/jsondatabase/author_data.json');
 
-final File bookDataJson = File('assets/jsondatabase/book_data.json');
-List<Book> mainBookList = [];
+List<Author> _authors = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -19,193 +20,144 @@ List<Book> mainBookList = [];
 // Changes and modifications by Maxim Saplin, 2021 - KizKizz 2022
 
 /// Keeps track of selected rows, feed the data into DataSource
-class RestorableBookSelections extends RestorableProperty<Set<int>> {
-  Set<int> _bookSelections = {};
+class RestorableauthorSelections extends RestorableProperty<Set<int>> {
+  Set<int> _authorSelections = {};
 
   // Returns whether or not a row is selected by index.
-  bool isSelected(int index) => _bookSelections.contains(index);
+  bool isSelected(int index) => _authorSelections.contains(index);
 
-  // Takes a list of [Book]s and saves the row indices of selected rows
+  // Takes a list of [author]s and saves the row indices of selected rows
   // into a [Set].
-  void setBookSelections(List<Book> books) {
+  void setauthorSelections(List<Author> authors) {
     final updatedSet = <int>{};
-    for (var i = 0; i < books.length; i += 1) {
-      var book = books[i];
-      if (book.selected) {
+    for (var i = 0; i < authors.length; i += 1) {
+      var author = authors[i];
+      if (author.selected) {
         updatedSet.add(i);
       }
     }
-    _bookSelections = updatedSet;
+    _authorSelections = updatedSet;
     notifyListeners();
   }
 
   @override
-  Set<int> createDefaultValue() => _bookSelections;
+  Set<int> createDefaultValue() => _authorSelections;
 
   @override
   Set<int> fromPrimitives(Object? data) {
     final selectedItemIndices = data as List<dynamic>;
-    _bookSelections = {
+    _authorSelections = {
       ...selectedItemIndices.map<int>((dynamic id) => id as int),
     };
-    return _bookSelections;
+    return _authorSelections;
   }
 
   @override
   void initWithValue(Set<int> value) {
-    _bookSelections = value;
+    _authorSelections = value;
   }
 
   @override
-  Object toPrimitives() => _bookSelections.toList();
+  Object toPrimitives() => _authorSelections.toList();
 }
 
 /// Domain model entity
-class Book {
-  Book(this.title, this.id, this.author, this.publisher, this.publishDate,
-      this.edition, this.cost, this.retailPrice, this.condition, this.sold);
+class Author {
+  Author(
+    this.fullName,
+    this.id,
+    this.yearBirth,
+    this.yearDead,
+    this.description,
+  );
 
-  String title;
+  String fullName;
   String id;
-  String author;
-  String publisher;
-  int publishDate;
-  double edition;
-  double cost;
-  double retailPrice;
-  String condition;
-  String sold;
+  int yearBirth;
+  int yearDead;
+  String description;
 
   bool selected = false;
   List editResults = List.filled(10, null);
 
   List get allInfo {
     return [
-      title,
+      fullName,
       id,
-      author,
-      publisher,
-      publishDate,
-      edition,
-      cost,
-      retailPrice,
-      condition,
-      sold
+      yearBirth,
+      yearDead,
+      description,
     ];
   }
 
   List get allInfoHeaders {
     return [
-      'Title',
+      'Full Name',
       'ID',
-      'Author',
-      'Publisher',
-      'Publish Date',
-      'Edition',
-      'Cost',
-      'Retail Price',
-      'Condition',
-      'Sold'
+      'Year of Birth',
+      'Year of Dead',
+      'Description',
     ];
   }
 
   void setInfo(var info) {
-    if (info == 'Title' && editResults[0] != null)
-      title = editResults[0];
+    if (info == 'Full Name' && editResults[0] != null)
+      fullName = editResults[0];
     else if (info == 'ID' && editResults[1] != null)
       id = editResults[1];
-    else if (info == 'Author' && editResults[2] != null)
-      author = editResults[2];
-    else if (info == 'Publisher' && editResults[3] != null)
-      publisher = editResults[3];
-    else if (info == 'Publish Date' && editResults[4] != null)
-      publishDate = int.parse(editResults[4]);
-    else if (info == 'Edition' && editResults[5] != null)
-      edition = double.parse(editResults[5]);
-    else if (info == 'Cost' && editResults[6] != null)
-      cost = double.parse(editResults[6]);
-    else if (info == 'Retail Price' && editResults[7] != null)
-      retailPrice = double.parse(editResults[7]);
-    else if (info == 'Condition' && editResults[8] != null)
-      condition = editResults[8];
-    else if (info == 'Sold' && editResults[9] != null) sold = editResults[9];
+    else if (info == 'Year of Birth' && editResults[2] != null)
+      yearBirth = int.parse(editResults[2]);
+    else if (info == 'Year of Dead' && editResults[3] != null)
+      yearDead = int.parse(editResults[3]);
+    else if (info == 'Description' && editResults[4] != null)
+      description = editResults[4];
   }
 
   String headerToInfo(var header) {
-    if (header == 'Title')
-      return title;
+    if (header == 'Full Name')
+      return fullName;
     else if (header == 'ID')
       return id;
-    else if (header == 'Author')
-      return author;
-    else if (header == 'Publisher')
-      return publisher;
-    else if (header == 'Publish Date')
-      return publishDate.toString();
-    else if (header == 'Edition')
-      return edition.toString();
-    else if (header == 'Cost')
-      return cost.toString();
-    else if (header == 'Retail Price')
-      return retailPrice.toString();
-    else if (header == 'Condition')
-      return condition;
-    else if (header == 'Sold')
-      return sold;
+    else if (header == 'Year of Birth')
+      return yearBirth.toString();
+    else if (header == 'Year of Dead')
+      return yearDead.toString();
+    else if (header == 'Description')
+      return description;
     else
       return 'error';
   }
 
   void infoEdited(var info, var editedVal) {
-    if (info == 'Title')
+    if (info == 'Full Name')
       editResults[0] = editedVal;
     else if (info == 'ID')
       editResults[1] = editedVal;
-    else if (info == 'Author')
+    else if (info == 'Year of Birth')
       editResults[2] = editedVal;
-    else if (info == 'Publisher')
+    else if (info == 'Year of Dead')
       editResults[3] = editedVal;
-    else if (info == 'Publish Date')
+    else if (info == 'Description')
       editResults[4] = editedVal;
-    else if (info == 'Edition')
-      editResults[5] = editedVal;
-    else if (info == 'Cost')
-      editResults[6] = editedVal;
-    else if (info == 'RetailPrice')
-      editResults[7] = editedVal;
-    else if (info == 'Condition')
-      editResults[8] = editedVal;
-    else if (info == 'Sold')
-      editResults[9] = editedVal;
     else
       editResults[0] = editedVal;
   }
 
   fromJson(Map<String, dynamic> json) {
-    title = json['title'];
+    fullName = json['fullName'];
     id = json['id'];
-    author = json['author'];
-    publisher = json['publisher'];
-    publishDate = json['publishDate'];
-    edition = json['edition'];
-    cost = json['cost'];
-    retailPrice = json['retailPrice'];
-    condition = json['condition'];
-    sold = json['sold'];
+    yearBirth = json['yearBirth'];
+    yearDead = json['yearDead'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = title;
+    data['fullName'] = fullName;
     data['id'] = id;
-    data['author'] = author;
-    data['publisher'] = publisher;
-    data['publishDate'] = publishDate;
-    data['edition'] = edition;
-    data['cost'] = cost;
-    data['retailPrice'] = retailPrice;
-    data['condition'] = condition;
-    data['sold'] = sold;
+    data['yearBirth'] = yearBirth;
+    data['yearDead'] = yearDead;
+    data['description'] = description;
 
     return data;
   }
@@ -215,28 +167,28 @@ class Book {
 /// which is part of DataTable and PaginatedDataTable synchronous data fecthin API.
 /// This class uses static collection of data as a data store, projects it into
 /// DataRows, keeps track of selected items, provides sprting capability
-class BookDatabase extends DataTableSource {
-  BookDatabase.empty(this.context) {
-    books = [];
+class authorDatabase extends DataTableSource {
+  authorDatabase.empty(this.context) {
+    authors = [];
   }
 
-  BookDatabase(this.context,
+  authorDatabase(this.context,
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
-    books = mainBookList;
+    authors = _authors;
     if (sortedByName) {
-      sort((d) => d.title, true);
+      sort((d) => d.fullName, true);
     }
   }
 
   final BuildContext context;
-  late List<Book> books;
+  late List<Author> authors;
   late bool hasRowTaps;
   late bool hasRowHeightOverrides;
 
-  void sort<T>(Comparable<T> Function(Book d) getField, bool ascending) {
-    books.sort((a, b) {
+  void sort<T>(Comparable<T> Function(Author d) getField, bool ascending) {
+    authors.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
       return ascending
@@ -247,15 +199,15 @@ class BookDatabase extends DataTableSource {
   }
 
   int _selectedCount = 0;
-  void updateSelectedBooks(RestorableBookSelections selectedRows) {
+  void updateSelectedauthors(RestorableauthorSelections selectedRows) {
     _selectedCount = 0;
-    for (var i = 0; i < books.length; i += 1) {
-      var book = books[i];
+    for (var i = 0; i < authors.length; i += 1) {
+      var author = authors[i];
       if (selectedRows.isSelected(i)) {
-        book.selected = true;
+        author.selected = true;
         _selectedCount += 1;
       } else {
-        book.selected = false;
+        author.selected = false;
       }
     }
     notifyListeners();
@@ -269,60 +221,55 @@ class BookDatabase extends DataTableSource {
       decimalDigits: 00,
     );
     assert(index >= 0);
-    if (index >= books.length) throw 'index > _books.length';
-    final book = books[index];
+    if (index >= authors.length) throw 'index > _authors.length';
+    final author = authors[index];
     return DataRow2.byIndex(
       index: index,
-      selected: book.selected,
+      selected: author.selected,
       onSelectChanged: hasRowTaps
           ? null
           : (value) {
-              if (book.selected != value) {
+              if (author.selected != value) {
                 _selectedCount += value! ? 1 : -1;
                 assert(_selectedCount >= 0);
-                book.selected = value;
+                author.selected = value;
                 notifyListeners();
               }
             },
       onTap: hasRowTaps
           ? () => [
-                _showDialog(context, book),
+                _showDialog(context, author),
               ]
           : null,
       onDoubleTap: hasRowTaps
-          ? () => [ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 //backgroundColor: Theme.of(context).focusColor,
-                content: Text('Double Tapped on ${book.title}'),
-              )),
-              ]
+                content: Text('Double Tapped on ${author.fullName}'),
+              ))
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => //_bookDataAdder()
+          ? () => //_authorDataAdder()
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 backgroundColor: Theme.of(context).errorColor,
-                content: Text('Right clicked on ${book.title}'),
+                content: Text('Right clicked on ${author.fullName}'),
               ))
           : null,
-      specificRowHeight: hasRowHeightOverrides && book.cost >= 25 ? 100 : null,
+      specificRowHeight:
+          hasRowHeightOverrides && author.yearBirth >= 25 ? 100 : null,
       cells: [
-        DataCell(Text(book.title)),
-        DataCell(Text(book.id)),
-        DataCell(Text(book.author)),
-        DataCell(Text(book.publisher)),
-        DataCell(Text(book.publishDate.toString())),
-        DataCell(Text(book.edition.toString())),
-        DataCell(Text(book.cost.toString())),
-        DataCell(Text(book.retailPrice.toString())),
-        DataCell(Text(book.condition)),
-        DataCell(Text(book.sold.toString())),
+        DataCell(Text(author.fullName)),
+        DataCell(Text(author.id)),
+        DataCell(Text(author.yearBirth.toString())),
+        DataCell(Text(author.yearDead.toString())),
+        DataCell(Text(author.description)),
       ],
     );
   }
 
   @override
-  int get rowCount => books.length;
+  int get rowCount => authors.length;
 
   @override
   bool get isRowCountApproximate => false;
@@ -331,16 +278,16 @@ class BookDatabase extends DataTableSource {
   int get selectedRowCount => _selectedCount;
 
   void selectAll(bool? checked) {
-    for (final dessert in books) {
+    for (final dessert in authors) {
       dessert.selected = checked ?? false;
     }
-    _selectedCount = (checked ?? false) ? books.length : 0;
+    _selectedCount = (checked ?? false) ? authors.length : 0;
     notifyListeners();
   }
 
   //Custom dialog handles
-  //Edit Book Popup
-  _showDialog(context, Book curBook) async {
+  //Edit author Popup
+  _showDialog(context, Author curAuthor) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -354,17 +301,17 @@ class BookDatabase extends DataTableSource {
                           child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Edit Book Info'),
-                      for (var item in curBook.allInfoHeaders)
+                      const Text('Edit author Info'),
+                      for (var item in curAuthor.allInfoHeaders)
                         TextField(
                             controller: TextEditingController()
-                              ..text = curBook.headerToInfo(item),
+                              ..text = curAuthor.headerToInfo(item),
                             onChanged: (text) =>
-                                {curBook.infoEdited(item, text)},
+                                {curAuthor.infoEdited(item, text)},
                             autofocus: true,
                             decoration: InputDecoration(
                                 labelText: item + ':',
-                                hintText: item + ' of the book')),
+                                hintText: item + ' of the author')),
                     ],
                   )))
                 ],
@@ -378,15 +325,15 @@ class BookDatabase extends DataTableSource {
                 TextButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      for (var item in curBook.allInfoHeaders) {
-                        curBook.setInfo(item);
+                      for (var item in curAuthor.allInfoHeaders) {
+                        curAuthor.setInfo(item);
                       }
-                      mainBookList
-                        .map(
-                          (book) => book.toJson(),
-                        )
-                        .toList();
-                      bookDataJson.writeAsStringSync(json.encode(mainBookList));
+                      _authors
+                          .map(
+                            (author) => author.toJson(),
+                          )
+                          .toList();
+                      authorDataJson.writeAsStringSync(json.encode(_authors));
                       notifyListeners();
                       Navigator.pop(context);
                     })
@@ -397,9 +344,9 @@ class BookDatabase extends DataTableSource {
   }
 }
 
-//Add book
-Future<void> bookDataAdder(context) async {
-  Book newBook = Book('', '', '', '', 0000, 00, 00, 00, '', '');
+//Add author
+Future<void> authorDataAdder(context) async {
+  Author newauthor = Author('', '', 0000, 0000, '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -413,16 +360,17 @@ Future<void> bookDataAdder(context) async {
                         child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Add Book'),
-                    for (var item in newBook.allInfoHeaders)
+                    const Text('Add author'),
+                    for (var item in newauthor.allInfoHeaders)
                       TextField(
                           // controller: TextEditingController()
                           //   ..text = item.toString(),
-                          onChanged: (text) => {newBook.infoEdited(item, text)},
+                          onChanged: (text) =>
+                              {newauthor.infoEdited(item, text)},
                           autofocus: true,
                           decoration: InputDecoration(
                               labelText: item + ':',
-                              hintText: item + ' of the book')),
+                              hintText: item + ' of the author')),
                   ],
                 )))
               ],
@@ -436,17 +384,17 @@ Future<void> bookDataAdder(context) async {
               TextButton(
                   child: const Text('ADD'),
                   onPressed: () {
-                    for (var item in newBook.allInfoHeaders) {
-                      newBook.setInfo(item);
+                    for (var item in newauthor.allInfoHeaders) {
+                      newauthor.setInfo(item);
                     }
-                    mainBookList.add(newBook);
-                    mainBookList
+                    _authors.add(newauthor);
+                    _authors
                         .map(
-                          (book) => book.toJson(),
+                          (author) => author.toJson(),
                         )
                         .toList();
-                    bookDataJson.writeAsStringSync(json.encode(mainBookList));
-                    debugPrint(newBook.allInfo.toString());
+                    authorDataJson.writeAsStringSync(json.encode(_authors));
+                    debugPrint(newauthor.allInfo.toString());
                     Navigator.pop(context);
                   })
             ],
@@ -456,22 +404,38 @@ Future<void> bookDataAdder(context) async {
 }
 
 //JSON Helper
-void convertBookData(var jsonResponse) {
+void convertauthorData(var jsonResponse) {
   for (var b in jsonResponse) {
-    Book book = Book(
-        b['title'],
-        b['id'],
-        b['author'],
-        b['publisher'],
-        b['publishDate'],
-        b['edition'],
-        b['cost'],
-        b['retailPrice'],
-        b['condition'],
-        b['sold']);
-    mainBookList.add(book);
+    Author author = Author(b['fullName'], b['id'], b['yearBirth'],
+        b['yearDead'], b['description']);
+    _authors.add(author);
   }
-  //debugPrint('test ${mainBookList.length}');
+  //debugPrint('test ${_authors.length}');
+  getAuthorsFromBook();
+}
+
+//Get Authors from Book data
+void getAuthorsFromBook() {
+  List<Author> _tempAuthors = [];
+  for (var book in mainBookList) {
+    if (_authors.isEmpty) {
+      Author newAuthor = Author('', '', 0000, 0000, '');
+      newAuthor.fullName = book.author;
+      _authors.add(newAuthor);
+      debugPrint('test ${newAuthor.fullName}');
+    }
+    for (var author in _authors) {
+      if (author.fullName != book.author) {
+        Author newAuthor = Author('', '', 0000, 0000, '');
+        newAuthor.fullName = book.author;
+        _tempAuthors.add(newAuthor);
+        debugPrint('test ${newAuthor.fullName}');
+      }
+    }
+  }
+  for (var item in _tempAuthors) {
+    _authors.add(item);
+  }
 }
 
 // Dialog Helper
