@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> mainBookList = [];
 
@@ -290,11 +289,12 @@ class BookDatabase extends DataTableSource {
               ]
           : null,
       onDoubleTap: hasRowTaps
-          ? () => [ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: const Duration(seconds: 1),
-                //backgroundColor: Theme.of(context).focusColor,
-                content: Text('Double Tapped on ${book.title}'),
-              )),
+          ? () => [
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: const Duration(seconds: 1),
+                  //backgroundColor: Theme.of(context).focusColor,
+                  content: Text('Double Tapped on ${book.title}'),
+                )),
               ]
           : null,
       onSecondaryTap: hasRowTaps
@@ -381,14 +381,15 @@ class BookDatabase extends DataTableSource {
                       for (var item in curBook.allInfoHeaders) {
                         curBook.setInfo(item);
                       }
+                      Navigator.pop(context);
                       mainBookList
-                        .map(
-                          (book) => book.toJson(),
-                        )
-                        .toList();
+                          .map(
+                            (book) => book.toJson(),
+                          )
+                          .toList();
                       bookDataJson.writeAsStringSync(json.encode(mainBookList));
                       notifyListeners();
-                      Navigator.pop(context);
+                      //Navigator.pop(context);
                     })
               ],
             ),
@@ -440,14 +441,15 @@ Future<void> bookDataAdder(context) async {
                       newBook.setInfo(item);
                     }
                     mainBookList.add(newBook);
+                    Navigator.pop(context);
                     mainBookList
                         .map(
                           (book) => book.toJson(),
                         )
                         .toList();
                     bookDataJson.writeAsStringSync(json.encode(mainBookList));
-                    debugPrint(newBook.allInfo.toString());
-                    Navigator.pop(context);
+                    //debugPrint(newBook.allInfo.toString());
+                    //Navigator.pop(context);
                   })
             ],
           ),

@@ -328,6 +328,7 @@ class authorDatabase extends DataTableSource {
                       for (var item in curAuthor.allInfoHeaders) {
                         curAuthor.setInfo(item);
                       }
+                      Navigator.pop(context);
                       _authors
                           .map(
                             (author) => author.toJson(),
@@ -335,7 +336,7 @@ class authorDatabase extends DataTableSource {
                           .toList();
                       authorDataJson.writeAsStringSync(json.encode(_authors));
                       notifyListeners();
-                      Navigator.pop(context);
+                      //Navigator.pop(context);
                     })
               ],
             ),
@@ -388,6 +389,7 @@ Future<void> authorDataAdder(context) async {
                       newauthor.setInfo(item);
                     }
                     _authors.add(newauthor);
+                    Navigator.pop(context);
                     _authors
                         .map(
                           (author) => author.toJson(),
@@ -395,7 +397,6 @@ Future<void> authorDataAdder(context) async {
                         .toList();
                     authorDataJson.writeAsStringSync(json.encode(_authors));
                     debugPrint(newauthor.allInfo.toString());
-                    Navigator.pop(context);
                   })
             ],
           ),
@@ -417,42 +418,22 @@ void convertauthorData(var jsonResponse) {
 //Get Authors from Book data
 void getAuthorsFromBook() {
   if (mainBookList.isNotEmpty) {
-    List<Author> _tempAuthors = [];
+    List<Book> _tempBook = mainBookList;
     Author _newAuthor = Author('', '', 0000, 0000, '');
-    bool _nameFound = false;
-    String _temp = '';
+
     if (_authors.isEmpty) {
       _newAuthor.fullName = mainBookList[0].author;
       _authors.add(_newAuthor);
-    } 
-    // else {
-    //   for (var book in mainBookList) {
-    //     for (var author in _authors) {
+    }
+    //  else {
+    //   for (var author in _authors) {
+    //     for (var book in mainBookList)
+    //     {
     //       if (author.fullName == book.author) {
-    //         _nameFound = true;
-    //         break;
-    //       } else {
-    //         _temp = book.author;
+
     //       }
     //     }
-    //     if (!_nameFound) {
-    //       _newAuthor.fullName = book.author;
-    //       _tempAuthors.add(_newAuthor);
-    //     } else {
-    //       _nameFound = false;
-    //     }
     //   }
-    //   if (_tempAuthors.isNotEmpty) {
-    //     for (var item in _tempAuthors) {
-    //       _authors.add(item);
-    //     }
-    //   }
-    //   _authors
-    //       .map(
-    //         (author) => author.toJson(),
-    //       )
-    //       .toList();
-    //   authorDataJson.writeAsStringSync(json.encode(_authors));
     // }
   }
 }
