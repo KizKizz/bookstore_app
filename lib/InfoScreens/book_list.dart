@@ -89,7 +89,7 @@ class _BookListState extends State<BookList> {
                       ),
         ],
       ),
-      drawer: const MainDrawer(),
+      //drawer: const MainDrawer(),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
                 .loadString('assets/jsondatabase/book_data.json'),
