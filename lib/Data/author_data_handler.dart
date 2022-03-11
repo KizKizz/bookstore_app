@@ -73,8 +73,8 @@ class Author {
 
   String fullName;
   String id;
-  int yearBirth;
-  int yearDead;
+  String yearBirth;
+  String yearDead;
   String description;
 
   bool selected = false;
@@ -106,9 +106,9 @@ class Author {
     else if (info == 'ID' && editResults[1] != null)
       id = editResults[1];
     else if (info == 'Year of Birth' && editResults[2] != null)
-      yearBirth = int.parse(editResults[2]);
+      yearBirth = editResults[2];
     else if (info == 'Year of Dead' && editResults[3] != null)
-      yearDead = int.parse(editResults[3]);
+      yearDead = editResults[3];
     else if (info == 'Description' && editResults[4] != null)
       description = editResults[4];
   }
@@ -167,12 +167,12 @@ class Author {
 /// which is part of DataTable and PaginatedDataTable synchronous data fecthin API.
 /// This class uses static collection of data as a data store, projects it into
 /// DataRows, keeps track of selected items, provides sprting capability
-class authorDatabase extends DataTableSource {
-  authorDatabase.empty(this.context) {
+class AuthorDatabase extends DataTableSource {
+  AuthorDatabase.empty(this.context) {
     authors = [];
   }
 
-  authorDatabase(this.context,
+  AuthorDatabase(this.context,
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
@@ -257,7 +257,7 @@ class authorDatabase extends DataTableSource {
               ))
           : null,
       specificRowHeight:
-          hasRowHeightOverrides && author.yearBirth >= 25 ? 100 : null,
+          hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(author.fullName)),
         DataCell(Text(author.id)),
@@ -347,7 +347,7 @@ class authorDatabase extends DataTableSource {
 
 //Add author
 Future<void> authorDataAdder(context) async {
-  Author newauthor = Author('', '', 0000, 0000, '');
+  Author newauthor = Author('', '', '', '', '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -418,57 +418,41 @@ void convertauthorData(var jsonResponse) {
 //Get Authors from Book data
 void getAuthorsFromBook() {
   if (mainBookList.isNotEmpty) {
-    List<Book> _tempBook = mainBookList;
-    Author _newAuthor = Author('', '', 0000, 0000, '');
+    List<String> remainName = [];
+    bool _found = false;
 
     if (_authors.isEmpty) {
+      Author _newAuthor = Author('', '', '', '', '');
       _newAuthor.fullName = mainBookList[0].author;
       _authors.add(_newAuthor);
+    } 
+    for (var book in mainBookList) {
+      for (var author in _authors) {
+        if (author.fullName == book.author) {
+          _found = true;
+          break;
+        }
+      }
+      if (!_found) {
+        remainName.add(book.author);
+      }
+      _found = false;
     }
-    //  else {
-    //   for (var author in _authors) {
-    //     for (var book in mainBookList)
-    //     {
-    //       if (author.fullName == book.author) {
-
-    //       }
-    //     }
-    //   }
-    // }
+    for (var name in remainName) {
+      Author _newAuthor = Author('', '', '', '', '');
+      _newAuthor.fullName = name;
+      _authors.add(_newAuthor);
+    }
+    _authors
+        .map(
+          (author) => author.toJson(),
+        )
+        .toList();
+    authorDataJson.writeAsStringSync(json.encode(_authors));
+                  
+    //debugPrint('test ${remainName.length}');
   }
 }
-
-// List<Author> _tempAuthors = [];
-// for (var book in mainBookList) {
-//   if (_authors.isEmpty) {
-//     Author newAuthor = Author('', '', 0000, 0000, '');
-//     newAuthor.fullName = book.author;
-//     _authors.add(newAuthor);
-//     //debugPrint('test ${newAuthor.fullName}');
-//   } else {
-//     for (var author in _authors) {
-//       if (author.fullName == book.author) {
-//         break;
-//       }
-//       else {
-//         Author newAuthor = Author('', '', 0000, 0000, '');
-//         newAuthor.fullName = book.author;
-//         _tempAuthors.add(newAuthor);
-//         //debugPrint('test ${newAuthor.fullName}');
-//       }
-//     }
-//   }
-//   for (var item in _tempAuthors) {
-//     _authors.add(item);
-//   }
-//   _tempAuthors.clear();
-
-// _authors
-//     .map(
-//       (author) => author.toJson(),
-//     )
-//     .toList();
-// authorDataJson.writeAsStringSync(json.encode(_authors));
 
 // Dialog Helper
 class _SystemPadding extends StatelessWidget {

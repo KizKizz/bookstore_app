@@ -17,6 +17,7 @@ class _OrderListState extends State<OrderList> {
         appBar: MainAppbar(
             title: const Text('Order Data'),
             appBar: AppBar(),
+            flexSpace: Text('PlaceHolder'),
             widgets: <Widget>[]),
         body: Center(
             child: Column(children: const [

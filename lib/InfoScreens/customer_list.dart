@@ -17,6 +17,7 @@ class _CustomerListState extends State<CustomerList> {
         appBar: MainAppbar(
             title: const Text('Customer Data'),
             appBar: AppBar(),
+            flexSpace: Text('PlaceHolder'),
             widgets: <Widget>[]),
         body: Center(
             child: Column(children: const [

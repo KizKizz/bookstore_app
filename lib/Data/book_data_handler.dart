@@ -9,6 +9,8 @@ import 'package:data_table_2/data_table_2.dart';
 
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> mainBookList = [];
+List<Book> mainBookListCopy = [];
+
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -68,10 +70,10 @@ class Book {
   String id;
   String author;
   String publisher;
-  int publishDate;
-  double edition;
-  double cost;
-  double retailPrice;
+  String publishDate;
+  String edition;
+  String cost;
+  String retailPrice;
   String condition;
   String sold;
 
@@ -118,13 +120,13 @@ class Book {
     else if (info == 'Publisher' && editResults[3] != null)
       publisher = editResults[3];
     else if (info == 'Publish Date' && editResults[4] != null)
-      publishDate = int.parse(editResults[4]);
+      publishDate = editResults[4];
     else if (info == 'Edition' && editResults[5] != null)
-      edition = double.parse(editResults[5]);
+      edition = editResults[5];
     else if (info == 'Cost' && editResults[6] != null)
-      cost = double.parse(editResults[6]);
+      cost = editResults[6];
     else if (info == 'Retail Price' && editResults[7] != null)
-      retailPrice = double.parse(editResults[7]);
+      retailPrice = editResults[7];
     else if (info == 'Condition' && editResults[8] != null)
       condition = editResults[8];
     else if (info == 'Sold' && editResults[9] != null) sold = editResults[9];
@@ -140,13 +142,13 @@ class Book {
     else if (header == 'Publisher')
       return publisher;
     else if (header == 'Publish Date')
-      return publishDate.toString();
+      return publishDate;
     else if (header == 'Edition')
-      return edition.toString();
+      return edition;
     else if (header == 'Cost')
-      return cost.toString();
+      return cost;
     else if (header == 'Retail Price')
-      return retailPrice.toString();
+      return retailPrice;
     else if (header == 'Condition')
       return condition;
     else if (header == 'Sold')
@@ -305,7 +307,7 @@ class BookDatabase extends DataTableSource {
                 content: Text('Right clicked on ${book.title}'),
               ))
           : null,
-      specificRowHeight: hasRowHeightOverrides && book.cost >= 25 ? 100 : null,
+      specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(book.title)),
         DataCell(Text(book.id)),
@@ -400,7 +402,7 @@ class BookDatabase extends DataTableSource {
 
 //Add book
 Future<void> bookDataAdder(context) async {
-  Book newBook = Book('', '', '', '', 0000, 00, 00, 00, '', '');
+  Book newBook = Book('', '', '', '', '', '', '', '', '', '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -449,7 +451,6 @@ Future<void> bookDataAdder(context) async {
                         .toList();
                     bookDataJson.writeAsStringSync(json.encode(mainBookList));
                     //debugPrint(newBook.allInfo.toString());
-                    //Navigator.pop(context);
                   })
             ],
           ),
@@ -472,8 +473,31 @@ void convertBookData(var jsonResponse) {
         b['condition'],
         b['sold']);
     mainBookList.add(book);
+    mainBookListCopy.add(book);
   }
   //debugPrint('test ${mainBookList.length}');
+}
+
+//Search Helper
+Future<void> searchHelper(context, List<Book> foundList) async {
+  if (foundList.isEmpty) {
+    mainBookList.removeRange(1, mainBookList.length);
+    mainBookList.first = Book('', '', '', '', '', '', '', '', '', '');
+  } else {
+    if (mainBookList.length > 1) {
+      mainBookList.removeRange(1, mainBookList.length);
+    }
+
+    for (var book in foundList) {
+      if (book == foundList.first) {
+        mainBookList.first = book;
+      } else if (foundList.length > 1) {
+        mainBookList.add(book);
+      }
+    }
+  }
+  //debugPrint('main ${mainBookList.toString()}');
+  //debugPrint('copy ${mainBookListCopy.toString()}');
 }
 
 // Dialog Helper

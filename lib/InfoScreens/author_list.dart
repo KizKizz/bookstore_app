@@ -16,7 +16,7 @@ class AuthorList extends StatefulWidget {
 class _AuthorListState extends State<AuthorList> {
   bool _sortAscending = true;
   int? _sortColumnIndex;
-  late authorDatabase _authorsDataSource;
+  late AuthorDatabase _authorsDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
 
@@ -25,7 +25,7 @@ class _AuthorListState extends State<AuthorList> {
     super.didChangeDependencies();
     if (!_initialized) {
       setState(() {});
-      _authorsDataSource = authorDatabase(context);
+      _authorsDataSource = AuthorDatabase(context);
       _initialized = true;
       _authorsDataSource.addListener(() {
         setState(() {});
@@ -58,6 +58,7 @@ class _AuthorListState extends State<AuthorList> {
         appBar: MainAppbar(
           title: const Text('Author Data'),
           appBar: AppBar(),
+          flexSpace: Text('PlaceHolder'),
           widgets: <Widget>[
             MaterialButton(
               onPressed: () => [
@@ -123,7 +124,7 @@ class _AuthorListState extends State<AuthorList> {
                               'Full Name',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.L,
+                            size: ColumnSize.M,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.fullName, columnIndex, ascending),
                           ),
@@ -133,17 +134,18 @@ class _AuthorListState extends State<AuthorList> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.id, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Year od Birth',
+                              'Year of Birth',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.M,
+                            size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<num>(
+                            onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.yearBirth, columnIndex, ascending),
                           ),
                           DataColumn2(
@@ -152,8 +154,8 @@ class _AuthorListState extends State<AuthorList> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<num>(
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.yearDead, columnIndex, ascending),
                           ),
                           DataColumn2(
@@ -161,8 +163,8 @@ class _AuthorListState extends State<AuthorList> {
                               'Description',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.S,
-                            numeric: true,
+                            size: ColumnSize.L,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.description, columnIndex, ascending),
                           ),

@@ -17,6 +17,7 @@ class _SaleRecordListState extends State<SaleRecordList> {
         appBar: MainAppbar(
             title: const Text('Sales Records'),
             appBar: AppBar(),
+            flexSpace: Text('PlaceHolder'),
             widgets: <Widget>[]),
         body: Center(
             child: Column(children: const [

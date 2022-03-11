@@ -19,6 +19,7 @@ class _EmployeeListState extends State<EmployeeList> {
         appBar: MainAppbar(
             title: const Text('Employee Data'),
             appBar: AppBar(),
+            flexSpace: Text('PlaceHolder'),
             widgets: <Widget>[]),
         body: Center(
             child: Column(children: const [
