@@ -339,8 +339,8 @@ class _BookListState extends State<BookList> {
                             ),
                             size: ColumnSize.S,
                             numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.publishDate, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.publishDate), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -349,8 +349,8 @@ class _BookListState extends State<BookList> {
                             ),
                             size: ColumnSize.S,
                             numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.edition, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.edition), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -359,8 +359,8 @@ class _BookListState extends State<BookList> {
                             ),
                             size: ColumnSize.S,
                             numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.cost, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.cost), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -369,8 +369,8 @@ class _BookListState extends State<BookList> {
                             ),
                             size: ColumnSize.S,
                             numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.retailPrice, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.retailPrice), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

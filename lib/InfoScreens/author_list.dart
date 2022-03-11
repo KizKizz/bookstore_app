@@ -145,8 +145,8 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.yearBirth, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.yearBirth), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -155,8 +155,8 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.yearDead, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.yearDead), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
