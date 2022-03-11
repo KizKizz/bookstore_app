@@ -150,7 +150,7 @@ class _BookListState extends State<BookList> {
         },
         autofocus: false,
         cursorColor: Colors.white,
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 20, color: Colors.white),
         textInputAction: TextInputAction.search,
         decoration: const InputDecoration(
             enabledBorder: UnderlineInputBorder(
