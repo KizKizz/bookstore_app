@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -10,7 +11,6 @@ import 'package:data_table_2/data_table_2.dart';
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> mainBookList = [];
 List<Book> mainBookListCopy = [];
-
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -78,6 +78,7 @@ class Book {
   String sold;
 
   bool selected = false;
+  bool isSearched = false;
   List editResults = List.filled(10, null);
 
   List get allInfo {
@@ -238,6 +239,25 @@ class BookDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Book d) getField, bool ascending) {
     books.sort((a, b) {
+      if (a.cost == '') {
+        a.cost = 0.toString();
+      } else if (a.edition == '') {
+        a.edition = 0.toString();
+      } else if (a.retailPrice == '') {
+        a.retailPrice = 0.toString();
+      } else if (a.publishDate == '') {
+        a.publishDate = 0.toString();
+      }
+      if (b.cost == '') {
+        b.cost = 0.toString();
+      } else if (b.edition == '') {
+        b.edition = 0.toString();
+      } else if (b.retailPrice == '') {
+        b.retailPrice = 0.toString();
+      } else if (b.publishDate == '') {
+        b.publishDate = 0.toString();
+      }
+
       final aValue = getField(a);
       final bValue = getField(b);
       return ascending
@@ -267,7 +287,7 @@ class BookDatabase extends DataTableSource {
     // ignore: unused_local_variable
     final format = NumberFormat.decimalPercentPattern(
       locale: 'en',
-      decimalDigits: 00,
+      decimalDigits: 0,
     );
     assert(index >= 0);
     if (index >= books.length) throw 'index > _books.length';
@@ -340,7 +360,6 @@ class BookDatabase extends DataTableSource {
     notifyListeners();
   }
 
-  //Custom dialog handles
   //Edit Book Popup
   _showDialog(context, Book curBook) async {
     await showDialog<String>(
@@ -380,18 +399,28 @@ class BookDatabase extends DataTableSource {
                 TextButton(
                     child: const Text('SAVE'),
                     onPressed: () {
+                      int _bookMatchIndex = mainBookListCopy
+                          .indexWhere((element) => element.id == curBook.id);
+                      debugPrint('curafter: ${_bookMatchIndex}');
                       for (var item in curBook.allInfoHeaders) {
                         curBook.setInfo(item);
                       }
-                      Navigator.pop(context);
-                      mainBookList
-                          .map(
-                            (book) => book.toJson(),
-                          )
-                          .toList();
-                      bookDataJson.writeAsStringSync(json.encode(mainBookList));
+
+                      if (_bookMatchIndex >= 0) {
+                        mainBookListCopy[_bookMatchIndex] = curBook;
+                      }
+
+                      if (!kIsWeb) {
+                        mainBookListCopy
+                            .map(
+                              (book) => book.toJson(),
+                            )
+                            .toList();
+                        bookDataJson
+                            .writeAsStringSync(json.encode(mainBookListCopy));
+                      }
                       notifyListeners();
-                      //Navigator.pop(context);
+                      Navigator.pop(context);
                     })
               ],
             ),
@@ -443,13 +472,18 @@ Future<void> bookDataAdder(context) async {
                       newBook.setInfo(item);
                     }
                     mainBookList.add(newBook);
+                    mainBookListCopy.add(newBook);
+
+                    if (!kIsWeb) {
+                      mainBookListCopy
+                          .map(
+                            (book) => book.toJson(),
+                          )
+                          .toList();
+                      bookDataJson
+                          .writeAsStringSync(json.encode(mainBookListCopy));
+                    }
                     Navigator.pop(context);
-                    mainBookList
-                        .map(
-                          (book) => book.toJson(),
-                        )
-                        .toList();
-                    bookDataJson.writeAsStringSync(json.encode(mainBookList));
                     //debugPrint(newBook.allInfo.toString());
                   })
             ],

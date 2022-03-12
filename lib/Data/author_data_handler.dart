@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -256,8 +257,7 @@ class AuthorDatabase extends DataTableSource {
                 content: Text('Right clicked on ${author.fullName}'),
               ))
           : null,
-      specificRowHeight:
-          hasRowHeightOverrides ? 100 : null,
+      specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(author.fullName)),
         DataCell(Text(author.id)),
@@ -328,15 +328,17 @@ class AuthorDatabase extends DataTableSource {
                       for (var item in curAuthor.allInfoHeaders) {
                         curAuthor.setInfo(item);
                       }
-                      Navigator.pop(context);
-                      _authors
-                          .map(
-                            (author) => author.toJson(),
-                          )
-                          .toList();
-                      authorDataJson.writeAsStringSync(json.encode(_authors));
                       notifyListeners();
-                      //Navigator.pop(context);
+                      Navigator.pop(context);
+                      //write to json
+                      if (!kIsWeb) {
+                        _authors
+                            .map(
+                              (author) => author.toJson(),
+                            )
+                            .toList();
+                        authorDataJson.writeAsStringSync(json.encode(_authors));
+                      }
                     })
               ],
             ),
@@ -389,14 +391,17 @@ Future<void> authorDataAdder(context) async {
                       newauthor.setInfo(item);
                     }
                     _authors.add(newauthor);
+
+                    if (!kIsWeb) {
+                      _authors
+                          .map(
+                            (author) => author.toJson(),
+                          )
+                          .toList();
+                      authorDataJson.writeAsStringSync(json.encode(_authors));
+                      debugPrint(newauthor.allInfo.toString());
+                    }
                     Navigator.pop(context);
-                    _authors
-                        .map(
-                          (author) => author.toJson(),
-                        )
-                        .toList();
-                    authorDataJson.writeAsStringSync(json.encode(_authors));
-                    debugPrint(newauthor.allInfo.toString());
                   })
             ],
           ),
@@ -423,10 +428,10 @@ void getAuthorsFromBook() {
 
     if (_authors.isEmpty) {
       Author _newAuthor = Author('', '', '', '', '');
-      _newAuthor.fullName = mainBookList[0].author;
+      _newAuthor.fullName = mainBookListCopy[0].author;
       _authors.add(_newAuthor);
-    } 
-    for (var book in mainBookList) {
+    }
+    for (var book in mainBookListCopy) {
       for (var author in _authors) {
         if (author.fullName == book.author) {
           _found = true;
@@ -443,13 +448,14 @@ void getAuthorsFromBook() {
       _newAuthor.fullName = name;
       _authors.add(_newAuthor);
     }
-    _authors
-        .map(
-          (author) => author.toJson(),
-        )
-        .toList();
-    authorDataJson.writeAsStringSync(json.encode(_authors));
-                  
+    if (!kIsWeb) {
+      _authors
+          .map(
+            (author) => author.toJson(),
+          )
+          .toList();
+      authorDataJson.writeAsStringSync(json.encode(_authors));
+    }
     //debugPrint('test ${remainName.length}');
   }
 }

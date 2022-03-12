@@ -4,7 +4,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import '../main_appbar.dart';
 
@@ -45,8 +44,8 @@ class _BookListState extends State<BookList> {
     if (!_initialized) {
       setState(() {});
       _booksDataSource = BookDatabase(context);
-      _initialized = true;
       curSearchChoice = _searchDropDownVal[0];
+      _initialized = true;
       _booksDataSource.addListener(() {
         setState(() {});
       });
@@ -170,7 +169,7 @@ class _BookListState extends State<BookList> {
           appBar: AppBar(),
           flexSpace: Container(
             padding: const EdgeInsets.only(top: 5, bottom: 12),
-            margin: const EdgeInsets.only(left: 300, right: 300),
+            margin: const EdgeInsets.only(left: 300, right: 350),
             // decoration: BoxDecoration(
             //   border: Border.all(color: Colors.white10)),
             child: _searchField(),
@@ -179,7 +178,7 @@ class _BookListState extends State<BookList> {
             //Dropdown search
             Container(
               padding: const EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 0),
-              margin: const EdgeInsets.only(right: 110, top: 5, bottom: 4),
+              margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
               child: 
             DropdownButton2(
               buttonHeight: 25,
@@ -192,6 +191,7 @@ class _BookListState extends State<BookList> {
               //   ),),
               value: curSearchChoice,
               itemHeight: 35,
+              dropdownDecoration: const BoxDecoration(color: Color.fromARGB(255, 54, 54, 54)),
               itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
               items: _searchDropDownVal
                   .map<DropdownMenuItem<String>>((String value) {
@@ -199,7 +199,7 @@ class _BookListState extends State<BookList> {
                     value: value,
                     child: SizedBox(width: 70, child: 
                       Text(value, style: const TextStyle(
-                        fontSize: 14.5),)));
+                        fontSize: 14.5, color: Colors.white),)));
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
@@ -207,33 +207,7 @@ class _BookListState extends State<BookList> {
                       });
                     },
                   )),
-            // //Drop Down Search Button
-            // Container(
-            //   padding: const EdgeInsets.only(left: 2, right: 2, top: 5, bottom: 10),
-            //   margin: const EdgeInsets.only(right: 120, top: 5),
-            //   child: Theme(
-            //       data: ThemeData(
-            //           canvasColor:
-            //               Color.fromARGB(255, 51, 49, 49)), //this is where the magic happens
-            //       child: DropdownButton(
-            //         alignment: Alignment.center,
-            //         style: Theme.of(context).textTheme.labelLarge,
-            //         underline: const SizedBox(),
-            //         value: curSearchChoice,
-            //         items: _searchDropDownVal
-            //             .map<DropdownMenuItem<String>>((String value) {
-            //           return DropdownMenuItem<String>(
-            //               value: value,
-            //               child: SizedBox(width: 70, child: 
-            //                 Text(value, style: const TextStyle(color: Colors.white),)));
-            //         }).toList(),
-            //         onChanged: (String? newValue) {
-            //           setState(() {
-            //             curSearchChoice = newValue!;
-            //           });
-            //         },
-            //       )),
-            // ),
+ 
             //Add Data Button
             MaterialButton(
               onPressed: () => [
