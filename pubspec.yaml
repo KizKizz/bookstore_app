@@ -38,6 +38,7 @@ dependencies:
   toggle_switch: ^1.4.0
   dropdown_button2: ^1.2.2
   multi_split_view: ^1.11.0
+  flutter_rating_bar: ^4.0.0
 
 
 

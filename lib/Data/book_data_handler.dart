@@ -5,8 +5,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import 'author_data_handler.dart';
 
@@ -341,7 +343,7 @@ class BookDatabase extends DataTableSource {
         DataCell(Text(book.retailPrice)),
         DataCell(Text(book.condition)),
         DataCell(Text(book.sold)),
-        if (book.sold != 'SOLD')
+        if (book.sold.toLowerCase() == 'Available'.toLowerCase())
           DataCell(
             Container(
                 padding: const EdgeInsets.only(right: 15),
@@ -350,8 +352,8 @@ class BookDatabase extends DataTableSource {
               notifyListeners();
             },
           )
-        else 
-        const DataCell(SizedBox())
+        else
+          const DataCell(SizedBox())
 
         // else
         //   DataCell(
@@ -388,6 +390,30 @@ class BookDatabase extends DataTableSource {
 
   //Edit Book Popup
   _showDialog(context, Book curBook) async {
+    double _conditionRating = 1.0;
+    int _statusRating = 0;
+    if (curBook.condition == 'Poor') {
+      _conditionRating = 1.0;
+    }
+    else if (curBook.condition == 'Fair') {
+      _conditionRating = 2.0;
+    }
+    else if (curBook.condition == 'Good') {
+      _conditionRating = 3.0;
+    }
+    else if (curBook.condition == 'Exellent') {
+      _conditionRating = 4.0;
+    }
+    else if (curBook.condition == 'Superb') {
+      _conditionRating = 5.0;
+    }
+    if (curBook.sold == 'Available') {
+      _statusRating = 0;
+    }
+    else if (curBook.sold == 'Sold') {
+      _statusRating = 1;
+    }
+
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -403,6 +429,90 @@ class BookDatabase extends DataTableSource {
                     children: [
                       const Text('Edit Book Info'),
                       for (var item in curBook.allInfoHeaders)
+                        if (item == 'Condition')
+                          Container(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Column(children: [
+                                Container(
+                                  alignment: Alignment(-1, 0),
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text(
+                                    'Condition:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor),
+                                  ),
+                                ),
+                                RatingBar.builder(
+                                  itemSize: 40,
+                                  initialRating: _conditionRating,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: false,
+                                  itemCount: 5,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  itemBuilder: (context, _) => const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    if (rating == 1.0) {
+                                      curBook.infoEdited(item, 'Poor');
+                                    } else if (rating == 2.0) {
+                                      curBook.infoEdited(item, 'Fair');
+                                    } else if (rating == 3.0) {
+                                      curBook.infoEdited(item, 'Good');
+                                    } else if (rating == 4.0) {
+                                      curBook.infoEdited(item, 'Excellent');
+                                    } else if (rating == 5.0) {
+                                      curBook.infoEdited(item, 'Superb');
+                                    }
+                                  },
+                                )
+                              ]))
+                        else if (item == 'Sold')
+                          Container(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Column(children: [
+                                Container(
+                                  alignment: const Alignment(-1, 0),
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text(
+                                    'Status:',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor),
+                                  ),
+                                ),
+                                ToggleSwitch(
+                                  minWidth: 80.0,
+                                  minHeight: 30,
+                                  borderColor: [
+                                    Theme.of(context).primaryColorLight
+                                  ],
+                                  borderWidth: 1.5,
+                                  initialLabelIndex: _statusRating,
+                                  cornerRadius: 50.0,
+                                  activeFgColor: Colors.white,
+                                  inactiveBgColor: Colors.grey,
+                                  inactiveFgColor: Colors.white,
+                                  totalSwitches: 2,
+                                  labels: const ['Available', 'Sold'],
+                                  activeBgColors: const [
+                                    [Colors.blue],
+                                    [Colors.pink]
+                                  ],
+                                  onToggle: (index) {
+                                    if (index == 0) {
+                                      curBook.infoEdited(item, 'Available');
+                                    } else if (index == 1) {
+                                      curBook.infoEdited(item, 'Sold');
+                                    }
+                                  },
+                                )
+                              ]))
+                        else
                         TextField(
                             controller: TextEditingController()
                               ..text = curBook.headerToInfo(item),
@@ -476,14 +586,101 @@ Future<void> bookDataAdder(context) async {
                   children: [
                     const Text('Add Book'),
                     for (var item in newBook.allInfoHeaders)
-                      TextField(
-                          // controller: TextEditingController()
-                          //   ..text = item.toString(),
-                          onChanged: (text) => {newBook.infoEdited(item, text)},
-                          autofocus: true,
-                          decoration: InputDecoration(
-                              labelText: item + ':',
-                              hintText: item + ' of the book')),
+                      if (item == 'Condition')
+                        Container(
+                            padding: EdgeInsets.only(top: 10),
+                            child: Column(children: [
+                              Container(
+                                alignment: Alignment(-1, 0),
+                                padding: EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'Condition:',
+                                  style: TextStyle(
+                                      color: Theme.of(context).hintColor),
+                                ),
+                              ),
+                              RatingBar.builder(
+                                itemSize: 40,
+                                initialRating: 3,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: false,
+                                itemCount: 5,
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  if (rating == 1.0) {
+                                    newBook.infoEdited(item, 'Poor');
+                                  } else if (rating == 2.0) {
+                                    newBook.infoEdited(item, 'Fair');
+                                  }
+                                  else if (rating == 3.0) {
+                                    newBook.infoEdited(item, 'Good');
+                                  }
+                                  else if (rating == 4.0) {
+                                    newBook.infoEdited(item, 'Excellent');
+                                  }
+                                  else if (rating == 5.0) {
+                                    newBook.infoEdited(item, 'Superb');
+                                  }
+                                },
+                              )
+                            ]))
+                      else if (item == 'Sold')
+                        Container(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Column(children: [
+                              Container(
+                                alignment: const Alignment(-1, 0),
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'Status:',
+                                  style: TextStyle(
+                                      color: Theme.of(context).hintColor),
+                                ),
+                              ),
+                              ToggleSwitch(
+                                minWidth: 80.0,
+                                minHeight: 30,
+                                borderColor: [
+                                  Theme.of(context).primaryColorLight
+                                ],
+                                borderWidth: 1.5,
+                                initialLabelIndex: 0,
+                                cornerRadius: 50.0,
+                                activeFgColor: Colors.white,
+                                inactiveBgColor: Colors.grey,
+                                inactiveFgColor: Colors.white,
+                                totalSwitches: 2,
+                                labels: const ['Available', 'Sold'],
+                                activeBgColors: const [
+                                  [Colors.blue],
+                                  [Colors.pink]
+                                ],
+                                onToggle: (index) {
+                                  if (index == 0) {
+                                    newBook.infoEdited(item, 'Available');
+                                  }
+                                  else if (index == 1) {
+                                    newBook.infoEdited(item, 'Sold');
+                                  }
+                                },
+                              )
+                            ]))
+                      else
+                        TextField(
+                            // controller: TextEditingController()
+                            //   ..text = item.toString(),
+                            onChanged: (text) =>
+                                {newBook.infoEdited(item, text)},
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                labelText: item + ':',
+                                hintText: item + ' of the book')),
                   ],
                 )))
               ],
