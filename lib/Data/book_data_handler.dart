@@ -350,18 +350,21 @@ class BookDatabase extends DataTableSource {
               notifyListeners();
             },
           )
-        else
-          DataCell(
-            Container(
-                padding: const EdgeInsets.only(right: 15),
-                child: const Icon(
-                  Icons.shopping_cart_checkout,
-                  color: Colors.grey,
-                )),
-            onTap: () {
-              notifyListeners();
-            },
-          ),
+        else 
+        const DataCell(SizedBox())
+
+        // else
+        //   DataCell(
+        //     Container(
+        //         padding: const EdgeInsets.only(right: 15),
+        //         child: const Icon(
+        //           Icons.shopping_cart_checkout,
+        //           color: Colors.grey,
+        //         )),
+        //     onTap: () {
+        //       notifyListeners();
+        //     },
+        //   ),
       ],
     );
   }

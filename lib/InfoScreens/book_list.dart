@@ -399,7 +399,7 @@ class _BookListState extends State<BookList> {
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Sold',
+                              'Status',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
