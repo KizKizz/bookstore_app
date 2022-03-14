@@ -29,7 +29,7 @@ class RestorableauthorSelections extends RestorableProperty<Set<int>> {
 
   // Takes a list of [author]s and saves the row indices of selected rows
   // into a [Set].
-  void setauthorSelections(List<Author> authors) {
+  void setAuthorSelections(List<Author> authors) {
     final updatedSet = <int>{};
     for (var i = 0; i < authors.length; i += 1) {
       var author = authors[i];
@@ -77,6 +77,7 @@ class Author {
   String yearBirth;
   String yearDead;
   String description;
+  
 
   bool selected = false;
   List editResults = List.filled(10, null);
@@ -259,11 +260,14 @@ class AuthorDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(Text(author.fullName)),
+        DataCell(
+          Text(author.fullName),
+        ),
         DataCell(Text(author.id)),
         DataCell(Text(author.yearBirth.toString())),
         DataCell(Text(author.yearDead.toString())),
         DataCell(Text(author.description)),
+        
       ],
     );
   }
@@ -421,9 +425,10 @@ void convertauthorData(var jsonResponse) {
 }
 
 //Get Authors from Book data
-void getAuthorsFromBook() {
+Future<void> getAuthorsFromBook() async {
   if (mainBookList.isNotEmpty) {
     List<String> remainName = [];
+    _authors = [];
     bool _found = false;
 
     if (_authors.isEmpty) {

@@ -7,6 +7,7 @@ import 'package:bookstore_project/table_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import 'main.dart';
 import 'main_appbar.dart';
@@ -17,9 +18,8 @@ import 'login_page.dart';
 import 'InfoScreens/book_list.dart';
 import 'InfoScreens/employee_list.dart';
 
-
 class MainPage extends StatefulWidget {
-  const MainPage({ Key? key }) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -28,17 +28,31 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   String appBarName = "Book Records";
-  List<Widget> screen = [const BookList(), const AuthorList(), const OrderList(), const SaleRecordList(), CustomerList(), const EmployeeList()];
-  List<String> screenTitle = ["Book Records", "Author Records", "Order Records", 'Sale Records', 'Customer Records', 'Employee Record'];
-   
+  List<Widget> screen = [
+    const BookList(),
+    const AuthorList(),
+    const OrderList(),
+    const SaleRecordList(),
+    CustomerList(),
+    const EmployeeList()
+  ];
+  List<String> screenTitle = [
+    "Book Records",
+    "Author Records",
+    "Order Records",
+    'Sale Records',
+    'Customer Records',
+    'Employee Record'
+  ];
+
   //AppBar + Navigation Rail
   @override
   Widget build(BuildContext context) {
-    bool darkModeOn = false;
+    int darkModeOn = 0;
     if (MyApp.themeNotifier.value == ThemeMode.light) {
-      darkModeOn = false;
+      darkModeOn = 0;
     } else {
-      darkModeOn = true;
+      darkModeOn = 1;
     }
     return Scaffold(
       // appBar: MainAppbar(
@@ -64,58 +78,89 @@ class _MainPageState extends State<MainPage> {
                               appBarName = screenTitle[_selectedIndex];
                             });
                           },
-//Other buttons   
-                          leading:
-                          Column(children: [
-                            Container(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: const Icon(Icons.adb_outlined, size: 40),
-                            ),
-//DarkMode Switch
-                            Column(
-                              children: [
-                                Switch(
-                                  value: darkModeOn,
-                                  onChanged: (value) async {
-                                    // obtain shared preferences
-                                    final prefs = await SharedPreferences.getInstance();
-                                    setState(() {
-                                      if (MyApp.themeNotifier.value == ThemeMode.light) {
-                                        darkModeOn = true;
-                                        prefs.setBool('isDarkMode', true);
-                                        MyApp.themeNotifier.value = ThemeMode.dark;
-                                      } else {
-                                        darkModeOn = false;
-                                        MyApp.themeNotifier.value = ThemeMode.light;
-                                        prefs.setBool('isDarkMode', false);
-                                      }   
-                                    });
-                                  }),
-                                  const Text('Dark Theme'),
-                                  const Padding(padding: EdgeInsets.only(bottom: 15)),]),
+//Other buttons
+                          leading: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: const Icon(Icons.adb_outlined, size: 40),
+                              ),
+
 //Logout Button
-                            MaterialButton(                            
-                              onPressed: (() {
-                                _logoutDialog();
-                              }),                       
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Icon(Icons.logout,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Text("Logout",
-                                      style: TextStyle(
-                                        // color: Colors.yellow,
-                                        // fontWeight: FontWeight.bold,
+                              MaterialButton(
+                                onPressed: (() {
+                                  _logoutDialog();
+                                }),
+                                child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.logout,
+                                        ),
                                       ),
-                                    ),
-                                  )]),
-                            ),],),
+                                      Padding(
+                                        padding: EdgeInsets.all(2.0),
+                                        child: Text(
+                                          "Logout",
+                                          style: TextStyle(
+                                              // color: Colors.yellow,
+                                              // fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      )
+                                    ]),
+                              ),
+//DarkMode Switch
+                              Container(
+                                padding: EdgeInsets.only(top: 20),
+                                child: ToggleSwitch(
+                                    minWidth: 35.0,
+                                    minHeight: 28.0,
+                                    initialLabelIndex: darkModeOn,
+                                    cornerRadius: 90.0,
+                                    borderColor: const [
+                                      Color(0xff00aeff),
+                                    ],
+                                    borderWidth: 1.5,
+                                    activeFgColor: Colors.white,
+                                    inactiveBgColor: Color.fromARGB(255, 122, 122, 122),
+                                    inactiveFgColor: Colors.white,
+                                    totalSwitches: 2,
+                                    icons: const [
+                                      Icons.light_mode,
+                                      Icons.dark_mode
+                                    ],
+                                    iconSize: 26.0,
+                                    animate: true,
+                                    curve: Curves.bounceInOut,
+                                    onToggle: (darkModeOn) async {
+                                      // obtain shared preferences
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      setState(() {
+                                        if (MyApp.themeNotifier.value ==
+                                            ThemeMode.light) {
+                                          darkModeOn = 0;
+                                          prefs.setBool('isDarkMode', true);
+                                          MyApp.themeNotifier.value =
+                                              ThemeMode.dark;
+                                        } else {
+                                          darkModeOn = 1;
+                                          MyApp.themeNotifier.value =
+                                              ThemeMode.light;
+                                          prefs.setBool('isDarkMode', false);
+                                        }
+                                      });
+                                    }),
+                                //const Text('Dark Theme'),
+                              ),
+
+                            ],
+                          ),
+                          
+
 //screens buttons
                           groupAlignment: 1.0,
                           labelType: NavigationRailLabelType.all,
@@ -164,80 +209,81 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
 //Widgets on right of bar
   Widget _editTableButton() {
-    return MaterialButton(                            
-      onPressed: () => [ 
-        if (context.read<tableAdderSwitch>().isAddingMode == false) {
-          context.read<tableAdderSwitch>().addingModeOn()
-        }
-        else {
-          context.read<tableAdderSwitch>().addingModeOff()
-        }
-      ],                           
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: const <Widget>[
-          Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Icon(Icons.add_circle_outline_outlined,
-            ),
+    return MaterialButton(
+      onPressed: () => [
+        if (context.read<tableAdderSwitch>().isAddingMode == false)
+          {context.read<tableAdderSwitch>().addingModeOn()}
+        else
+          {context.read<tableAdderSwitch>().addingModeOff()}
+      ],
+      child: Column(mainAxisSize: MainAxisSize.min, children: const <Widget>[
+        Padding(
+          padding: EdgeInsets.all(2.0),
+          child: Icon(
+            Icons.add_circle_outline_outlined,
           ),
-          Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Text("Add",
-              style: TextStyle(
-              ),
-            ),
-          )]),
+        ),
+        Padding(
+          padding: EdgeInsets.all(2.0),
+          child: Text(
+            "Add",
+            style: TextStyle(),
+          ),
+        )
+      ]),
     );
   }
 
   //Logout alert helpers
   _logoutDialog() async {
     await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-          return _SystemPadding(child: AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
-        content: SizedBox( 
-          width: 300,
-          height: 70,
-          child: Center( 
-            child: Column(
-              children: const <Widget>[           
-                  Text('Log out', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Padding(padding: EdgeInsets.only(bottom: 15)),
-                  Text('You will be returned to the login screen.'),
+        context: context,
+        builder: (BuildContext context) {
+          return _SystemPadding(
+            child: AlertDialog(
+              contentPadding: const EdgeInsets.all(16.0),
+              content: SizedBox(
+                  width: 300,
+                  height: 70,
+                  child: Center(
+                      child: Column(children: const <Widget>[
+                    Text('Log out',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Padding(padding: EdgeInsets.only(bottom: 15)),
+                    Text('You will be returned to the login screen.'),
                   ]))),
-        actions: <Widget>[
-          TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          TextButton(
-              child: const Text('CONFIRM'),
-              onPressed: (() async {
-                final prefs = await SharedPreferences.getInstance();
-                // set value
-                prefs.setBool('isLoggedin', false);
-                Navigator.pushReplacement(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        const LoginPage(),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
-                );
-              }))
-        ],
-      ),);
-      });
-  
+              actions: <Widget>[
+                TextButton(
+                    child: const Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+                TextButton(
+                    child: const Text('CONFIRM'),
+                    onPressed: (() async {
+                      final prefs = await SharedPreferences.getInstance();
+                      // set value
+                      prefs.setBool('isLoggedin', false);
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              const LoginPage(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    }))
+              ],
+            ),
+          );
+        });
   }
 }
+
 class _SystemPadding extends StatelessWidget {
   final Widget child;
 

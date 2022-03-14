@@ -7,7 +7,6 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 
 import '../main_appbar.dart';
 
-List<Book> searchBookList = [];
 //String _searchDropDownVal = 'Title';
 
 class BookList extends StatefulWidget {
@@ -23,6 +22,8 @@ class _BookListState extends State<BookList> {
   late BookDatabase _booksDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
+  List<Book> searchBookList = [];
+  final List<Book> preSearchList = mainBookListCopy;
   final searchbookController = TextEditingController();
   final List<String> _searchDropDownVal = [
     'Title',
@@ -156,8 +157,8 @@ class _BookListState extends State<BookList> {
                 borderSide: BorderSide(color: Colors.white)),
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.yellow)),
-            hintText: 'Search..',
-            hintStyle: TextStyle(fontSize: 20, color: Colors.white60)));
+            hintText: 'Search',
+            hintStyle: TextStyle(fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
   }
 
   @override
@@ -175,39 +176,71 @@ class _BookListState extends State<BookList> {
             child: _searchField(),
           ),
           widgets: <Widget>[
+            // Clear
+            if (searchbookController.text.isNotEmpty)
+              Container(
+                width: 50,
+                height: 50,
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(right: 0, top: 5, bottom: 4),
+                child: MaterialButton(
+                  onPressed: () => [
+                    setState(() {
+                      setState(() {
+                        searchbookController.clear();
+                        searchBookList = preSearchList;
+                        searchHelper(context, searchBookList).then((_) {
+                          setState(() {});
+                        });
+                      });
+                    })
+                  ],
+                  child: const Icon(
+                    Icons.clear_sharp,
+                    color: Color.fromARGB(255, 240, 240, 240),
+                  ),
+                ),
+              ),
+
             //Dropdown search
             Container(
-              padding: const EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 0),
-              margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
-              child: 
-            DropdownButton2(
-              buttonHeight: 25,
-              buttonWidth: 105,
-              offset: const Offset(0,2),
-              // buttonDecoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(5),
-              //   border: Border.all(
-              //     color: Colors.white54,
-              //   ),),
-              value: curSearchChoice,
-              itemHeight: 35,
-              dropdownDecoration: const BoxDecoration(color: Color.fromARGB(255, 54, 54, 54)),
-              itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-              items: _searchDropDownVal
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                    value: value,
-                    child: SizedBox(width: 70, child: 
-                      Text(value, style: const TextStyle(
-                        fontSize: 14.5, color: Colors.white),)));
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  curSearchChoice = newValue!;
-                      });
-                    },
-                  )),
- 
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 0),
+                margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
+                child: DropdownButton2(
+                  buttonHeight: 25,
+                  buttonWidth: 105,
+                  offset: const Offset(0, 2),
+                  // buttonDecoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(5),
+                  //   border: Border.all(
+                  //     color: Colors.white54,
+                  //   ),),
+                  value: curSearchChoice,
+                  itemHeight: 35,
+                  dropdownDecoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 54, 54, 54)),
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  items: _searchDropDownVal
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                        value: value,
+                        child: SizedBox(
+                            width: 70,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                  fontSize: 14.5, color: Colors.white),
+                            )));
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      curSearchChoice = newValue!;
+                    });
+                  },
+                )),
+
             //Add Data Button
             MaterialButton(
               onPressed: () => [
@@ -314,7 +347,9 @@ class _BookListState extends State<BookList> {
                             size: ColumnSize.S,
                             numeric: true,
                             onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.publishDate), columnIndex, ascending),
+                                (d) => int.parse(d.publishDate),
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -324,7 +359,9 @@ class _BookListState extends State<BookList> {
                             size: ColumnSize.S,
                             numeric: true,
                             onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.edition), columnIndex, ascending),
+                                (d) => double.parse(d.edition),
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -334,7 +371,9 @@ class _BookListState extends State<BookList> {
                             size: ColumnSize.S,
                             numeric: true,
                             onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.cost), columnIndex, ascending),
+                                (d) => double.parse(d.cost),
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -344,7 +383,9 @@ class _BookListState extends State<BookList> {
                             size: ColumnSize.S,
                             numeric: true,
                             onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.retailPrice), columnIndex, ascending),
+                                (d) => double.parse(d.retailPrice),
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -365,6 +406,14 @@ class _BookListState extends State<BookList> {
                             numeric: true,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.sold, columnIndex, ascending),
+                          ),
+                          const DataColumn2(
+                            label: Text(
+                              '',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: true,
                           ),
                         ],
                         rows: List<DataRow>.generate(_booksDataSource.rowCount,

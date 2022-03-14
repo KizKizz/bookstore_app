@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
+import 'author_data_handler.dart';
+
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> mainBookList = [];
 List<Book> mainBookListCopy = [];
@@ -257,9 +259,9 @@ class BookDatabase extends DataTableSource {
       } else if (b.publishDate == '') {
         b.publishDate = 0.toString();
       }
-
       final aValue = getField(a);
       final bValue = getField(b);
+
       return ascending
           ? Comparable.compare(aValue, bValue)
           : Comparable.compare(bValue, aValue);
@@ -333,12 +335,33 @@ class BookDatabase extends DataTableSource {
         DataCell(Text(book.id)),
         DataCell(Text(book.author)),
         DataCell(Text(book.publisher)),
-        DataCell(Text(book.publishDate.toString())),
-        DataCell(Text(book.edition.toString())),
-        DataCell(Text(book.cost.toString())),
-        DataCell(Text(book.retailPrice.toString())),
+        DataCell(Text(book.publishDate)),
+        DataCell(Text(book.edition)),
+        DataCell(Text(book.cost)),
+        DataCell(Text(book.retailPrice)),
         DataCell(Text(book.condition)),
-        DataCell(Text(book.sold.toString())),
+        DataCell(Text(book.sold)),
+        if (book.sold != 'SOLD')
+          DataCell(
+            Container(
+                padding: const EdgeInsets.only(right: 15),
+                child: const Icon(Icons.shopping_cart_checkout)),
+            onTap: () {
+              notifyListeners();
+            },
+          )
+        else
+          DataCell(
+            Container(
+                padding: const EdgeInsets.only(right: 15),
+                child: const Icon(
+                  Icons.shopping_cart_checkout,
+                  color: Colors.grey,
+                )),
+            onTap: () {
+              notifyListeners();
+            },
+          ),
       ],
     );
   }
@@ -401,7 +424,7 @@ class BookDatabase extends DataTableSource {
                     onPressed: () {
                       int _bookMatchIndex = mainBookListCopy
                           .indexWhere((element) => element.id == curBook.id);
-                      debugPrint('curafter: ${_bookMatchIndex}');
+                      //debugPrint('curafter: ${_bookMatchIndex}');
                       for (var item in curBook.allInfoHeaders) {
                         curBook.setInfo(item);
                       }
@@ -409,6 +432,9 @@ class BookDatabase extends DataTableSource {
                       if (_bookMatchIndex >= 0) {
                         mainBookListCopy[_bookMatchIndex] = curBook;
                       }
+
+                      //Fetech author data again?
+                      getAuthorsFromBook();
 
                       if (!kIsWeb) {
                         mainBookListCopy
