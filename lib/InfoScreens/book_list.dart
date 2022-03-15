@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -242,6 +243,7 @@ class _BookListState extends State<BookList> {
                 )),
 
             //Add Data Button
+            if (isManager)
             MaterialButton(
               onPressed: () => [
                 setState(() {

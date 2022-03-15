@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -311,7 +312,10 @@ class BookDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                _showDialog(context, book),
+                if (isManager)
+                  {
+                    _showDialog(context, book)
+                  }
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -394,23 +398,18 @@ class BookDatabase extends DataTableSource {
     int _statusRating = 0;
     if (curBook.condition == 'Poor') {
       _conditionRating = 1.0;
-    }
-    else if (curBook.condition == 'Fair') {
+    } else if (curBook.condition == 'Fair') {
       _conditionRating = 2.0;
-    }
-    else if (curBook.condition == 'Good') {
+    } else if (curBook.condition == 'Good') {
       _conditionRating = 3.0;
-    }
-    else if (curBook.condition == 'Exellent') {
+    } else if (curBook.condition == 'Exellent') {
       _conditionRating = 4.0;
-    }
-    else if (curBook.condition == 'Superb') {
+    } else if (curBook.condition == 'Superb') {
       _conditionRating = 5.0;
     }
     if (curBook.sold == 'Available') {
       _statusRating = 0;
-    }
-    else if (curBook.sold == 'Sold') {
+    } else if (curBook.sold == 'Sold') {
       _statusRating = 1;
     }
 
@@ -439,8 +438,8 @@ class BookDatabase extends DataTableSource {
                                   child: Text(
                                     'Condition:',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).hintColor),
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor),
                                   ),
                                 ),
                                 RatingBar.builder(
@@ -481,8 +480,8 @@ class BookDatabase extends DataTableSource {
                                   child: Text(
                                     'Status:',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).hintColor),
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor),
                                   ),
                                 ),
                                 ToggleSwitch(
@@ -513,15 +512,15 @@ class BookDatabase extends DataTableSource {
                                 )
                               ]))
                         else
-                        TextField(
-                            controller: TextEditingController()
-                              ..text = curBook.headerToInfo(item),
-                            onChanged: (text) =>
-                                {curBook.infoEdited(item, text)},
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                labelText: item + ':',
-                                hintText: item + ' of the book')),
+                          TextField(
+                              controller: TextEditingController()
+                                ..text = curBook.headerToInfo(item),
+                              onChanged: (text) =>
+                                  {curBook.infoEdited(item, text)},
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                  labelText: item + ':',
+                                  hintText: item + ' of the book')),
                     ],
                   )))
                 ],
@@ -617,14 +616,11 @@ Future<void> bookDataAdder(context) async {
                                     newBook.infoEdited(item, 'Poor');
                                   } else if (rating == 2.0) {
                                     newBook.infoEdited(item, 'Fair');
-                                  }
-                                  else if (rating == 3.0) {
+                                  } else if (rating == 3.0) {
                                     newBook.infoEdited(item, 'Good');
-                                  }
-                                  else if (rating == 4.0) {
+                                  } else if (rating == 4.0) {
                                     newBook.infoEdited(item, 'Excellent');
-                                  }
-                                  else if (rating == 5.0) {
+                                  } else if (rating == 5.0) {
                                     newBook.infoEdited(item, 'Superb');
                                   }
                                 },
@@ -664,8 +660,7 @@ Future<void> bookDataAdder(context) async {
                                 onToggle: (index) {
                                   if (index == 0) {
                                     newBook.infoEdited(item, 'Available');
-                                  }
-                                  else if (index == 1) {
+                                  } else if (index == 1) {
                                     newBook.infoEdited(item, 'Sold');
                                   }
                                 },

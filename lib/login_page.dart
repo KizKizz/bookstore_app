@@ -2,6 +2,8 @@ import 'package:bookstore_project/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+bool isManager = false;
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -13,122 +15,174 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //backgroundColor: Colors.white,
         body: Center(
-      child: SingleChildScrollView(
-        child: Column(
-          //mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-//Logo
-            Container(
-              padding: const EdgeInsets.only(top: 60, bottom: 20),
-              child: const Center(
-                child: Text(
-                  "Bookstore Management App",
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    //color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-//Login ID Input
-            Container(
-              constraints: const BoxConstraints(minWidth: 300, maxWidth: 500),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Login ID',
-                  hintText: 'Enter your ID',
-                ),
-              ),
-            ),
-//Pass Input
-            Container(
-              constraints: const BoxConstraints(minWidth: 300, maxWidth: 500),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                ),
-              ),
-            ),
-//Forgot Pass
-            TextButton(
-                onPressed: () async {
-                  //Forgot pass function
-                  final prefs = await SharedPreferences.getInstance();
-                  // set value
-                  prefs.setBool('isLoggedin', false);
-                },
-                child: const Text(
-                  'Forgot Password',
-                  style: TextStyle(
-                    //color: Colors.blue,
-                    fontSize: 15,
-                  ),
-                )),
-//Login Button
-            const SizedBox(height: 20),
-            SizedBox(
-                width: 250,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    //TO DO
-                    // obtain shared preferences
-                    final prefs = await SharedPreferences.getInstance();
-                    // set value
-                    prefs.setBool('isLoggedin', true);
-                    //Move to next screen
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const MainPage(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Bookstore Management App',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+          ),
+
+          //Login Stack
+          Stack(
+            children: [
+              //Manager login page
+              if (isManager)
+                Column(
+                  children: [
+                    Container(
+                        width: 500,
+                        constraints:
+                            const BoxConstraints(minWidth: 200, maxWidth: 400),
+                        padding: const EdgeInsets.only(
+                            top: 40, bottom: 10, left: 5, right: 5),
+                        child: const Text(
+                          'Manager login:',
+                          style: TextStyle(fontSize: 15)),
+                        ),
+                    Container(
+                      constraints:
+                          const BoxConstraints(minWidth: 200, maxWidth: 400),
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 15, right: 15),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Login ID',
+                          hintText: 'Enter your login ID',
+                        ),
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      //color: Colors.white,
-                      fontSize: 30,
                     ),
-                  ),
-                )),
-//New user
-            const SizedBox(height: 130),
-            TextButton(
-                onPressed: () {
-                  //TO DO
-                  Navigator.pushReplacement(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          const LoginPage(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
+                    Container(
+                      constraints:
+                          const BoxConstraints(minWidth: 200, maxWidth: 400),
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 15, right: 15),
+                      child: const TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                        ),
+                      ),
                     ),
-                  );
-                },
-                child: const Text(
-                  'New user? Click To Register',
-                  style: TextStyle(
-                    //color: Colors.black,
-                    fontSize: 13,
-                  ),
-                ))
-          ],
-        ),
+                    Container(
+                        constraints:
+                            const BoxConstraints(minWidth: 200, maxWidth: 400),
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 15, right: 15),
+                        child: SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setBool('isLoggedin', true);
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation1, animation2) =>
+                                            const MainPage(),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'Login',
+                                style: TextStyle(fontSize: 30),
+                              )),
+                        )),
+                    Container(
+                        constraints:
+                            const BoxConstraints(minWidth: 200, maxWidth: 400),
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 15, right: 15),
+                        child: TextButton(
+                            onPressed: () {
+                              isManager = false;
+                              setState(() {});
+                            },
+                            child: const Text(
+                                'Not a manager? Click here to return.',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ))))
+                  ],
+                ),
+
+              //Login Selection Screen
+              if (!isManager)
+              Column(
+                children: [
+                  Container(
+                    width: 500,
+                        constraints:
+                            const BoxConstraints(minWidth: 200, maxWidth: 400),
+                        padding: const EdgeInsets.only(
+                            top: 40, bottom: 10, left: 5, right: 5),
+                        child: const Text('Login as:', 
+                          style: TextStyle(fontSize: 15),)
+                        ),
+                  Container(
+                      constraints:
+                          const BoxConstraints(minWidth: 200, maxWidth: 400),
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 15, right: 15),
+                      child: SizedBox(
+                        width: 250,
+                        height: 50,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              isManager = true;
+                              setState(() {});
+                            },
+                            child: const Text(
+                              'Manager',
+                              style: TextStyle(fontSize: 30),
+                            )),
+                      )),
+                  Container(
+                      constraints:
+                          const BoxConstraints(minWidth: 200, maxWidth: 400),
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 15, right: 15),
+                      child: SizedBox(
+                        width: 250,
+                        height: 50,
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setBool('isLoggedin', true);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MainPage(),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Employee',
+                              style: TextStyle(fontSize: 30),
+                            )),
+                      )),
+                      //Spacer
+                      const SizedBox(height: 125)
+                ],
+              )
+            ],
+          )
+        ],
       ),
     ));
   }

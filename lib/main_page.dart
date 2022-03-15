@@ -1,17 +1,12 @@
-import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:bookstore_project/InfoScreens/author_list.dart';
 import 'package:bookstore_project/InfoScreens/customer_list.dart';
 import 'package:bookstore_project/InfoScreens/order_list.dart';
 import 'package:bookstore_project/InfoScreens/sale_record_list.dart';
-import 'package:bookstore_project/table_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import 'main.dart';
-import 'main_appbar.dart';
-import 'main_drawer.dart';
 
 //Screens
 import 'login_page.dart';
@@ -82,8 +77,37 @@ class _MainPageState extends State<MainPage> {
                           leading: Column(
                             children: [
                               Container(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: const Icon(Icons.adb_outlined, size: 40),
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                child: Column(
+                                  children: [
+                                    isManager
+                                    ? Column(
+                                        children: [
+                                          const Icon(Icons.account_box, size: 24),
+                                          Text('Manager', 
+                                            style: TextStyle(
+                                              color: (Theme.of(context).toggleableActiveColor)
+                                            ),)
+                                        ],
+                                      )
+                                    : Column(
+                                        children: [
+                                          const Icon(Icons.account_circle,
+                                              size: 24),
+                                          Text('Employee',
+                                          style: TextStyle(
+                                            color: (Theme.of(context).toggleableActiveColor)))
+                                        ],
+                                      )
+                                  ],
+                                )
+                              ),
+                              SizedBox(
+                                height: 2,
+                                width: 60,
+                                child: Container(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  color: Theme.of(context).hintColor)
                               ),
 
 //Logout Button
@@ -104,10 +128,6 @@ class _MainPageState extends State<MainPage> {
                                         padding: EdgeInsets.all(2.0),
                                         child: Text(
                                           "Logout",
-                                          style: TextStyle(
-                                              // color: Colors.yellow,
-                                              // fontWeight: FontWeight.bold,
-                                              ),
                                         ),
                                       )
                                     ]),
@@ -125,7 +145,8 @@ class _MainPageState extends State<MainPage> {
                                     ],
                                     borderWidth: 1.5,
                                     activeFgColor: Colors.white,
-                                    inactiveBgColor: Color.fromARGB(255, 122, 122, 122),
+                                    inactiveBgColor:
+                                        Color.fromARGB(255, 122, 122, 122),
                                     inactiveFgColor: Colors.white,
                                     totalSwitches: 2,
                                     icons: const [
@@ -156,12 +177,10 @@ class _MainPageState extends State<MainPage> {
                                     }),
                                 //const Text('Dark Theme'),
                               ),
-
                             ],
                           ),
-                          
 
-//screens buttons
+//Screens buttons
                           groupAlignment: 1.0,
                           labelType: NavigationRailLabelType.all,
                           destinations: const <NavigationRailDestination>[
@@ -211,31 +230,31 @@ class _MainPageState extends State<MainPage> {
   }
 
 //Widgets on right of bar
-  Widget _editTableButton() {
-    return MaterialButton(
-      onPressed: () => [
-        if (context.read<tableAdderSwitch>().isAddingMode == false)
-          {context.read<tableAdderSwitch>().addingModeOn()}
-        else
-          {context.read<tableAdderSwitch>().addingModeOff()}
-      ],
-      child: Column(mainAxisSize: MainAxisSize.min, children: const <Widget>[
-        Padding(
-          padding: EdgeInsets.all(2.0),
-          child: Icon(
-            Icons.add_circle_outline_outlined,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(2.0),
-          child: Text(
-            "Add",
-            style: TextStyle(),
-          ),
-        )
-      ]),
-    );
-  }
+  // Widget _editTableButton() {
+  //   return MaterialButton(
+  //     onPressed: () => [
+  //       if (context.read<tableAdderSwitch>().isAddingMode == false)
+  //         {context.read<tableAdderSwitch>().addingModeOn()}
+  //       else
+  //         {context.read<tableAdderSwitch>().addingModeOff()}
+  //     ],
+  //     child: Column(mainAxisSize: MainAxisSize.min, children: const <Widget>[
+  //       Padding(
+  //         padding: EdgeInsets.all(2.0),
+  //         child: Icon(
+  //           Icons.add_circle_outline_outlined,
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: EdgeInsets.all(2.0),
+  //         child: Text(
+  //           "Add",
+  //           style: TextStyle(),
+  //         ),
+  //       )
+  //     ]),
+  //   );
+  // }
 
   //Logout alert helpers
   _logoutDialog() async {
@@ -264,6 +283,7 @@ class _MainPageState extends State<MainPage> {
                 TextButton(
                     child: const Text('CONFIRM'),
                     onPressed: (() async {
+                      isManager = false;
                       final prefs = await SharedPreferences.getInstance();
                       // set value
                       prefs.setBool('isLoggedin', false);
