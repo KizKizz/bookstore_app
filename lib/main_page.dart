@@ -83,32 +83,34 @@ class _MainPageState extends State<MainPage> {
                                     isManager
                                     ? Column(
                                         children: [
-                                          const Icon(Icons.account_box, size: 24),
+                                          const Icon(Icons.account_box, size: 30),
                                           Text('Manager', 
-                                            style: TextStyle(
-                                              color: (Theme.of(context).toggleableActiveColor)
-                                            ),)
+                                            // style: TextStyle(
+                                            //   color: (Theme.of(context).toggleableActiveColor))
+                                            )
                                         ],
                                       )
                                     : Column(
                                         children: [
                                           const Icon(Icons.account_circle,
-                                              size: 24),
+                                              size: 30),
                                           Text('Employee',
-                                          style: TextStyle(
-                                            color: (Theme.of(context).toggleableActiveColor)))
+                                          // style: TextStyle(
+                                          //   color: (Theme.of(context).toggleableActiveColor))
+                                          )
                                         ],
                                       )
                                   ],
                                 )
                               ),
-                              SizedBox(
-                                height: 2,
-                                width: 60,
-                                child: Container(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  color: Theme.of(context).hintColor)
-                              ),
+                              //Spacer
+                              // SizedBox(
+                              //   height: 2,
+                              //   width: 60,
+                              //   child: Container(
+                              //     padding: const EdgeInsets.only(bottom: 5),
+                              //     color: Theme.of(context).hintColor)
+                              // ),
 
 //Logout Button
                               MaterialButton(
@@ -119,7 +121,7 @@ class _MainPageState extends State<MainPage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: const <Widget>[
                                       Padding(
-                                        padding: EdgeInsets.all(4.0),
+                                        padding: EdgeInsets.only(top: 4, bottom: 2),
                                         child: Icon(
                                           Icons.logout,
                                         ),
@@ -134,19 +136,19 @@ class _MainPageState extends State<MainPage> {
                               ),
 //DarkMode Switch
                               Container(
-                                padding: EdgeInsets.only(top: 20),
+                                padding: const EdgeInsets.only(top: 20),
                                 child: ToggleSwitch(
                                     minWidth: 35.0,
                                     minHeight: 28.0,
                                     initialLabelIndex: darkModeOn,
                                     cornerRadius: 90.0,
-                                    borderColor: const [
-                                      Color(0xff00aeff),
+                                    borderColor: [
+                                      Theme.of(context).hintColor,
                                     ],
                                     borderWidth: 1.5,
                                     activeFgColor: Colors.white,
                                     inactiveBgColor:
-                                        Color.fromARGB(255, 122, 122, 122),
+                                        const Color.fromARGB(255, 122, 122, 122),
                                     inactiveFgColor: Colors.white,
                                     totalSwitches: 2,
                                     icons: const [

@@ -8,6 +8,8 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 
 import '../main_appbar.dart';
 
+final searchbookController = TextEditingController();
+
 //String _searchDropDownVal = 'Title';
 
 class BookList extends StatefulWidget {
@@ -25,7 +27,7 @@ class _BookListState extends State<BookList> {
   final ScrollController _controller = ScrollController();
   List<Book> searchBookList = [];
   final List<Book> preSearchList = mainBookListCopy;
-  final searchbookController = TextEditingController();
+  
   final List<String> _searchDropDownVal = [
     'Title',
     'ID',
@@ -243,8 +245,8 @@ class _BookListState extends State<BookList> {
                 )),
 
             //Add Data Button
-            if (isManager)
-            MaterialButton(
+            isManager
+            ? MaterialButton(
               onPressed: () => [
                 setState(() {
                   setState(() {
@@ -272,7 +274,8 @@ class _BookListState extends State<BookList> {
                       ),
                     )
                   ]),
-            ),
+            )
+            : const SizedBox(width:80)
           ],
         ),
         body: FutureBuilder(

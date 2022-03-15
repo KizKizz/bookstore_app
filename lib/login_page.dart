@@ -38,9 +38,11 @@ class _LoginPageState extends State<LoginPage> {
                             const BoxConstraints(minWidth: 200, maxWidth: 400),
                         padding: const EdgeInsets.only(
                             top: 40, bottom: 10, left: 5, right: 5),
-                        child: const Text(
+                        child: Text(
                           'Manager login:',
-                          style: TextStyle(fontSize: 15)),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).hintColor)),
                         ),
                     Container(
                       constraints:
@@ -126,8 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                             const BoxConstraints(minWidth: 200, maxWidth: 400),
                         padding: const EdgeInsets.only(
                             top: 40, bottom: 10, left: 5, right: 5),
-                        child: const Text('Login as:', 
-                          style: TextStyle(fontSize: 15),)
+                        child: Text('Login as:', 
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).hintColor),)
                         ),
                   Container(
                       constraints:
