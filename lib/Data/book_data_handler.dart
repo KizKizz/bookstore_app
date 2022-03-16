@@ -550,6 +550,9 @@ class BookDatabase extends DataTableSource {
                               .contains(_curBookAuthor.toLowerCase()));
                       foundAuthor.fullName = curBook.author;
 
+                      notifyListeners();
+                      Navigator.pop(context);
+
                       if (!kIsWeb) {
                         mainBookListCopy
                             .map(
@@ -559,8 +562,8 @@ class BookDatabase extends DataTableSource {
                         bookDataJson
                             .writeAsStringSync(json.encode(mainBookListCopy));
                       }
-                      notifyListeners();
-                      Navigator.pop(context);
+                      // notifyListeners();
+                      // Navigator.pop(context);
                     })
               ],
             ),
