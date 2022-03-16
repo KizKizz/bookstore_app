@@ -185,33 +185,34 @@ class _MainPageState extends State<MainPage> {
 //Screens buttons
                           groupAlignment: 1.0,
                           labelType: NavigationRailLabelType.all,
-                          destinations: const <NavigationRailDestination>[
-                            NavigationRailDestination(
+                          destinations: <NavigationRailDestination>[
+                            const NavigationRailDestination(
                               icon: Icon(Icons.menu_book_outlined),
                               selectedIcon: Icon(Icons.menu_book),
                               label: Text('Books'),
                             ),
-                            NavigationRailDestination(
+                            const NavigationRailDestination(
                               icon: Icon(Icons.library_books_outlined),
                               selectedIcon: Icon(Icons.library_books),
                               label: Text('Authors'),
                             ),
-                            NavigationRailDestination(
+                            const NavigationRailDestination(
                               icon: Icon(Icons.receipt_outlined),
                               selectedIcon: Icon(Icons.receipt),
                               label: Text('Orders'),
                             ),
-                            NavigationRailDestination(
+                            const NavigationRailDestination(
                               icon: Icon(Icons.receipt_long_outlined),
                               selectedIcon: Icon(Icons.receipt_long),
                               label: Text('Sales'),
                             ),
-                            NavigationRailDestination(
+                            const NavigationRailDestination(
                               icon: Icon(Icons.people_alt_outlined),
                               selectedIcon: Icon(Icons.people_alt),
                               label: Text('Customers'),
                             ),
-                            NavigationRailDestination(
+                            if (isManager)
+                            const NavigationRailDestination(
                               icon: Icon(Icons.emoji_people_outlined),
                               selectedIcon: Icon(Icons.emoji_people),
                               label: Text('Employees'),
