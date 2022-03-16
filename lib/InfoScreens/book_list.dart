@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/book_data_handler.dart';
 
+import '../Data/author_data_handler.dart';
 import '../main_appbar.dart';
 
 final searchbookController = TextEditingController();
-
 //String _searchDropDownVal = 'Title';
 
 class BookList extends StatefulWidget {
@@ -27,7 +27,7 @@ class _BookListState extends State<BookList> {
   final ScrollController _controller = ScrollController();
   List<Book> searchBookList = [];
   final List<Book> preSearchList = mainBookListCopy;
-  
+
   final List<String> _searchDropDownVal = [
     'Title',
     'ID',
@@ -161,7 +161,8 @@ class _BookListState extends State<BookList> {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.yellow)),
             hintText: 'Search',
-            hintStyle: TextStyle(fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
+            hintStyle: TextStyle(
+                fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
   }
 
   @override
@@ -246,45 +247,46 @@ class _BookListState extends State<BookList> {
 
             //Add Data Button
             isManager
-            ? MaterialButton(
-              onPressed: () => [
-                setState(() {
-                  setState(() {
-                    bookDataAdder(context).then((_) {
-                      setState(() {});
-                    });
-                  });
-                })
-              ],
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Icon(
-                        Icons.add_circle_outline_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        "Add",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ]),
-            )
-            : const SizedBox(width:80)
+                ? MaterialButton(
+                    onPressed: () => [
+                      setState(() {
+                        setState(() {
+                          bookDataAdder(context).then((_) {
+                            setState(() {});
+                          });
+                        });
+                      })
+                    ],
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: Icon(
+                              Icons.add_circle_outline_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: Text(
+                              "Add",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ]),
+                  )
+                : const SizedBox(width: 80)
           ],
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
                 .loadString('assets/jsondatabase/book_data.json'),
             builder: (context, snapshot) {
-              if (snapshot.hasData && _booksDataSource.books.isEmpty) {
+              if (snapshot.data.toString().isNotEmpty && snapshot.hasData && _booksDataSource.books.isEmpty) {
                 var jsonResponse = jsonDecode(snapshot.data.toString());
                 convertBookData(jsonResponse);
+                //getAuthorsFromBook();
                 //debugPrint('test ${jsonResponse}');
               }
               //Build table

@@ -11,7 +11,7 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 
 final File authorDataJson = File('assets/jsondatabase/author_data.json');
 
-List<Author> _authors = [];
+List<Author> authorDataList = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -77,7 +77,6 @@ class Author {
   String yearBirth;
   String yearDead;
   String description;
-  
 
   bool selected = false;
   List editResults = List.filled(10, null);
@@ -178,7 +177,7 @@ class AuthorDatabase extends DataTableSource {
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
-    authors = _authors;
+    authors = authorDataList;
     if (sortedByName) {
       sort((d) => d.fullName, true);
     }
@@ -267,7 +266,6 @@ class AuthorDatabase extends DataTableSource {
         DataCell(Text(author.yearBirth.toString())),
         DataCell(Text(author.yearDead.toString())),
         DataCell(Text(author.description)),
-        
       ],
     );
   }
@@ -332,17 +330,19 @@ class AuthorDatabase extends DataTableSource {
                       for (var item in curAuthor.allInfoHeaders) {
                         curAuthor.setInfo(item);
                       }
-                      notifyListeners();
-                      Navigator.pop(context);
+
                       //write to json
                       if (!kIsWeb) {
-                        _authors
+                        authorDataList
                             .map(
                               (author) => author.toJson(),
                             )
                             .toList();
-                        authorDataJson.writeAsStringSync(json.encode(_authors));
+                        authorDataJson
+                            .writeAsStringSync(json.encode(authorDataList));
                       }
+                      notifyListeners();
+                      Navigator.pop(context);
                     })
               ],
             ),
@@ -352,73 +352,74 @@ class AuthorDatabase extends DataTableSource {
 }
 
 //Add author
-Future<void> authorDataAdder(context) async {
-  Author newauthor = Author('', '', '', '', '');
-  await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return _SystemPadding(
-          child: AlertDialog(
-            contentPadding: const EdgeInsets.all(16.0),
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Add author'),
-                    for (var item in newauthor.allInfoHeaders)
-                      TextField(
-                          // controller: TextEditingController()
-                          //   ..text = item.toString(),
-                          onChanged: (text) =>
-                              {newauthor.infoEdited(item, text)},
-                          autofocus: true,
-                          decoration: InputDecoration(
-                              labelText: item + ':',
-                              hintText: item + ' of the author')),
-                  ],
-                )))
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                  child: const Text('CANCEL'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              TextButton(
-                  child: const Text('ADD'),
-                  onPressed: () {
-                    for (var item in newauthor.allInfoHeaders) {
-                      newauthor.setInfo(item);
-                    }
-                    _authors.add(newauthor);
+// Future<void> authorDataAdder(context) async {
+//   Author newauthor = Author('', '', '', '', '');
+//   await showDialog<String>(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return _SystemPadding(
+//           child: AlertDialog(
+//             contentPadding: const EdgeInsets.all(16.0),
+//             content: Row(
+//               children: <Widget>[
+//                 Expanded(
+//                     child: SingleChildScrollView(
+//                         child: Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     const Text('Add author'),
+//                     for (var item in newauthor.allInfoHeaders)
+//                       TextField(
+//                           // controller: TextEditingController()
+//                           //   ..text = item.toString(),
+//                           onChanged: (text) =>
+//                               {newauthor.infoEdited(item, text)},
+//                           autofocus: true,
+//                           decoration: InputDecoration(
+//                               labelText: item + ':',
+//                               hintText: item + ' of the author')),
+//                   ],
+//                 )))
+//               ],
+//             ),
+//             actions: <Widget>[
+//               TextButton(
+//                   child: const Text('CANCEL'),
+//                   onPressed: () {
+//                     Navigator.pop(context);
+//                   }),
+//               TextButton(
+//                   child: const Text('ADD'),
+//                   onPressed: () {
+//                     for (var item in newauthor.allInfoHeaders) {
+//                       newauthor.setInfo(item);
+//                     }
+//                     authorDataList.add(newauthor);
 
-                    if (!kIsWeb) {
-                      _authors
-                          .map(
-                            (author) => author.toJson(),
-                          )
-                          .toList();
-                      authorDataJson.writeAsStringSync(json.encode(_authors));
-                      debugPrint(newauthor.allInfo.toString());
-                    }
-                    Navigator.pop(context);
-                  })
-            ],
-          ),
-        );
-      });
-}
+//                     if (!kIsWeb) {
+//                       authorDataList
+//                           .map(
+//                             (author) => author.toJson(),
+//                           )
+//                           .toList();
+//                       authorDataJson
+//                           .writeAsStringSync(json.encode(authorDataList));
+//                       debugPrint(newauthor.allInfo.toString());
+//                     }
+//                     Navigator.pop(context);
+//                   })
+//             ],
+//           ),
+//         );
+//       });
+// }
 
 //JSON Helper
 void convertauthorData(var jsonResponse) {
   for (var b in jsonResponse) {
     Author author = Author(b['fullName'], b['id'], b['yearBirth'],
         b['yearDead'], b['description']);
-    _authors.add(author);
+    authorDataList.add(author);
   }
   //debugPrint('test ${_authors.length}');
   getAuthorsFromBook();
@@ -426,42 +427,44 @@ void convertauthorData(var jsonResponse) {
 
 //Get Authors from Book data
 Future<void> getAuthorsFromBook() async {
-  if (mainBookList.isNotEmpty) {
-    List<String> remainName = [];
-    _authors = [];
-    bool _found = false;
-
-    if (_authors.isEmpty) {
-      Author _newAuthor = Author('', '', '', '', '');
-      _newAuthor.fullName = mainBookListCopy[0].author;
-      _authors.add(_newAuthor);
-    }
+  if (mainBookListCopy.isNotEmpty && authorDataList.isEmpty) {
+    List<String> _authorNames = [];
     for (var book in mainBookListCopy) {
-      for (var author in _authors) {
-        if (author.fullName == book.author) {
-          _found = true;
-          break;
-        }
+      _authorNames.add(book.author);
+    }
+    _authorNames = _authorNames.toSet().toList();
+    //print(_authorNames);
+    for (var name in _authorNames) {
+      authorDataList.add(Author(name, '', '', '', ''));
+    }
+  } else if (mainBookListCopy.isNotEmpty && authorDataList.isNotEmpty) {
+    List<String> _authorNames = [];
+    for (var book in mainBookListCopy) {
+      _authorNames.add(book.author);
+    }
+    _authorNames = _authorNames.toSet().toList();
+    for (var author in authorDataList) {
+      final index =
+          _authorNames.indexWhere((element) => element == author.fullName);
+      if (index >= 0) {
+        _authorNames.removeAt(index);
       }
-      if (!_found) {
-        remainName.add(book.author);
+    }
+    if (_authorNames.isNotEmpty) {
+      for (var name in _authorNames) {
+        authorDataList.add(Author(name, '', '', '', ''));
       }
-      _found = false;
     }
-    for (var name in remainName) {
-      Author _newAuthor = Author('', '', '', '', '');
-      _newAuthor.fullName = name;
-      _authors.add(_newAuthor);
-    }
-    if (!kIsWeb) {
-      _authors
-          .map(
-            (author) => author.toJson(),
-          )
-          .toList();
-      authorDataJson.writeAsStringSync(json.encode(_authors));
-    }
-    //debugPrint('test ${remainName.length}');
+  }
+
+  //Save to database
+  if (!kIsWeb) {
+    authorDataList
+        .map(
+          (author) => author.toJson(),
+        )
+        .toList();
+    authorDataJson.writeAsStringSync(json.encode(authorDataList));
   }
 }
 

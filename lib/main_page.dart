@@ -288,7 +288,8 @@ class _MainPageState extends State<MainPage> {
                       isManager = false;
                       final prefs = await SharedPreferences.getInstance();
                       // set value
-                      prefs.setBool('isLoggedin', false);
+                      prefs.setBool('isLoggedinManager', false);
+                      prefs.setBool('isLoggedinEmployee', false);
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(

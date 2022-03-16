@@ -23,20 +23,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  bool isLoggedin = false, isDarkMode = false;
+  bool isLoggedinManager = false,
+      isLoggedinEmployee = false,
+      isDarkMode = false;
 
   @override
   void initState() {
     super.initState();
     loginCheck();
-    
   }
 
   //Loading counter value on start
   void loginCheck() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isLoggedin = (prefs.getBool('isLoggedin') ?? false);
+      isLoggedinManager = (prefs.getBool('isLoggedinManager') ?? false);
+      isLoggedinEmployee = (prefs.getBool('isLoggedinEmployee') ?? false);
 
       //darkmode check
       isDarkMode = (prefs.getBool('isDarkMode') ?? false);
@@ -48,11 +50,18 @@ class _MyAppState extends State<MyApp> {
 
   Widget loginState() {
     Widget temp = const MainPage();
-    if (!isLoggedin) {
+    if (!isLoggedinManager && !isLoggedinEmployee) {
       temp = const LoginPage();
-    } else {
-      temp = const MainPage();
+    } 
+    else if (isLoggedinManager) {
+        isManager = true;
+        temp = const MainPage();
+      } 
+    else if (isLoggedinEmployee) {
+        isManager = false;
+        temp = const MainPage();
     }
+    
     return temp;
   }
 

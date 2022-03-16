@@ -64,32 +64,32 @@ class _AuthorListState extends State<AuthorList> {
           appBar: AppBar(),
           flexSpace: Text('PlaceHolder'),
           widgets: <Widget>[
-            MaterialButton(
-              onPressed: () => [
-                setState(() {
-                  authorDataAdder(context).then((_) {
-                    setState(() {});
-                  });
-                })
-              ],
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Icon(
-                        Icons.add_circle_outline_outlined,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        "Add",
-                        style: TextStyle(),
-                      ),
-                    )
-                  ]),
-            ),
+            // MaterialButton(
+            //   onPressed: () => [
+            //     setState(() {
+            //       authorDataAdder(context).then((_) {
+            //         setState(() {});
+            //       });
+            //     })
+            //   ],
+            //   child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: const <Widget>[
+            //         Padding(
+            //           padding: EdgeInsets.all(2.0),
+            //           child: Icon(
+            //             Icons.add_circle_outline_outlined,
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.all(2.0),
+            //           child: Text(
+            //             "Add",
+            //             style: TextStyle(),
+            //           ),
+            //         )
+            //       ]),
+            // ),
           ],
         ),
         body: FutureBuilder(

@@ -82,8 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                               onPressed: () async {
                                 final prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.setBool('isLoggedin', true);
+                                await SharedPreferences.getInstance();
+                                prefs.setBool('isLoggedinEmployee', false);
+                                prefs.setBool('isLoggedinManager', true);
                                 Navigator.pushReplacement(
                                   context,
                                   PageRouteBuilder(
@@ -162,8 +163,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                             onPressed: () async {
                               final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setBool('isLoggedin', true);
+                              await SharedPreferences.getInstance();
+                              prefs.setBool('isLoggedinEmployee', true);
+                              prefs.setBool('isLoggedinManager', false);
                               Navigator.pushReplacement(
                                 context,
                                 PageRouteBuilder(

@@ -312,10 +312,7 @@ class BookDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                if (isManager)
-                  {
-                    _showDialog(context, book)
-                  }
+                if (isManager) {_showDialog(context, book)}
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -396,6 +393,7 @@ class BookDatabase extends DataTableSource {
   _showDialog(context, Book curBook) async {
     double _conditionRating = 1.0;
     int _statusRating = 0;
+    String _curBookAuthor = curBook.author;
     if (curBook.condition == 'Poor') {
       _conditionRating = 1.0;
     } else if (curBook.condition == 'Fair') {
@@ -545,8 +543,12 @@ class BookDatabase extends DataTableSource {
                         mainBookListCopy[_bookMatchIndex] = curBook;
                       }
 
-                      //Fetech author data again?
-                      getAuthorsFromBook();
+                      //Fetch author data again?
+                      final foundAuthor = authorDataList.singleWhere(
+                          (element) => element.fullName
+                              .toLowerCase()
+                              .contains(_curBookAuthor.toLowerCase()));
+                      foundAuthor.fullName = curBook.author;
 
                       if (!kIsWeb) {
                         mainBookListCopy
