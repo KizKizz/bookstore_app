@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:bookstore_project/table_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,8 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => tableAdderSwitch()),
   ], child: const MyApp()));
+  //Prevent brower right click on web
+  window.document.onContextMenu.listen((evt) => evt.preventDefault());
 }
 
 class MyApp extends StatefulWidget {
