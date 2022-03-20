@@ -52,10 +52,6 @@ class _BookListState extends State<BookList> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      //Get Employees
-      if (mainEmployeeListCopy.isEmpty) {
-        getEmployeesData();
-      }
       setState(() {});
       _booksDataSource = BookDatabase(context);
       curSearchChoice = _searchDropDownVal[0];
@@ -670,7 +666,6 @@ class MenuItems {
         int _index = checkoutCartList
             .indexWhere((element) => element.id == getBookID.last);
         checkoutDropDownRemoveIndex = _index;
-        print(_index);
 
         checkoutCartList.remove(checkoutCartList
             .singleWhere((element) => element.id == getBookID.last));

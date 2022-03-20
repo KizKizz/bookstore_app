@@ -46,9 +46,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
   double shippingInfoHeight = 280;
   ShippingOptions? _curShippingOption = ShippingOptions.inStore;
 
+  // Future<void> getEmployeesData() async {
+  //   String contents = await employeeDataJson.readAsString();
+  //   var jsonResponse = await jsonDecode(contents);
+  //   convertEmployeeData(jsonResponse);
+  // }
+
   @override
   void initState() {
     super.initState();
+
     //Get prices to a separated list
     if (checkoutPrices.isEmpty) {
       checkoutPrices = List.filled(checkoutCartList.length, '');
@@ -72,16 +79,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
-  
-    
 
-    if (mainEmployeeListCopy.isNotEmpty) {
-      _employeesDropDownVal.clear();
-      for (var employee in mainEmployeeListCopy) {
-        _employeesDropDownVal.add(
-            employee.firstName + ' ' + employee.lastName + ' - ' + employee.id);
-      }
-    }
+    
   }
 
   @override
@@ -90,16 +89,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.dispose();
   }
 
-  Future<List<Customer>> _getAallCustomers(String text) async {
-    List<Customer> customers = mainCustomerListCopy
-        .where((element) =>
-            element.firstName.contains(text) || element.lastName.contains(text))
-        .toList();
-    return customers;
-  }
+  // Future<List<Customer>> _getAllCustomers(String text) async {
+  //   List<Customer> customers = mainCustomerListCopy
+  //       .where((element) =>
+  //           element.firstName.contains(text) || element.lastName.contains(text))
+  //       .toList();
+  //   return customers;
+  // }
 
   @override
   Widget build(BuildContext context) {
+    //Get Employees
+    // if (mainEmployeeListCopy.isEmpty) {
+    //   getEmployeesData();
+    // }
     subTotalTax = (9 / 100) * subTotal;
     totalCost = subTotal + subTotalTax + shippingCost;
 
@@ -140,21 +143,42 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 padding: const EdgeInsets.only(top: 10, left: 10, right: 20),
                 height: 40,
                 width: 250,
-                child: CustomDropdownButton2(
-                  hint: 'Select Employee',
-                  dropdownElevation: 3,
-                  offset: const Offset(-20, 0),
-                  valueAlignment: Alignment.center,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  dropdownWidth: 250,
-                  dropdownItems: _employeesDropDownVal,
-                  value: _curEmployeeChoice,
-                  onChanged: (value) {
-                    setState(() {
-                      _curEmployeeChoice = value;
-                    });
-                  },
-                ),
+                child: FutureBuilder(
+                    future: DefaultAssetBundle.of(context)
+                        .loadString('assets/jsondatabase/employee_data.json'),
+                    builder: (context, snapshot) {
+                      if (snapshot.data.toString().isNotEmpty &&
+                          snapshot.hasData && mainEmployeeListCopy.isEmpty) {
+                        var jsonResponse = jsonDecode(snapshot.data.toString());
+                        convertEmployeeData(jsonResponse);
+                        if (mainEmployeeListCopy.isNotEmpty) {
+                          _employeesDropDownVal.clear();
+                          for (var employee in mainEmployeeListCopy) {
+                            _employeesDropDownVal.add(employee.firstName +
+                                ' ' +
+                                employee.lastName +
+                                ' - ' +
+                                employee.id);
+                          }
+                        }
+                      }
+                      //Build table
+                      return CustomDropdownButton2(
+                        hint: 'Select Employee',
+                        dropdownElevation: 3,
+                        offset: const Offset(-20, 0),
+                        valueAlignment: Alignment.center,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        dropdownWidth: 250,
+                        dropdownItems: _employeesDropDownVal,
+                        value: _curEmployeeChoice,
+                        onChanged: (value) {
+                          setState(() {
+                            _curEmployeeChoice = value;
+                          });
+                        },
+                      );
+                    }),
               )
             ],
           )
@@ -1018,7 +1042,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               for (var book in checkoutCartList) {
                                 book.sold = 'Available';
                               }
-                              
+
                               _curShippingOption = ShippingOptions.inStore;
                               checkoutCartList.clear();
                               checkoutPrices.clear();
@@ -1056,10 +1080,4 @@ class _CheckoutPageState extends State<CheckoutPage> {
       body: Column(children: [Expanded(child: theme)]),
     );
   }
-}
-
-Future<void> getEmployeesData() async {
-  String contents = await employeeDataJson.readAsString();
-  var jsonResponse = jsonDecode(contents);
-  convertEmployeeData(jsonResponse);
 }
