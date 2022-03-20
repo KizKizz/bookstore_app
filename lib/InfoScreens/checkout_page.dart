@@ -73,10 +73,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
   
-    //Get Employees
-     if (mainEmployeeListCopy.isEmpty) {
-      _getEmployeesData();
-    }
+    
 
     if (mainEmployeeListCopy.isNotEmpty) {
       _employeesDropDownVal.clear();
@@ -1061,7 +1058,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 }
 
-Future<void> _getEmployeesData() async {
+Future<void> getEmployeesData() async {
   String contents = await employeeDataJson.readAsString();
   var jsonResponse = jsonDecode(contents);
   convertEmployeeData(jsonResponse);

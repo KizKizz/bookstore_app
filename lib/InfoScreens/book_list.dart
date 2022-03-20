@@ -9,6 +9,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:provider/provider.dart';
 
+import '../Data/employee_data_handler.dart';
 import '../main_appbar.dart';
 import 'customer_list.dart';
 
@@ -51,6 +52,10 @@ class _BookListState extends State<BookList> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
+      //Get Employees
+      if (mainEmployeeListCopy.isEmpty) {
+        getEmployeesData();
+      }
       setState(() {});
       _booksDataSource = BookDatabase(context);
       curSearchChoice = _searchDropDownVal[0];
