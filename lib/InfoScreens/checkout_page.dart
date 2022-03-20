@@ -72,6 +72,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
+  
+    //Get Employees
+     if (mainEmployeeListCopy.isEmpty) {
+      _getEmployeesData();
+    }
+
+    if (mainEmployeeListCopy.isNotEmpty) {
+      _employeesDropDownVal.clear();
+      for (var employee in mainEmployeeListCopy) {
+        _employeesDropDownVal.add(
+            employee.firstName + ' ' + employee.lastName + ' - ' + employee.id);
+      }
+    }
   }
 
   @override
@@ -100,18 +113,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         shippingInfoHeight = 550;
       } else {
         shippingInfoHeight = 300;
-      }
-    }
-
-    if (mainEmployeeListCopy.isEmpty) {
-      _getEmployeesData();
-    }
-
-    if (mainEmployeeListCopy.isNotEmpty) {
-      _employeesDropDownVal.clear();
-      for (var employee in mainEmployeeListCopy) {
-        _employeesDropDownVal.add(
-            employee.firstName + ' ' + employee.lastName + ' - ' + employee.id);
       }
     }
 
