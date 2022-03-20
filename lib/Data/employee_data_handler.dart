@@ -4,18 +4,23 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
-import 'author_data_handler.dart';
 
-final File employeeDataJson = File('assets/jsondatabase/book_data.json');
+final File employeeDataJson = File('assets/jsondatabase/employee_data.json');
 List<Employee> mainEmployeeList = [];
 List<Employee> mainEmployeeListCopy = [];
+final List<String> _jobPosDropDownVal = [
+  'Owner',
+  'Assistant Manager',
+  'Full Time Sales Clerk',
+  'Part Time Sales Clerk',
+];
+late String _curJobPosChoice = _jobPosDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -25,7 +30,7 @@ List<Employee> mainEmployeeListCopy = [];
 // Changes and modifications by Maxim Saplin, 2021 - KizKizz 2022
 
 /// Keeps track of selected rows, feed the data into DataSource
-class RestorableBookSelections extends RestorableProperty<Set<int>> {
+class RestorableEmployeeSelections extends RestorableProperty<Set<int>> {
   Set<int> _employeeSelections = {};
 
   // Returns whether or not a row is selected by index.
@@ -33,7 +38,7 @@ class RestorableBookSelections extends RestorableProperty<Set<int>> {
 
   // Takes a list of [Book]s and saves the row indices of selected rows
   // into a [Set].
-  void setBookSelections(List<Employee> employees) {
+  void setEmployeeSelections(List<Employee> employees) {
     final updatedSet = <int>{};
     for (var i = 0; i < employees.length; i += 1) {
       var employee = employees[i];
@@ -77,6 +82,7 @@ class Employee {
       this.dateOfBirth,
       this.hireDate,
       this.position,
+      this.numBookSold,
       this.description);
 
   String firstName;
@@ -87,6 +93,7 @@ class Employee {
   String dateOfBirth;
   String hireDate;
   String position;
+  String numBookSold;
   String description;
 
   bool selected = false;
@@ -103,7 +110,8 @@ class Employee {
       dateOfBirth,
       hireDate,
       position,
-      description
+      numBookSold,
+      description,
     ];
   }
 
@@ -117,7 +125,8 @@ class Employee {
       'Date Of Birth',
       'Hire Date',
       'Position',
-      'Description'
+      'Total Book Sales',
+      'Description',
     ];
   }
 
@@ -138,8 +147,10 @@ class Employee {
       hireDate = editResults[6];
     else if (info == 'Position' && editResults[7] != null)
       position = editResults[7];
-    else if (info == 'Description' && editResults[8] != null)
-      description = editResults[8];
+    else if (info == 'Total Book Sales' && editResults[8] != null)
+      numBookSold = editResults[8];
+    else if (info == 'Description' && editResults[9] != null)
+      description = editResults[9];
   }
 
   String headerToInfo(var header) {
@@ -159,7 +170,9 @@ class Employee {
       return hireDate;
     else if (header == 'Position')
       return position;
-    else if (header == 'Decsription')
+    else if (header == 'Total Book Sales')
+      return numBookSold;
+    else if (header == 'Description')
       return description;
     else
       return 'error';
@@ -182,8 +195,10 @@ class Employee {
       editResults[6] = editedVal;
     else if (info == 'Position')
       editResults[7] = editedVal;
-    else if (info == 'Description')
+    else if (info == 'Total Book Sales')
       editResults[8] = editedVal;
+    else if (info == 'Description')
+      editResults[9] = editedVal;
     else
       editResults[0] = editedVal;
   }
@@ -197,6 +212,7 @@ class Employee {
     dateOfBirth = json['dateOfBirth'];
     hireDate = json['hireDate'];
     position = json['position'];
+    numBookSold = json['numBookSold'];
     description = json['description'];
   }
 
@@ -210,6 +226,7 @@ class Employee {
     data['dateOfBirth'] = dateOfBirth;
     data['hireDate'] = hireDate;
     data['position'] = position;
+    data['numBookSold'] = numBookSold;
     data['description'] = description;
 
     return data;
@@ -271,7 +288,7 @@ class EmployeeDatabase extends DataTableSource {
   }
 
   int _selectedCount = 0;
-  void updateSelectedBooks(RestorableBookSelections selectedRows) {
+  void updateSelectedEmployees(RestorableEmployeeSelections selectedRows) {
     _selectedCount = 0;
     for (var i = 0; i < employees.length; i += 1) {
       var employee = employees[i];
@@ -293,7 +310,7 @@ class EmployeeDatabase extends DataTableSource {
       decimalDigits: 0,
     );
     assert(index >= 0);
-    if (index >= employees.length) throw 'index > _books.length';
+    if (index >= employees.length) throw 'index > .length';
     final employee = employees[index];
     return DataRow2.byIndex(
       index: index,
@@ -324,11 +341,11 @@ class EmployeeDatabase extends DataTableSource {
               ]
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => //_bookDataAdder()
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 backgroundColor: Theme.of(context).errorColor,
-                content: Text('Double Tapped on ${employee.firstName} ${employee.lastName}'),
+                content: Text(
+                    'Double Tapped on ${employee.firstName} ${employee.lastName}'),
               ))
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
@@ -341,8 +358,8 @@ class EmployeeDatabase extends DataTableSource {
         DataCell(Text(employee.dateOfBirth)),
         DataCell(Text(employee.hireDate)),
         DataCell(Text(employee.position)),
+        DataCell(Text(employee.numBookSold)),
         DataCell(Text(employee.description)),
-
       ],
     );
   }
@@ -364,33 +381,18 @@ class EmployeeDatabase extends DataTableSource {
     notifyListeners();
   }
 
-  //Edit Book Popup
+  //Edit Popup
   _showDialog(context, Employee curEmployee) async {
-    double _conditionRating = 1.0;
-    int _statusRating = 0;
-    //String _curBookAuthor = curBook.author;
-    // if (curBook.condition == 'Poor') {
-    //   _conditionRating = 1.0;
-    // } else if (curBook.condition == 'Fair') {
-    //   _conditionRating = 2.0;
-    // } else if (curBook.condition == 'Good') {
-    //   _conditionRating = 3.0;
-    // } else if (curBook.condition == 'Exellent') {
-    //   _conditionRating = 4.0;
-    // } else if (curBook.condition == 'Superb') {
-    //   _conditionRating = 5.0;
-    // }
-    // if (curBook.sold == 'Available') {
-    //   _statusRating = 0;
-    // } else if (curBook.sold == 'Sold') {
-    //   _statusRating = 1;
-    // }
-
+    for (var pos in _jobPosDropDownVal) {
+      if (pos == curEmployee.position) {
+        _curJobPosChoice = pos;
+      }
+    }
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return _SystemPadding(
-            child: AlertDialog(
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
               contentPadding: const EdgeInsets.all(16.0),
               content: Row(
                 children: <Widget>[
@@ -401,90 +403,60 @@ class EmployeeDatabase extends DataTableSource {
                     children: [
                       const Text('Edit Employee Info'),
                       for (var item in curEmployee.allInfoHeaders)
-                        // if (item == 'Condition')
-                        //   Container(
-                        //       padding: EdgeInsets.only(top: 10),
-                        //       child: Column(children: [
-                        //         Container(
-                        //           alignment: Alignment(-1, 0),
-                        //           padding: EdgeInsets.only(bottom: 5),
-                        //           child: Text(
-                        //             'Condition:',
-                        //             style: TextStyle(
-                        //                 fontSize: 14,
-                        //                 color: Theme.of(context).hintColor),
-                        //           ),
-                        //         ),
-                        //         RatingBar.builder(
-                        //           itemSize: 40,
-                        //           initialRating: _conditionRating,
-                        //           minRating: 1,
-                        //           direction: Axis.horizontal,
-                        //           allowHalfRating: false,
-                        //           itemCount: 5,
-                        //           itemPadding: const EdgeInsets.symmetric(
-                        //               horizontal: 4.0),
-                        //           itemBuilder: (context, _) => const Icon(
-                        //             Icons.star,
-                        //             color: Colors.amber,
-                        //           ),
-                        //           onRatingUpdate: (rating) {
-                        //             if (rating == 1.0) {
-                        //               curBook.infoEdited(item, 'Poor');
-                        //             } else if (rating == 2.0) {
-                        //               curBook.infoEdited(item, 'Fair');
-                        //             } else if (rating == 3.0) {
-                        //               curBook.infoEdited(item, 'Good');
-                        //             } else if (rating == 4.0) {
-                        //               curBook.infoEdited(item, 'Excellent');
-                        //             } else if (rating == 5.0) {
-                        //               curBook.infoEdited(item, 'Superb');
-                        //             }
-                        //           },
-                        //         )
-                        //       ]))
-                        // else if (item == 'Sold')
-                        //   Container(
-                        //       padding: const EdgeInsets.only(top: 5),
-                        //       child: Column(children: [
-                        //         Container(
-                        //           alignment: const Alignment(-1, 0),
-                        //           padding: const EdgeInsets.only(bottom: 5),
-                        //           child: Text(
-                        //             'Status:',
-                        //             style: TextStyle(
-                        //                 fontSize: 14,
-                        //                 color: Theme.of(context).hintColor),
-                        //           ),
-                        //         ),
-                        //         ToggleSwitch(
-                        //           minWidth: 80.0,
-                        //           minHeight: 30,
-                        //           borderColor: [
-                        //             Theme.of(context).primaryColorLight
-                        //           ],
-                        //           borderWidth: 1.5,
-                        //           initialLabelIndex: _statusRating,
-                        //           cornerRadius: 50.0,
-                        //           activeFgColor: Colors.white,
-                        //           inactiveBgColor: Colors.grey,
-                        //           inactiveFgColor: Colors.white,
-                        //           totalSwitches: 2,
-                        //           labels: const ['Available', 'Sold'],
-                        //           activeBgColors: const [
-                        //             [Colors.blue],
-                        //             [Colors.pink]
-                        //           ],
-                        //           onToggle: (index) {
-                        //             if (index == 0) {
-                        //               curBook.infoEdited(item, 'Available');
-                        //             } else if (index == 1) {
-                        //               curBook.infoEdited(item, 'Sold');
-                        //             }
-                        //           },
-                        //         )
-                        //       ]))
-                        // else
+                        if (item == 'Position')
+                          Container(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Column(children: [
+                                Container(
+                                  alignment: const Alignment(-1, 0),
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text(
+                                    'Job Position:',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context).hintColor),
+                                  ),
+                                ),
+                                DropdownButton2(
+                                  buttonHeight: 40,
+                                  buttonWidth: double.infinity,
+                                  offset: const Offset(0, 2),
+                                  // buttonDecoration: BoxDecoration(
+                                  //   borderRadius: BorderRadius.circular(5),
+                                  //   border: Border.all(
+                                  //     color: Colors.white54,
+                                  //   ),),
+                                  value: _curJobPosChoice,
+                                  itemHeight: 35,
+                                  dropdownDecoration: const BoxDecoration(
+                                      //color: Color.fromARGB(255, 54, 54, 54)
+                                      ),
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 2.0),
+                                  items: _jobPosDropDownVal
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: const TextStyle(
+                                            fontSize: 14.5,
+                                            //color: Colors.white
+                                          ),
+                                        ));
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(
+                                      () {
+                                        _curJobPosChoice = newValue!;
+                                        curEmployee.infoEdited(item, newValue);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ]))
+                        else
                           TextField(
                               controller: TextEditingController()
                                 ..text = curEmployee.headerToInfo(item),
@@ -492,8 +464,7 @@ class EmployeeDatabase extends DataTableSource {
                                   {curEmployee.infoEdited(item, text)},
                               autofocus: true,
                               decoration: InputDecoration(
-                                  labelText: item + ':',
-                                  hintText: item + ' of the book')),
+                                  labelText: item + ':', hintText: item)),
                     ],
                   )))
                 ],
@@ -507,51 +478,44 @@ class EmployeeDatabase extends DataTableSource {
                 TextButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      int _EmployeeMatchIndex = mainEmployeeListCopy
-                          .indexWhere((element) => element.id == curEmployee.id);
-                      //debugPrint('curafter: ${_bookMatchIndex}');
+                      int _employeeMatchIndex = mainEmployeeListCopy.indexWhere(
+                          (element) => element.id == curEmployee.id);
+                      //debugPrint('curafter: ${_employeeMatchIndex}');
                       for (var item in curEmployee.allInfoHeaders) {
                         curEmployee.setInfo(item);
                       }
 
-                      if (_EmployeeMatchIndex >= 0) {
-                        mainEmployeeListCopy[_EmployeeMatchIndex] = curEmployee;
+                      if (_employeeMatchIndex >= 0) {
+                        mainEmployeeListCopy[_employeeMatchIndex] = curEmployee;
                       }
-
-                      //Fetch author data again?
-                      // final foundAuthor = authorDataList.singleWhere(
-                      //     (element) => element.fullName
-                      //         .toLowerCase()
-                      //         .contains(_curBookAuthor.toLowerCase()));
-                      // foundAuthor.fullName = curBook.author;
-
-                      // if (!kIsWeb) {
-                      //   mainBookListCopy
-                      //       .map(
-                      //         (book) => book.toJson(),
-                      //       )
-                      //       .toList();
-                      //   bookDataJson
-                      //       .writeAsStringSync(json.encode(mainBookListCopy));
-                      // }
                       notifyListeners();
                       Navigator.pop(context);
+                      if (!kIsWeb) {
+                        mainEmployeeListCopy
+                            .map(
+                              (employee) => employee.toJson(),
+                            )
+                            .toList();
+                        employeeDataJson.writeAsStringSync(
+                            json.encode(mainEmployeeListCopy));
+                      }
                     })
               ],
-            ),
-          );
+            );
+          });
         });
   }
 }
 
-//Add book
+//Add
 Future<void> employeeDataAdder(context) async {
-  Employee newBook = Employee('', '', '', '', '', '', '', '', '');
+  _curJobPosChoice = _jobPosDropDownVal[2];
+  Employee newEmployee = Employee('', '', '', '', '', '', '', '', '', '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return _SystemPadding(
-          child: AlertDialog(
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
             contentPadding: const EdgeInsets.all(16.0),
             content: Row(
               children: <Widget>[
@@ -561,98 +525,69 @@ Future<void> employeeDataAdder(context) async {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text('Add Employee'),
-                    for (var item in newBook.allInfoHeaders)
-                      // if (item == 'Condition')
-                      //   Container(
-                      //       padding: EdgeInsets.only(top: 10),
-                      //       child: Column(children: [
-                      //         Container(
-                      //           alignment: Alignment(-1, 0),
-                      //           padding: EdgeInsets.only(bottom: 5),
-                      //           child: Text(
-                      //             'Condition:',
-                      //             style: TextStyle(
-                      //                 color: Theme.of(context).hintColor),
-                      //           ),
-                      //         ),
-                      //         RatingBar.builder(
-                      //           itemSize: 40,
-                      //           initialRating: 3,
-                      //           minRating: 1,
-                      //           direction: Axis.horizontal,
-                      //           allowHalfRating: false,
-                      //           itemCount: 5,
-                      //           itemPadding:
-                      //               const EdgeInsets.symmetric(horizontal: 4.0),
-                      //           itemBuilder: (context, _) => const Icon(
-                      //             Icons.star,
-                      //             color: Colors.amber,
-                      //           ),
-                      //           onRatingUpdate: (rating) {
-                      //             if (rating == 1.0) {
-                      //               newBook.infoEdited(item, 'Poor');
-                      //             } else if (rating == 2.0) {
-                      //               newBook.infoEdited(item, 'Fair');
-                      //             } else if (rating == 3.0) {
-                      //               newBook.infoEdited(item, 'Good');
-                      //             } else if (rating == 4.0) {
-                      //               newBook.infoEdited(item, 'Excellent');
-                      //             } else if (rating == 5.0) {
-                      //               newBook.infoEdited(item, 'Superb');
-                      //             }
-                      //           },
-                      //         )
-                      //       ]))
-                      // else if (item == 'Sold')
-                      //   Container(
-                      //       padding: const EdgeInsets.only(top: 5),
-                      //       child: Column(children: [
-                      //         Container(
-                      //           alignment: const Alignment(-1, 0),
-                      //           padding: const EdgeInsets.only(bottom: 5),
-                      //           child: Text(
-                      //             'Status:',
-                      //             style: TextStyle(
-                      //                 color: Theme.of(context).hintColor),
-                      //           ),
-                      //         ),
-                      //         ToggleSwitch(
-                      //           minWidth: 80.0,
-                      //           minHeight: 30,
-                      //           borderColor: [
-                      //             Theme.of(context).primaryColorLight
-                      //           ],
-                      //           borderWidth: 1.5,
-                      //           initialLabelIndex: 0,
-                      //           cornerRadius: 50.0,
-                      //           activeFgColor: Colors.white,
-                      //           inactiveBgColor: Colors.grey,
-                      //           inactiveFgColor: Colors.white,
-                      //           totalSwitches: 2,
-                      //           labels: const ['Available', 'Sold'],
-                      //           activeBgColors: const [
-                      //             [Colors.blue],
-                      //             [Colors.pink]
-                      //           ],
-                      //           onToggle: (index) {
-                      //             if (index == 0) {
-                      //               newBook.infoEdited(item, 'Available');
-                      //             } else if (index == 1) {
-                      //               newBook.infoEdited(item, 'Sold');
-                      //             }
-                      //           },
-                      //         )
-                      //       ]))
-                      // else
+                    for (var item in newEmployee.allInfoHeaders)
+                      if (item == 'Position')
+                        Container(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Column(children: [
+                              Container(
+                                alignment: const Alignment(-1, 0),
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'Job Position:',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Theme.of(context).hintColor),
+                                ),
+                              ),
+                              DropdownButton2(
+                                buttonHeight: 40,
+                                buttonWidth: double.infinity,
+                                offset: const Offset(0, 2),
+                                // buttonDecoration: BoxDecoration(
+                                //   borderRadius: BorderRadius.circular(5),
+                                //   border: Border.all(
+                                //     color: Colors.white54,
+                                //   ),),
+                                value: _curJobPosChoice,
+                                itemHeight: 35,
+                                dropdownDecoration: const BoxDecoration(
+                                    //color: Color.fromARGB(255, 54, 54, 54)
+                                    ),
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 2.0),
+                                items: _jobPosDropDownVal
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                          fontSize: 14.5,
+                                          //color: Colors.white
+                                        ),
+                                      ));
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(
+                                    () {
+                                      _curJobPosChoice = newValue!;
+                                      newEmployee.infoEdited(item, newValue);
+                                    },
+                                  );
+                                },
+                              ),
+                            ]))
+                      else
                         TextField(
                             // controller: TextEditingController()
                             //   ..text = item.toString(),
                             onChanged: (text) =>
-                                {newBook.infoEdited(item, text)},
+                                {newEmployee.infoEdited(item, text)},
                             autofocus: true,
                             decoration: InputDecoration(
-                                labelText: item + ':',
-                                hintText: item)),
+                                labelText: item + ':', hintText: item)),
                   ],
                 )))
               ],
@@ -666,32 +601,32 @@ Future<void> employeeDataAdder(context) async {
               TextButton(
                   child: const Text('ADD'),
                   onPressed: () {
-                    for (var item in newBook.allInfoHeaders) {
-                      newBook.setInfo(item);
+                    for (var item in newEmployee.allInfoHeaders) {
+                      newEmployee.setInfo(item);
                     }
-                    mainEmployeeList.add(newBook);
-                    mainEmployeeListCopy.add(newBook);
-
+                    mainEmployeeList.add(newEmployee);
+                    mainEmployeeListCopy.add(newEmployee);
+                    Navigator.pop(context);
                     if (!kIsWeb) {
                       mainEmployeeListCopy
                           .map(
-                            (book) => book.toJson(),
+                            (employee) => employee.toJson(),
                           )
                           .toList();
                       employeeDataJson
                           .writeAsStringSync(json.encode(mainEmployeeListCopy));
                     }
-                    Navigator.pop(context);
+
                     //debugPrint(newBook.allInfo.toString());
                   })
             ],
-          ),
-        );
+          );
+        });
       });
 }
 
 //JSON Helper
-void convertBookData(var jsonResponse) {
+void convertEmployeeData(var jsonResponse) {
   for (var b in jsonResponse) {
     Employee employee = Employee(
         b['firstName'],
@@ -702,6 +637,7 @@ void convertBookData(var jsonResponse) {
         b['dateOfBirth'],
         b['hireDate'],
         b['position'],
+        b['numBookSold'],
         b['description']);
     mainEmployeeList.add(employee);
     mainEmployeeListCopy.add(employee);
@@ -710,10 +646,10 @@ void convertBookData(var jsonResponse) {
 }
 
 //Search Helper
-Future<void> searchHelper(context, List<Employee> foundList) async {
+Future<void> employeeSearchHelper(context, List<Employee> foundList) async {
   if (foundList.isEmpty) {
     mainEmployeeList.removeRange(1, mainEmployeeList.length);
-    mainEmployeeList.first = Employee('', '', '', '', '', '', '', '', '');
+    mainEmployeeList.first = Employee('', '', '', '', '', '', '', '', '', '');
   } else {
     if (mainEmployeeList.length > 1) {
       mainEmployeeList.removeRange(1, mainEmployeeList.length);

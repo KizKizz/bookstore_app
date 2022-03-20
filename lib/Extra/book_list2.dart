@@ -1,5 +1,5 @@
 import 'package:bookstore_project/Data/book_data_list.dart';
-import 'package:bookstore_project/table_provider.dart';
+import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -101,7 +101,7 @@ class _BookListState extends State<BookList> {
   }
 
   DataCell _createTitleCell(var editField) {
-    return DataCell(context.watch<tableAdderSwitch>().isAddingMode
+    return DataCell(context.watch<checkoutNotif>().isCheckout
         ? Stack(
                   children: [Container(
                     padding: const EdgeInsets.only(left: 10, bottom: 5),

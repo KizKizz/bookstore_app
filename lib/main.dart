@@ -1,6 +1,5 @@
-import 'dart:html';
-
-import 'package:bookstore_project/table_provider.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,10 +9,10 @@ import 'main_page.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => tableAdderSwitch()),
+    ChangeNotifierProvider(create: (_) => checkoutNotif()),
   ], child: const MyApp()));
   //Prevent brower right click on web
-  window.document.onContextMenu.listen((evt) => evt.preventDefault());
+  //window.document.onContextMenu.listen((evt) => evt.preventDefault());
 }
 
 class MyApp extends StatefulWidget {
@@ -56,16 +55,14 @@ class _MyAppState extends State<MyApp> {
     Widget temp = const MainPage();
     if (!isLoggedinManager && !isLoggedinEmployee) {
       temp = const LoginPage();
-    } 
-    else if (isLoggedinManager) {
-        isManager = true;
-        temp = const MainPage();
-      } 
-    else if (isLoggedinEmployee) {
-        isManager = false;
-        temp = const MainPage();
+    } else if (isLoggedinManager) {
+      isManager = true;
+      temp = const MainPage();
+    } else if (isLoggedinEmployee) {
+      isManager = false;
+      temp = const MainPage();
     }
-    
+
     return temp;
   }
 

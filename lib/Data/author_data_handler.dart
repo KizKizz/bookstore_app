@@ -11,7 +11,8 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 
 final File authorDataJson = File('assets/jsondatabase/author_data.json');
 
-List<Author> authorDataList = [];
+List<Author> mainAuthorList = [];
+List<Author> mainAuthorListCopy = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -177,7 +178,7 @@ class AuthorDatabase extends DataTableSource {
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
-    authors = authorDataList;
+    authors = mainAuthorList;
     if (sortedByName) {
       sort((d) => d.fullName, true);
     }
@@ -190,6 +191,16 @@ class AuthorDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Author d) getField, bool ascending) {
     authors.sort((a, b) {
+      if (a.yearBirth == '') {
+        a.yearBirth = 0.toString();
+      } else if (a.yearDead == '') {
+        a.yearDead = 0.toString();
+      }
+      if (b.yearBirth == '') {
+        b.yearBirth = 0.toString();
+      } else if (b.yearDead == '') {
+        b.yearDead = 0.toString();
+      }
       final aValue = getField(a);
       final bValue = getField(b);
       return ascending
@@ -333,13 +344,13 @@ class AuthorDatabase extends DataTableSource {
 
                       //write to json
                       if (!kIsWeb) {
-                        authorDataList
+                        mainAuthorList
                             .map(
                               (author) => author.toJson(),
                             )
                             .toList();
                         authorDataJson
-                            .writeAsStringSync(json.encode(authorDataList));
+                            .writeAsStringSync(json.encode(mainAuthorList));
                       }
                       notifyListeners();
                       Navigator.pop(context);
@@ -394,16 +405,16 @@ class AuthorDatabase extends DataTableSource {
 //                     for (var item in newauthor.allInfoHeaders) {
 //                       newauthor.setInfo(item);
 //                     }
-//                     authorDataList.add(newauthor);
+//                     mainAuthorList.add(newauthor);
 
 //                     if (!kIsWeb) {
-//                       authorDataList
+//                       mainAuthorList
 //                           .map(
 //                             (author) => author.toJson(),
 //                           )
 //                           .toList();
 //                       authorDataJson
-//                           .writeAsStringSync(json.encode(authorDataList));
+//                           .writeAsStringSync(json.encode(mainAuthorList));
 //                       debugPrint(newauthor.allInfo.toString());
 //                     }
 //                     Navigator.pop(context);
@@ -419,7 +430,8 @@ void convertauthorData(var jsonResponse) {
   for (var b in jsonResponse) {
     Author author = Author(b['fullName'], b['id'], b['yearBirth'],
         b['yearDead'], b['description']);
-    authorDataList.add(author);
+    mainAuthorList.add(author);
+    mainAuthorListCopy.add(author);
   }
   //debugPrint('test ${_authors.length}');
   getAuthorsFromBook();
@@ -427,7 +439,7 @@ void convertauthorData(var jsonResponse) {
 
 //Get Authors from Book data
 Future<void> getAuthorsFromBook() async {
-  if (mainBookListCopy.isNotEmpty && authorDataList.isEmpty) {
+  if (mainBookListCopy.isNotEmpty && mainAuthorList.isEmpty) {
     List<String> _authorNames = [];
     for (var book in mainBookListCopy) {
       _authorNames.add(book.author);
@@ -435,15 +447,15 @@ Future<void> getAuthorsFromBook() async {
     _authorNames = _authorNames.toSet().toList();
     //print(_authorNames);
     for (var name in _authorNames) {
-      authorDataList.add(Author(name, '', '', '', ''));
+      mainAuthorList.add(Author(name, '', '', '', ''));
     }
-  } else if (mainBookListCopy.isNotEmpty && authorDataList.isNotEmpty) {
+  } else if (mainBookListCopy.isNotEmpty && mainAuthorList.isNotEmpty) {
     List<String> _authorNames = [];
     for (var book in mainBookListCopy) {
       _authorNames.add(book.author);
     }
     _authorNames = _authorNames.toSet().toList();
-    for (var author in authorDataList) {
+    for (var author in mainAuthorList) {
       final index =
           _authorNames.indexWhere((element) => element == author.fullName);
       if (index >= 0) {
@@ -452,20 +464,43 @@ Future<void> getAuthorsFromBook() async {
     }
     if (_authorNames.isNotEmpty) {
       for (var name in _authorNames) {
-        authorDataList.add(Author(name, '', '', '', ''));
+        mainAuthorList.add(Author(name, '', '', '', ''));
+        mainAuthorListCopy.add(Author(name, '', '', '', ''));
       }
     }
   }
 
   //Save to database
   if (!kIsWeb) {
-    authorDataList
+    mainAuthorList
         .map(
           (author) => author.toJson(),
         )
         .toList();
-    authorDataJson.writeAsStringSync(json.encode(authorDataList));
+    authorDataJson.writeAsStringSync(json.encode(mainAuthorList));
   }
+}
+
+//Search Helper
+Future<void> authorSearchHelper(context, List<Author> foundList) async {
+  if (foundList.isEmpty) {
+    mainAuthorList.removeRange(1, mainAuthorList.length);
+    mainAuthorList.first = Author('', '', '', '', '');
+  } else {
+    if (mainAuthorList.length > 1) {
+      mainAuthorList.removeRange(1, mainAuthorList.length);
+    }
+
+    for (var customer in foundList) {
+      if (customer == foundList.first) {
+        mainAuthorList.first = customer;
+      } else if (foundList.length > 1) {
+        mainAuthorList.add(customer);
+      }
+    }
+  }
+  //debugPrint('main ${mainBookList.toString()}');
+  //debugPrint('copy ${mainBookListCopy.toString()}');
 }
 
 // Dialog Helper

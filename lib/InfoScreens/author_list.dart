@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/author_data_handler.dart';
-import 'package:multi_split_view/multi_split_view.dart';
 
 import '../main_appbar.dart';
 
 bool showBooks = false;
+final searchAuthorController = TextEditingController();
 
 class AuthorList extends StatefulWidget {
   const AuthorList({Key? key}) : super(key: key);
@@ -23,6 +23,17 @@ class _AuthorListState extends State<AuthorList> {
   late AuthorDatabase _authorsDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
+  List<Author> searchAuthorList = [];
+  final List<Author> preSearchList = mainAuthorListCopy;
+
+  final List<String> _searchDropDownVal = [
+    'Full Name',
+    'ID',
+    'Year of Birth',
+    'Year of Dead',
+    'Description',
+  ];
+  late String _curSearchChoice;
 
   @override
   void didChangeDependencies() {
@@ -30,6 +41,7 @@ class _AuthorListState extends State<AuthorList> {
     if (!_initialized) {
       setState(() {});
       _authorsDataSource = AuthorDatabase(context);
+      _curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _authorsDataSource.addListener(() {
         setState(() {});
@@ -50,6 +62,71 @@ class _AuthorListState extends State<AuthorList> {
   }
 
   @override
+  Widget _searchField() {
+    return TextField(
+        controller: searchAuthorController,
+        onChanged: (String text) {
+          setState(() {
+            searchAuthorList = [];
+            Iterable<Author> foundAuthor = [];
+            if (_curSearchChoice == 'Full Name') {
+              foundAuthor = mainAuthorListCopy.where((element) =>
+                  element.fullName.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'ID') {
+              foundAuthor = mainAuthorListCopy.where((element) =>
+                  element.id.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Year of Birth') {
+              foundAuthor = mainAuthorListCopy.where((element) =>
+                  element.yearBirth.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Year of Dead') {
+              foundAuthor = mainAuthorListCopy.where((element) =>
+                  element.yearDead.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Description') {
+              foundAuthor = mainAuthorListCopy.where((element) => element
+                  .description
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
+            }
+
+            if (foundAuthor.isNotEmpty) {
+              for (var author in foundAuthor) {
+                Author tempAuthor = Author(author.fullName, author.id,
+                    author.yearBirth, author.yearDead, author.description);
+                searchAuthorList.add(tempAuthor);
+              }
+              setState(() {
+                authorSearchHelper(context, searchAuthorList).then((_) {
+                  setState(() {});
+                  //debugPrint('test ${mainBookList.toString()}');
+                });
+              });
+            } else {
+              setState(() {
+                authorSearchHelper(context, searchAuthorList).then((_) {
+                  setState(() {});
+                });
+              });
+            }
+          });
+        },
+        onSubmitted: (String text) {
+          setState(() {});
+        },
+        autofocus: false,
+        cursorColor: Colors.white,
+        style: const TextStyle(fontSize: 20, color: Colors.white),
+        textInputAction: TextInputAction.search,
+        decoration: const InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.yellow)),
+            hintText: 'Search',
+            hintStyle: TextStyle(
+                fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
+  }
+
+  @override
   void dispose() {
     _authorsDataSource.dispose();
     super.dispose();
@@ -62,8 +139,79 @@ class _AuthorListState extends State<AuthorList> {
         appBar: MainAppbar(
           title: const Text('Author Data'),
           appBar: AppBar(),
-          flexSpace: Text('PlaceHolder'),
+          flexSpace: Container(
+            padding: const EdgeInsets.only(top: 5, bottom: 12),
+            margin: const EdgeInsets.only(left: 250, right: 368),
+            // decoration: BoxDecoration(
+            //   border: Border.all(color: Colors.white10)),
+            child: _searchField(),
+          ),
           widgets: <Widget>[
+            // Clear
+            if (searchAuthorController.text.isNotEmpty)
+              Container(
+                width: 50,
+                height: 50,
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(right: 0, top: 5, bottom: 4),
+                child: MaterialButton(
+                  onPressed: () => [
+                    setState(() {
+                      setState(() {
+                        searchAuthorController.clear();
+                        searchAuthorList = preSearchList;
+                        authorSearchHelper(context, searchAuthorList).then((_) {
+                          setState(() {});
+                        });
+                      });
+                    })
+                  ],
+                  child: const Icon(
+                    Icons.clear_sharp,
+                    color: Color.fromARGB(255, 240, 240, 240),
+                  ),
+                ),
+              ),
+
+            //Dropdown search
+            Container(
+                padding: const EdgeInsets.only(
+                    left: 2, right: 2, top: 10, bottom: 0),
+                margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
+                child: DropdownButton2(
+                  buttonHeight: 25,
+                  buttonWidth: 123,
+                  offset: const Offset(0, 2),
+                  // buttonDecoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(5),
+                  //   border: Border.all(
+                  //     color: Colors.white54,
+                  //   ),),
+                  value: _curSearchChoice,
+                  itemHeight: 35,
+                  dropdownDecoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 54, 54, 54)),
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  items: _searchDropDownVal
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                        value: value,
+                        child: SizedBox(
+                            width: 98,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                  fontSize: 14.5, color: Colors.white),
+                            )));
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _curSearchChoice = newValue!;
+                    });
+                  },
+                )),
+            const SizedBox(width: 80)
             // MaterialButton(
             //   onPressed: () => [
             //     setState(() {
@@ -180,7 +328,6 @@ class _AuthorListState extends State<AuthorList> {
                                     _sort<String>((d) => d.description,
                                         columnIndex, ascending),
                               ),
-                              
                             ],
                             rows: List<DataRow>.generate(
                                 _authorsDataSource.rowCount,

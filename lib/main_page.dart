@@ -1,8 +1,11 @@
 import 'package:bookstore_project/InfoScreens/author_list.dart';
+import 'package:bookstore_project/InfoScreens/checkout_page.dart';
 import 'package:bookstore_project/InfoScreens/customer_list.dart';
 import 'package:bookstore_project/InfoScreens/order_list.dart';
 import 'package:bookstore_project/InfoScreens/sale_record_list.dart';
+import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -23,14 +26,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   String appBarName = "Book Records";
-  List<Widget> screen = [
-    const BookList(),
-    const AuthorList(),
-    const OrderList(),
-    const SaleRecordList(),
-    CustomerList(),
-    const EmployeeList()
-  ];
+  
   List<String> screenTitle = [
     "Book Records",
     "Author Records",
@@ -43,6 +39,21 @@ class _MainPageState extends State<MainPage> {
   //AppBar + Navigation Rail
   @override
   Widget build(BuildContext context) {
+    //NavigationRail Indexes
+    List<Widget> screen = [
+      if (context.watch<checkoutNotif>().isCheckout) 
+      const CheckoutPage(),
+      const BookList(),
+      const AuthorList(),
+      const OrderList(),
+      const SaleRecordList(),
+      const CustomerList(),
+      const EmployeeList()
+    ];
+    // if (context.watch<checkoutNotif>().isCheckout) {
+    //   _selectedIndex = 0;
+    // }
+
     int darkModeOn = 0;
     if (MyApp.themeNotifier.value == ThemeMode.light) {
       darkModeOn = 0;
@@ -70,14 +81,14 @@ class _MainPageState extends State<MainPage> {
                           onDestinationSelected: (int index) {
                             setState(() {
                               _selectedIndex = index;
-                              appBarName = screenTitle[_selectedIndex];
+                              //appBarName = screenTitle[_selectedIndex];
                             });
                           },
 //Other buttons
                           leading: Column(
                             children: [
                               Container(
-                                  padding: const EdgeInsets.only(bottom: 5),
+                                  padding: const EdgeInsets.only(bottom: 20),
                                 child: Column(
                                   children: [
                                     isManager
@@ -186,6 +197,12 @@ class _MainPageState extends State<MainPage> {
                           groupAlignment: 1.0,
                           labelType: NavigationRailLabelType.all,
                           destinations: <NavigationRailDestination>[
+                            if (context.watch<checkoutNotif>().isCheckout)
+                            const NavigationRailDestination(
+                              icon: Icon(Icons.shopping_basket_outlined),
+                              selectedIcon: Icon(Icons.shopping_basket),
+                              label: Text('Checkout'),
+                            ),
                             const NavigationRailDestination(
                               icon: Icon(Icons.menu_book_outlined),
                               selectedIcon: Icon(Icons.menu_book),

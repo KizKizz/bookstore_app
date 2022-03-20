@@ -11,11 +11,13 @@ import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
+import '../InfoScreens/book_list.dart';
 import 'author_data_handler.dart';
 
 final File bookDataJson = File('assets/jsondatabase/book_data.json');
 List<Book> mainBookList = [];
 List<Book> mainBookListCopy = [];
+List<Book> checkoutCartList = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -348,26 +350,16 @@ class BookDatabase extends DataTableSource {
           DataCell(
             Container(
                 padding: const EdgeInsets.only(right: 15),
-                child: const Icon(Icons.shopping_cart_checkout)),
+                child: const Icon(Icons.add_shopping_cart)),
             onTap: () {
+              book.sold = 'Sold';
+              checkoutCartList.add(book);
+              MenuItems.getItems(checkoutCartList);
               notifyListeners();
             },
           )
         else
           const DataCell(SizedBox())
-
-        // else
-        //   DataCell(
-        //     Container(
-        //         padding: const EdgeInsets.only(right: 15),
-        //         child: const Icon(
-        //           Icons.shopping_cart_checkout,
-        //           color: Colors.grey,
-        //         )),
-        //     onTap: () {
-        //       notifyListeners();
-        //     },
-        //   ),
       ],
     );
   }
@@ -544,7 +536,7 @@ class BookDatabase extends DataTableSource {
                       }
 
                       //Fetch author data again?
-                      final foundAuthor = authorDataList.singleWhere(
+                      final foundAuthor = mainAuthorList.singleWhere(
                           (element) => element.fullName
                               .toLowerCase()
                               .contains(_curBookAuthor.toLowerCase()));

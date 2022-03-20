@@ -2,7 +2,6 @@
 
 // import '../main_appbar.dart';
 
-
 // class EmployeeList extends StatefulWidget {
 //   const EmployeeList({ Key? key }) : super(key: key);
 
@@ -40,7 +39,7 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 import '../Data/employee_data_handler.dart';
 import '../main_appbar.dart';
 
-final searchbookController = TextEditingController();
+final searchEmployeeController = TextEditingController();
 //String _searchDropDownVal = 'Title';
 
 class EmployeeList extends StatefulWidget {
@@ -56,7 +55,7 @@ class _EmployeeListState extends State<EmployeeList> {
   late EmployeeDatabase _employeesDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
-  List<Book> searchBookList = [];
+  List<Employee> searchEmployeeList = [];
   final List<Employee> preSearchList = mainEmployeeListCopy;
 
   final List<String> _searchDropDownVal = [
@@ -68,6 +67,7 @@ class _EmployeeListState extends State<EmployeeList> {
     'Date of Birth',
     'Hire Date',
     'Position',
+    'Books Sold',
     'Description',
   ];
   late String curSearchChoice;
@@ -107,10 +107,10 @@ class _EmployeeListState extends State<EmployeeList> {
   @override
   Widget _searchField() {
     return TextField(
-        controller: searchbookController,
+        controller: searchEmployeeController,
         onChanged: (String text) {
           setState(() {
-            searchBookList = [];
+            searchEmployeeList = [];
             Iterable<Employee> foundEmployee = [];
             if (curSearchChoice == 'First Name') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
@@ -130,44 +130,52 @@ class _EmployeeListState extends State<EmployeeList> {
                   .toLowerCase()
                   .contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Date of Birth') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.dateOfBirth.toLowerCase().contains(text.toLowerCase()));
+              foundEmployee = mainEmployeeListCopy.where((element) => element
+                  .dateOfBirth
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Hire Date') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
                   element.hireDate.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Position') {
+              foundEmployee = mainEmployeeListCopy.where((element) =>
+                  element.position.toLowerCase().contains(text.toLowerCase()));
+            } else if (curSearchChoice == 'Books Sold') {
               foundEmployee = mainEmployeeListCopy.where((element) => element
-                  .position
+                  .numBookSold
                   .toLowerCase()
                   .contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Description') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.description.toLowerCase().contains(text.toLowerCase()));
+              foundEmployee = mainEmployeeListCopy.where((element) => element
+                  .description
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
             }
 
             if (foundEmployee.isNotEmpty) {
               for (var employee in foundEmployee) {
                 Employee tempEmployee = Employee(
-                  employee.firstName,
-                  employee.lastName,
-                  employee.id,
-                  employee.address,
-                  employee.dateOfBirth,
-                  employee.hireDate,
-                  employee.position,
-                  employee.description
-                    );
-                searchBookList.add(tempEmployee);
+                    employee.firstName,
+                    employee.lastName,
+                    employee.id,
+                    employee.address,
+                    employee.phoneNumber,
+                    employee.dateOfBirth,
+                    employee.hireDate,
+                    employee.position,
+                    employee.numBookSold,
+                    employee.description);
+                searchEmployeeList.add(tempEmployee);
               }
               setState(() {
-                searchHelper(context, searchBookList).then((_) {
+                employeeSearchHelper(context, searchEmployeeList).then((_) {
                   setState(() {});
                   //debugPrint('test ${mainBookList.toString()}');
                 });
               });
             } else {
               setState(() {
-                searchHelper(context, searchBookList).then((_) {
+                employeeSearchHelper(context, searchEmployeeList).then((_) {
                   setState(() {});
                 });
               });
@@ -196,18 +204,18 @@ class _EmployeeListState extends State<EmployeeList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Book Data'),
+          title: const Text('Employee Data'),
           appBar: AppBar(),
           flexSpace: Container(
             padding: const EdgeInsets.only(top: 5, bottom: 12),
-            margin: const EdgeInsets.only(left: 300, right: 350),
+            margin: const EdgeInsets.only(left: 250, right: 368),
             // decoration: BoxDecoration(
             //   border: Border.all(color: Colors.white10)),
             child: _searchField(),
           ),
           widgets: <Widget>[
             // Clear
-            if (searchbookController.text.isNotEmpty)
+            if (searchEmployeeController.text.isNotEmpty)
               Container(
                 width: 50,
                 height: 50,
@@ -218,9 +226,10 @@ class _EmployeeListState extends State<EmployeeList> {
                   onPressed: () => [
                     setState(() {
                       setState(() {
-                        searchbookController.clear();
-                        searchBookList = preSearchList;
-                        searchHelper(context, searchBookList).then((_) {
+                        searchEmployeeController.clear();
+                        searchEmployeeList = preSearchList;
+                        employeeSearchHelper(context, searchEmployeeList)
+                            .then((_) {
                           setState(() {});
                         });
                       });
@@ -240,7 +249,7 @@ class _EmployeeListState extends State<EmployeeList> {
                 margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
                 child: DropdownButton2(
                   buttonHeight: 25,
-                  buttonWidth: 105,
+                  buttonWidth: 123,
                   offset: const Offset(0, 2),
                   // buttonDecoration: BoxDecoration(
                   //   borderRadius: BorderRadius.circular(5),
@@ -257,7 +266,7 @@ class _EmployeeListState extends State<EmployeeList> {
                     return DropdownMenuItem<String>(
                         value: value,
                         child: SizedBox(
-                            width: 70,
+                            width: 98,
                             child: Text(
                               value,
                               style: const TextStyle(
@@ -277,7 +286,7 @@ class _EmployeeListState extends State<EmployeeList> {
                     onPressed: () => [
                       setState(() {
                         setState(() {
-                          bookDataAdder(context).then((_) {
+                          employeeDataAdder(context).then((_) {
                             setState(() {});
                           });
                         });
@@ -307,11 +316,13 @@ class _EmployeeListState extends State<EmployeeList> {
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
-                .loadString('assets/jsondatabase/book_data.json'),
+                .loadString('assets/jsondatabase/employee_data.json'),
             builder: (context, snapshot) {
-              if (snapshot.data.toString().isNotEmpty && snapshot.hasData && _employeesDataSource.books.isEmpty) {
+              if (snapshot.data.toString().isNotEmpty &&
+                  snapshot.hasData &&
+                  _employeesDataSource.employees.isEmpty) {
                 var jsonResponse = jsonDecode(snapshot.data.toString());
-                convertBookData(jsonResponse);
+                convertEmployeeData(jsonResponse);
                 //getAuthorsFromBook();
                 //debugPrint('test ${jsonResponse}');
               }
@@ -336,12 +347,21 @@ class _EmployeeListState extends State<EmployeeList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'Title',
+                              'First\nName',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.L,
+                            size: ColumnSize.S,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.title, columnIndex, ascending),
+                                (d) => d.firstName, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Last\nName',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.lastName, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -349,107 +369,85 @@ class _EmployeeListState extends State<EmployeeList> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.id, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Author',
+                              'Address',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.address, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Phone Number',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.M,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.author, columnIndex, ascending),
+                                (d) => d.phoneNumber, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Publisher',
+                              'Date of \nBirth',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            numeric: true,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.publisher, columnIndex, ascending),
+                                (d) => d.dateOfBirth, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Publish\nDate',
+                              'Hire Date',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.publishDate),
-                                columnIndex,
-                                ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Edition',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.edition),
-                                columnIndex,
-                                ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Cost',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.cost),
-                                columnIndex,
-                                ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Retail\nPrice',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: true,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => double.parse(d.retailPrice),
-                                columnIndex,
-                                ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Condition',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: true,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.condition, columnIndex, ascending),
+                                (d) => d.hireDate, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Status',
+                              'Job Position',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.S,
-                            numeric: true,
+                            size: ColumnSize.M,
+                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.sold, columnIndex, ascending),
+                                (d) => d.position, columnIndex, ascending),
                           ),
-                          const DataColumn2(
-                            label: Text(
-                              '',
+                          DataColumn2(
+                            label: const Text(
+                              'Books\nSold',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            numeric: true,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.numBookSold),
+                                columnIndex,
+                                ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Description',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.description, columnIndex, ascending),
                           ),
                         ],
-                        rows: List<DataRow>.generate(_employeesDataSource.rowCount,
+                        rows: List<DataRow>.generate(
+                            _employeesDataSource.rowCount,
                             (index) => _employeesDataSource.getRow(index))),
                     _ScrollUpButton(_controller)
                   ]));
