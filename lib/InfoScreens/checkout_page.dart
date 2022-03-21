@@ -78,6 +78,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     //Text controllers
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
+    existingCustomerInfoControllers =
+        List.generate(11, (i) => TextEditingController());
   }
 
   @override
@@ -89,9 +91,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String _getFullAddress(Customer curCustomer) {
     String temp = '';
     if (curCustomer.suiteNum.isEmpty) {
-      temp = '${curCustomer.streetAddress} ${curCustomer.city} ${curCustomer.state} ${curCustomer.zipCode}';
-    }
-    else {
+      temp =
+          '${curCustomer.streetAddress} ${curCustomer.city} ${curCustomer.state} ${curCustomer.zipCode}';
+    } else {
       temp =
           '${curCustomer.streetAddress} ${curCustomer.suiteNum} ${curCustomer.city} ${curCustomer.state} ${curCustomer.zipCode}';
     }
@@ -383,12 +385,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 20,
                                                             right: 10),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                0],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'First Name*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText:
+                                                              'First Name*',
+                                                        )),
                                                   )),
                                                   Expanded(
                                                       child: Container(
@@ -397,12 +403,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 10,
                                                             right: 15),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                1],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'Last Name*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText:
+                                                              'Last Name*',
+                                                        )),
                                                   )),
                                                 ],
                                               ),
@@ -418,12 +428,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           .width /
                                                       2),
                                                   child: TextFormField(
+                                                      controller:
+                                                          existingCustomerInfoControllers[
+                                                              3],
                                                       decoration:
                                                           const InputDecoration(
-                                                    hintText: '',
-                                                    labelText:
-                                                        'Street Address*',
-                                                  )),
+                                                        hintText: '',
+                                                        labelText:
+                                                            'Street Address*',
+                                                      )),
                                                 )),
                                               ]),
                                               //Address 2
@@ -439,13 +452,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 20,
                                                             right: 10),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                4],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText:
-                                                          'Suite / Apt #',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText:
+                                                              'Suite / Apt #',
+                                                        )),
                                                   )),
                                                   Expanded(
                                                       child: Container(
@@ -454,12 +470,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 10,
                                                             right: 15),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                5],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'City*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText: 'City*',
+                                                        )),
                                                   )),
                                                 ],
                                               ),
@@ -475,12 +494,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 20,
                                                             right: 10),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                6],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'State*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText: 'State*',
+                                                        )),
                                                   )),
                                                   Expanded(
                                                       child: Container(
@@ -489,12 +511,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 10,
                                                             right: 15),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                7],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'Postal Code*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText:
+                                                              'Postal Code*',
+                                                        )),
                                                   )),
                                                 ],
                                               ),
@@ -510,13 +536,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 20,
                                                             right: 10),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                8],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText:
-                                                          'Phone Number*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText:
+                                                              'Phone Number*',
+                                                        )),
                                                   )),
                                                   Expanded(
                                                       child: Container(
@@ -525,12 +554,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             left: 10,
                                                             right: 15),
                                                     child: TextFormField(
+                                                        controller:
+                                                            existingCustomerInfoControllers[
+                                                                2],
                                                         decoration:
                                                             const InputDecoration(
-                                                      //icon: Icon(Icons.person),
-                                                      hintText: '',
-                                                      labelText: 'ID*',
-                                                    )),
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '',
+                                                          labelText: 'ID*',
+                                                        )),
                                                   )),
                                                 ],
                                               ),
@@ -545,11 +577,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           .width /
                                                       2),
                                                   child: TextFormField(
+                                                      controller:
+                                                          existingCustomerInfoControllers[
+                                                              9],
                                                       decoration:
                                                           const InputDecoration(
-                                                    hintText: '',
-                                                    labelText: 'Email',
-                                                  )),
+                                                        hintText: '',
+                                                        labelText: 'Email',
+                                                      )),
                                                 )),
                                               ]),
                                             ],
@@ -599,7 +634,59 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             dense: true,
                                                             //contentPadding: EdgeInsets.symmetric(vertical: 0),
                                                             onTap: () {
-                                                              print('object');
+                                                              existingCustomerInfoControllers[
+                                                                          0]
+                                                                      .text =
+                                                                  customer
+                                                                      .firstName;
+                                                              existingCustomerInfoControllers[
+                                                                          1]
+                                                                      .text =
+                                                                  customer
+                                                                      .lastName;
+                                                              existingCustomerInfoControllers[
+                                                                          2]
+                                                                      .text =
+                                                                  customer.id;
+                                                              existingCustomerInfoControllers[
+                                                                          3]
+                                                                      .text =
+                                                                  customer
+                                                                      .streetAddress;
+                                                              existingCustomerInfoControllers[
+                                                                          4]
+                                                                      .text =
+                                                                  customer
+                                                                      .suiteNum;
+                                                              existingCustomerInfoControllers[
+                                                                          5]
+                                                                      .text =
+                                                                  customer.city;
+                                                              existingCustomerInfoControllers[
+                                                                          6]
+                                                                      .text =
+                                                                  customer
+                                                                      .state;
+                                                              existingCustomerInfoControllers[
+                                                                          7]
+                                                                      .text =
+                                                                  customer
+                                                                      .zipCode;
+                                                              existingCustomerInfoControllers[
+                                                                          8]
+                                                                      .text =
+                                                                  customer
+                                                                      .phoneNumber;
+                                                              existingCustomerInfoControllers[
+                                                                          9]
+                                                                      .text =
+                                                                  customer
+                                                                      .email;
+                                                              _searchCustomerController
+                                                                  .clear();
+                                                                  setState(() {
+                                                                    
+                                                                  });
                                                             },
                                                             leading: const Icon(
                                                                 Icons.person),

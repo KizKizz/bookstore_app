@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.only(bottom: 15)),
+                                  padding: const EdgeInsets.only(bottom: 11)),
                               onPressed: () async {
                                 final prefs =
                                 await SharedPreferences.getInstance();
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.only(bottom: 13)),
+                                  padding: const EdgeInsets.only(bottom: 11)),
                             onPressed: () {
                               isManager = true;
                               setState(() {});
@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                       primary: Color.fromRGBO(72, 125, 238, 1),
-                      padding: const EdgeInsets.only(bottom: 13)),
+                      padding: const EdgeInsets.only(bottom: 11)),
                             onPressed: () async {
                               final prefs =
                               await SharedPreferences.getInstance();
