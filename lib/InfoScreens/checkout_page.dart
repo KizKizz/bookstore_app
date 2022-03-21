@@ -1175,27 +1175,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            Container(
-              //height: 30,
-              //color: Colors.amber,
-              padding: const EdgeInsets.only(right: 10, top: 26),
-              alignment: Alignment.bottomRight,
-              child: TextButton(
-                onPressed: () {
-                  subTotal = 0.00;
-                  for (var book in checkoutCartList) {
-                    book.sold = 'Available';
-                  }
-                  checkoutCartList.clear();
-                  checkoutPrices.clear();
-                  priceControllers.clear();
-                  MenuItems.booksMenu.clear();
+            // Container(
+            //   //height: 30,
+            //   //color: Colors.amber,
+            //   padding: const EdgeInsets.only(right: 10, top: 26),
+            //   alignment: Alignment.bottomRight,
+            //   child: TextButton(
+            //     onPressed: () {
+            //       subTotal = 0.00;
+            //       for (var book in checkoutCartList) {
+            //         book.sold = 'Available';
+            //       }
+            //       checkoutCartList.clear();
+            //       checkoutPrices.clear();
+            //       priceControllers.clear();
+            //       MenuItems.booksMenu.clear();
 
-                  setState(() {});
-                },
-                child: const Text('Remove All'),
-              ),
-            ),
+            //       setState(() {});
+            //     },
+            //     child: const Text('Remove All'),
+            //   ),
+            // ),
           ],
         ),
         Expanded(
@@ -1464,7 +1464,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: Theme.of(context).hintColor,
-                              padding: const EdgeInsets.only(bottom: 10)),
+                              padding: const EdgeInsets.only(bottom: 9)),
                           child: const Text(
                             'Cancel',
                             textAlign: TextAlign.justify,
@@ -1495,7 +1495,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: Colors.red,
-                              padding: const EdgeInsets.only(bottom: 10)),
+                              padding: const EdgeInsets.only(bottom: 9)),
                           child: const Text(
                             'Submit Order',
                             textAlign: TextAlign.justify,
