@@ -361,12 +361,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 if (_customerInfoIndex == 0)
                                   Expanded(
                                     child: Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20, right: 15),
-                                        height: 40,
-                                        child: _searchField(),
-                                      ),
+                                      FutureBuilder(
+                                          future: DefaultAssetBundle.of(context)
+                                              .loadString(
+                                                  'assets/jsondatabase/customer_data.json'),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.data
+                                                    .toString()
+                                                    .isNotEmpty &&
+                                                snapshot.hasData &&
+                                                mainCustomerListCopy.isEmpty) {
+                                              var jsonResponse = jsonDecode(
+                                                  snapshot.data.toString());
+                                              convertCustomerData(jsonResponse);
+                                            }
+                                            //Build table
+                                            return Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5, left: 20, right: 15),
+                                              height: 40,
+                                              child: _searchField(),
+                                            );
+                                          }),
                                       Expanded(
                                           child: Stack(
                                         children: [
@@ -684,9 +700,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       .email;
                                                               _searchCustomerController
                                                                   .clear();
-                                                                  setState(() {
-                                                                    
-                                                                  });
+                                                              setState(() {});
                                                             },
                                                             leading: const Icon(
                                                                 Icons.person),
