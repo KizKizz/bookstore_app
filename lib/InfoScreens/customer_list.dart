@@ -88,7 +88,23 @@ class _CustomerListState extends State<CustomerList> {
                   element.id.toLowerCase().contains(text.toLowerCase()));
             } else if (_curSearchChoice == 'Address') {
               foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.address.toLowerCase().contains(text.toLowerCase()));
+                  element.streetAddress.toLowerCase().contains(text.toLowerCase()));
+              foundCustomer = mainCustomerListCopy.where((element) => element
+                  .suiteNum
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
+              foundCustomer = mainCustomerListCopy.where((element) => element
+                  .city
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
+              foundCustomer = mainCustomerListCopy.where((element) => element
+                  .state
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));
+              foundCustomer = mainCustomerListCopy.where((element) => element
+                  .zipCode
+                  .toLowerCase()
+                  .contains(text.toLowerCase()));  
             } else if (_curSearchChoice == 'Phone Number') {
               foundCustomer = mainCustomerListCopy.where((element) => element
                   .phoneNumber
@@ -107,8 +123,13 @@ class _CustomerListState extends State<CustomerList> {
                     customer.firstName,
                     customer.lastName,
                     customer.id,
-                    customer.address,
+                    customer.streetAddress,
+                    customer.suiteNum,
+                    customer.city,
+                    customer.state,
+                    customer.zipCode,
                     customer.phoneNumber,
+                    customer.email,
                     customer.totalPurchases);
                 searchCustomerList.add(tempCustomer);
               }
@@ -320,13 +341,53 @@ class _CustomerListState extends State<CustomerList> {
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Address',
+                              'Street Address',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.L,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.address, columnIndex, ascending),
+                                (d) => d.streetAddress, columnIndex, ascending),
+                          ),
+                         DataColumn2(
+                            label: const Text(
+                              'Suite\nApt #',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.suiteNum, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'City',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.city, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'State',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.state, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Postal\nCode',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.streetAddress, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -340,7 +401,17 @@ class _CustomerListState extends State<CustomerList> {
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Total Purchases',
+                              'Email',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.email, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Total\nPurchases',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,

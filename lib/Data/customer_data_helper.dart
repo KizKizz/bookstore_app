@@ -72,27 +72,37 @@ class RestorableCustomerSelections extends RestorableProperty<Set<int>> {
 
 /// Domain model entity
 class Customer {
-  Customer(this.firstName, this.lastName, this.id, this.address,
-      this.phoneNumber, this.totalPurchases);
+  Customer(this.firstName, this.lastName, this.id, this.streetAddress, this.suiteNum,
+     this.city, this.state, this.zipCode, this.phoneNumber, this.totalPurchases, this.email);
 
   String firstName;
   String lastName;
   String id;
-  String address;
+  String streetAddress;
+  String suiteNum;
+  String city;
+  String state;
+  String zipCode;
   String phoneNumber;
+  String email;
   String totalPurchases;
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(10, null);
+  List editResults = List.filled(11, null);
 
   List get allInfo {
     return [
       firstName,
       lastName,
       id,
-      address,
+      streetAddress,
+      suiteNum,
+      city,
+      state,
+      zipCode,
       phoneNumber,
+      email,
       totalPurchases,
     ];
   }
@@ -102,8 +112,13 @@ class Customer {
       'First Name',
       'Last Name',
       'ID',
-      'Address',
+      'Street Address',
+      'Suite Number',
+      'City',
+      'State',
+      'Postal Code',
       'Phone Number',
+      'Email',
       'Total Purchases',
     ];
   }
@@ -115,12 +130,22 @@ class Customer {
       lastName = editResults[1];
     else if (info == 'ID' && editResults[2] != null)
       id = editResults[2];
-    else if (info == 'Address' && editResults[3] != null)
-      address = editResults[3];
-    else if (info == 'Phone Number' && editResults[4] != null)
-      phoneNumber = editResults[4];
-    else if (info == 'Total Purchases' && editResults[5] != null)
-      totalPurchases = editResults[5];
+    else if (info == 'Street Address' && editResults[3] != null)
+      streetAddress = editResults[3];
+    else if (info == 'Suite Number' && editResults[4] != null)
+      suiteNum = editResults[4];
+    else if (info == 'City' && editResults[5] != null)
+      city = editResults[5];
+    else if (info == 'State' && editResults[6] != null)
+      state = editResults[6];
+    else if (info == 'Postal Code' && editResults[7] != null)
+      zipCode = editResults[7];
+    else if (info == 'Phone Number' && editResults[8] != null)
+      phoneNumber = editResults[8];
+    else if (info == 'Email' && editResults[9] != null)
+      email = editResults[9];
+    else if (info == 'Total Purchases' && editResults[10] != null)
+      totalPurchases = editResults[10];
   }
 
   String headerToInfo(var header) {
@@ -130,10 +155,20 @@ class Customer {
       return lastName;
     else if (header == 'ID')
       return id;
-    else if (header == 'Address')
-      return address;
+    else if (header == 'Street Address')
+      return streetAddress;
+    else if (header == 'Suite Number')
+      return suiteNum;
+    else if (header == 'City')
+      return city;
+    else if (header == 'State')
+      return state;
+    else if (header == 'Postal Code')
+      return zipCode;
     else if (header == 'Phone Number')
       return phoneNumber;
+    else if (header == 'Email')
+      return email;
     else if (header == 'Total Purchases')
       return totalPurchases;
     else
@@ -147,12 +182,22 @@ class Customer {
       editResults[1] = editedVal;
     else if (info == 'ID')
       editResults[2] = editedVal;
-    else if (info == 'Address')
+    else if (info == 'Street Address')
       editResults[3] = editedVal;
-    else if (info == 'Phone Number')
+    else if (info == 'Suite Number')
       editResults[4] = editedVal;
-    else if (info == 'Total Purchases')
+    else if (info == 'City')
       editResults[5] = editedVal;
+    else if (info == 'State')
+      editResults[6] = editedVal;
+    else if (info == 'Postal Code')
+      editResults[7] = editedVal;
+    else if (info == 'Phone Number')
+      editResults[8] = editedVal;
+    else if (info == 'Email')
+      editResults[9] = editedVal;
+    else if (info == 'Total Purchases')
+      editResults[10] = editedVal;
     else
       editResults[0] = editedVal;
   }
@@ -161,8 +206,13 @@ class Customer {
     firstName = json['firstName'];
     lastName = json['lastName'];
     id = json['id'];
-    address = json['address'];
+    streetAddress = json['streetAddress'];
+    suiteNum = json['suiteNum'];
+    city = json['suite'];
+    state = json['state'];
+    zipCode = json['zipCode'];
     phoneNumber = json['phoneNumber'];
+    email = json['email'];
     totalPurchases = json['totalPurchases'];
   }
 
@@ -171,8 +221,13 @@ class Customer {
     data['firstName'] = firstName;
     data['lastName'] = lastName;
     data['id'] = id;
-    data['address'] = address;
+    data['streetAddress'] = streetAddress;
+    data['suiteNum'] = suiteNum;
+    data['city'] = city;
+    data['state'] = state;
+    data['zipCode'] = zipCode;
     data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
     data['totalPurchases'] = totalPurchases;
 
     return data;
@@ -299,8 +354,13 @@ class CustomerDatabase extends DataTableSource {
         DataCell(Text(customer.firstName)),
         DataCell(Text(customer.lastName)),
         DataCell(Text(customer.id)),
-        DataCell(Text(customer.address)),
+        DataCell(Text(customer.streetAddress)),
+        DataCell(Text(customer.suiteNum)),
+        DataCell(Text(customer.city)),
+        DataCell(Text(customer.state)),
+        DataCell(Text(customer.zipCode)),
         DataCell(Text(customer.phoneNumber)),
+        DataCell(Text(customer.email)),
         DataCell(Text(customer.totalPurchases)),
       ],
     );
@@ -394,12 +454,7 @@ class CustomerDatabase extends DataTableSource {
 Future<void> customerDataAdder(context) async {
   _curJobPosChoice = _jobPosDropDownVal[2];
   Customer newCustomer = Customer(
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
+    '', '', '', '', '', '', '', '', '', '', ''
   );
   await showDialog<String>(
       context: context,
@@ -416,14 +471,14 @@ Future<void> customerDataAdder(context) async {
                   children: [
                     const Text('Add Customer'),
                     for (var item in newCustomer.allInfoHeaders)
-                        TextField(
-                            // controller: TextEditingController()
-                            //   ..text = item.toString(),
-                            onChanged: (text) =>
-                                {newCustomer.infoEdited(item, text)},
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                labelText: item + ':', hintText: item)),
+                      TextField(
+                          // controller: TextEditingController()
+                          //   ..text = item.toString(),
+                          onChanged: (text) =>
+                              {newCustomer.infoEdited(item, text)},
+                          autofocus: true,
+                          decoration: InputDecoration(
+                              labelText: item + ':', hintText: item)),
                   ],
                 )))
               ],
@@ -468,8 +523,13 @@ void convertCustomerData(var jsonResponse) {
       b['firstName'],
       b['lastName'],
       b['id'],
-      b['address'],
+      b['streetAddress'],
+      b['suiteNum'],
+      b['city'],
+      b['state'],
+      b['zipCode'],
       b['phoneNumber'],
+      b['email'],
       b['totalPurchases'],
     );
     mainCustomerList.add(customer);
@@ -482,7 +542,7 @@ void convertCustomerData(var jsonResponse) {
 Future<void> customerSearchHelper(context, List<Customer> foundList) async {
   if (foundList.isEmpty) {
     mainCustomerList.removeRange(1, mainCustomerList.length);
-    mainCustomerList.first = Customer('', '', '', '', '', '');
+    mainCustomerList.first = Customer('', '', '', '', '', '', '', '', '', '', '');
   } else {
     if (mainCustomerList.length > 1) {
       mainCustomerList.removeRange(1, mainCustomerList.length);

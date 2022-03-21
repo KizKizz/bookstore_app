@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:bookstore_project/Data/customer_data_helper.dart';
 import 'package:bookstore_project/InfoScreens/book_list.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:multi_split_view/multi_split_view.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
+import '../Data/customer_data_helper.dart';
 import '../Data/employee_data_handler.dart';
 import '../state_provider.dart';
 
@@ -25,6 +25,7 @@ double subTotalTax = 0.0;
 double totalCost = 0.0;
 
 List<TextEditingController> priceControllers = [];
+List<TextEditingController> existingCustomerInfoControllers = [];
 List<String> checkoutPrices = [];
 
 DateTime now = DateTime.now();
@@ -43,14 +44,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final MultiSplitViewController _checkoutMvController =
       MultiSplitViewController(weights: [0.65]);
 
-  double shippingInfoHeight = 280;
+  double _shippingInfoHeight = 280;
+  double _customerInfoHeight = 360;
   ShippingOptions? _curShippingOption = ShippingOptions.inStore;
-
-  // Future<void> getEmployeesData() async {
-  //   String contents = await employeeDataJson.readAsString();
-  //   var jsonResponse = await jsonDecode(contents);
-  //   convertEmployeeData(jsonResponse);
-  // }
+  final _searchCustomerController = TextEditingController();
+  List<Customer> _searchCustomerList = [];
 
   @override
   void initState() {
@@ -77,16 +75,111 @@ class _CheckoutPageState extends State<CheckoutPage> {
       priceControllers.removeAt(checkoutDropDownRemoveIndex);
     }
 
+    //Text controllers
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
-
-    
   }
 
   @override
   void dispose() {
     priceControllers.forEach((c) => c.dispose());
     super.dispose();
+  }
+
+  String _getFullAddress(Customer curCustomer) {
+    String temp = '';
+    if (curCustomer.suiteNum.isEmpty) {
+      temp = '${curCustomer.streetAddress} ${curCustomer.city} ${curCustomer.state} ${curCustomer.zipCode}';
+    }
+    else {
+      temp =
+          '${curCustomer.streetAddress} ${curCustomer.suiteNum} ${curCustomer.city} ${curCustomer.state} ${curCustomer.zipCode}';
+    }
+    return temp;
+  }
+
+  //Search bar Handler
+  @override
+  Widget _searchField() {
+    return TextField(
+        controller: _searchCustomerController,
+        onChanged: (String text) {
+          setState(() {
+            _searchCustomerList = [];
+            Iterable<Customer> _foundCustomer = [];
+            _foundCustomer = mainCustomerListCopy.where((element) =>
+                element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                element.lastName.toLowerCase().contains(text.toLowerCase()) ||
+                element.id.toLowerCase().contains(text.toLowerCase()) ||
+                element.streetAddress
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                element.city.toLowerCase().contains(text.toLowerCase()) ||
+                element.state.toLowerCase().contains(text.toLowerCase()) ||
+                element.zipCode.toLowerCase().contains(text.toLowerCase()) ||
+                element.phoneNumber
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.email.toLowerCase().contains(text.toLowerCase()) ||
+                element.totalPurchases
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+
+            if (_foundCustomer.isNotEmpty) {
+              for (var customer in _foundCustomer) {
+                Customer tempCustomer = Customer(
+                    customer.firstName,
+                    customer.lastName,
+                    customer.id,
+                    customer.streetAddress,
+                    customer.suiteNum,
+                    customer.city,
+                    customer.state,
+                    customer.zipCode,
+                    customer.phoneNumber,
+                    customer.email,
+                    customer.totalPurchases);
+                _searchCustomerList.add(tempCustomer);
+              }
+              setState(() {
+                print(_searchCustomerList.length);
+                // customerSearchHelper(context, _searchCustomerList).then((_) {
+                //   setState(() {});
+                //   //debugPrint('test ${mainBookList.toString()}');
+                // });
+              });
+            } else {
+              setState(() {
+                _searchCustomerList.clear();
+                // customerSearchHelper(context, _searchCustomerList).then((_) {
+                //   setState(() {});
+                // });
+              });
+            }
+          });
+        },
+        onSubmitted: (String text) {
+          setState(() {});
+        },
+        autofocus: false,
+        maxLines: 1,
+        //cursorColor: Colors.white,
+        style: const TextStyle(fontSize: 15),
+        textAlignVertical: TextAlignVertical.center,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+            filled: true,
+            contentPadding: EdgeInsets.zero,
+            prefixIcon:
+                Icon(Icons.search, color: Theme.of(context).iconTheme.color),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).hintColor)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).primaryColor)),
+            hintText: 'Search for existing customers',
+            hintStyle:
+                TextStyle(fontSize: 15, color: Theme.of(context).hintColor)));
   }
 
   // Future<List<Customer>> _getAllCustomers(String text) async {
@@ -99,20 +192,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    //Get Employees
-    // if (mainEmployeeListCopy.isEmpty) {
-    //   getEmployeesData();
-    // }
     subTotalTax = (9 / 100) * subTotal;
     totalCost = subTotal + subTotalTax + shippingCost;
 
+    //Info page height
+    if (_customerInfoIndex == 0) {
+      _customerInfoHeight = 400;
+    } else {
+      _customerInfoHeight = 360;
+    }
+    //Shipping page height
     if (_curShippingOption == ShippingOptions.inStore) {
-      shippingInfoHeight = 280;
+      _shippingInfoHeight = 280;
     } else if (_curShippingOption != ShippingOptions.inStore) {
       if (_shippingAddressIndex == 1) {
-        shippingInfoHeight = 550;
+        _shippingInfoHeight = 550;
       } else {
-        shippingInfoHeight = 300;
+        _shippingInfoHeight = 300;
       }
     }
 
@@ -148,7 +244,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         .loadString('assets/jsondatabase/employee_data.json'),
                     builder: (context, snapshot) {
                       if (snapshot.data.toString().isNotEmpty &&
-                          snapshot.hasData && mainEmployeeListCopy.isEmpty) {
+                          snapshot.hasData &&
+                          mainEmployeeListCopy.isEmpty) {
                         var jsonResponse = jsonDecode(snapshot.data.toString());
                         convertEmployeeData(jsonResponse);
                         if (mainEmployeeListCopy.isNotEmpty) {
@@ -186,7 +283,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
       //Order time
       Container(
-        padding: EdgeInsets.only(left: 25),
+        padding: const EdgeInsets.only(left: 25),
         alignment: Alignment.centerLeft,
         child: Text('Order date: $_orderDate'),
       ),
@@ -207,7 +304,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         initiallyExpanded: true,
                         children: <Widget>[
                           Container(
-                            height: 390,
+                            height: _customerInfoHeight,
                             width: double.infinity,
                             child: Column(
                               children: [
@@ -261,10 +358,279 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 //Returned customer
                                 if (_customerInfoIndex == 0)
                                   Expanded(
-                                    child: Container(
-                                      //color: Colors.amber,
-                                      child: Text('Nothing here yet'),
-                                    ),
+                                    child: Column(children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20, right: 15),
+                                        height: 40,
+                                        child: _searchField(),
+                                      ),
+                                      Expanded(
+                                          child: Stack(
+                                        children: [
+                                          //Info fields
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  //Name
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'First Name*',
+                                                    )),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            right: 15),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'Last Name*',
+                                                    )),
+                                                  )),
+                                                ],
+                                              ),
+                                              //Address
+                                              Row(children: [
+                                                Expanded(
+                                                    child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20, right: 15),
+                                                  width: (MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2),
+                                                  child: TextFormField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                    hintText: '',
+                                                    labelText:
+                                                        'Street Address*',
+                                                  )),
+                                                )),
+                                              ]),
+                                              //Address 2
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  //Name
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText:
+                                                          'Suite / Apt #',
+                                                    )),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            right: 15),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'City*',
+                                                    )),
+                                                  )),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  //Name
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'State*',
+                                                    )),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            right: 15),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'Postal Code*',
+                                                    )),
+                                                  )),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  //Name
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText:
+                                                          'Phone Number*',
+                                                    )),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            right: 15),
+                                                    child: TextFormField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                      //icon: Icon(Icons.person),
+                                                      hintText: '',
+                                                      labelText: 'ID*',
+                                                    )),
+                                                  )),
+                                                ],
+                                              ),
+                                              Row(children: [
+                                                Expanded(
+                                                    child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20, right: 15),
+                                                  width: (MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2),
+                                                  child: TextFormField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                    hintText: '',
+                                                    labelText: 'Email',
+                                                  )),
+                                                )),
+                                              ]),
+                                            ],
+                                          ),
+                                          //Search results
+                                          if (_searchCustomerController
+                                              .text.isNotEmpty)
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20, right: 15),
+                                              //color: Colors.amber,
+                                              //height: 400,
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15, right: 15),
+                                                color: Theme.of(context)
+                                                    .canvasColor,
+                                                child: ListView(
+                                                  controller:
+                                                      ScrollController(),
+                                                  children: [
+                                                    for (var customer
+                                                        in _searchCustomerList)
+                                                      Container(
+                                                        height: 75,
+                                                        child: Card(
+                                                          elevation: 3,
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  side:
+                                                                      BorderSide(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .hintColor
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    //color: Colors.grey.withOpacity(0.2),
+                                                                    width: 1,
+                                                                  )),
+                                                          child: ListTile(
+                                                            dense: true,
+                                                            //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                                            onTap: () {
+                                                              print('object');
+                                                            },
+                                                            leading: const Icon(
+                                                                Icons.person),
+                                                            title: Text(
+                                                              '${customer.firstName} ${customer.lastName}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          15),
+                                                            ),
+                                                            subtitle: Text(
+                                                              '${_getFullAddress(customer)}\n${customer.phoneNumber}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                            trailing:
+                                                                const Icon(
+                                                                    Icons.add),
+                                                            isThreeLine: true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ))
+                                    ]),
                                   ),
                                 //New customer
                                 if (_customerInfoIndex == 1)
@@ -315,7 +681,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           child: TextFormField(
                                               decoration: const InputDecoration(
                                             hintText: '',
-                                            labelText: 'Address*',
+                                            labelText: 'Street Address*',
                                           )),
                                         )),
                                       ]),
@@ -447,7 +813,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               padding:
                                   const EdgeInsets.only(left: 10, right: 15),
                               width: double.infinity,
-                              height: shippingInfoHeight,
+                              height: _shippingInfoHeight,
                               child: Column(
                                 children: [
                                   Container(
@@ -607,7 +973,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 decoration:
                                                     const InputDecoration(
                                               hintText: '',
-                                              labelText: 'Address*',
+                                              labelText: 'Street Address*',
                                             )),
                                           )),
                                         ]),
