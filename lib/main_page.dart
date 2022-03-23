@@ -76,165 +76,168 @@ class _MainPageState extends State<MainPage> {
                       constraints:
                           BoxConstraints(minHeight: constraint.maxHeight),
                       child: IntrinsicHeight(
-                        child: NavigationRail(
-                          selectedIndex: _selectedIndex,
-                          onDestinationSelected: (int index) {
-                            setState(() {
-                              _selectedIndex = index;
-                              //appBarName = screenTitle[_selectedIndex];
-                            });
-                          },
+                        child: FocusTraversalGroup(
+                          policy: OrderedTraversalPolicy(),
+                          child: NavigationRail(
+                            selectedIndex: _selectedIndex,
+                            onDestinationSelected: (int index) {
+                              setState(() {
+                                _selectedIndex = index;
+                                //appBarName = screenTitle[_selectedIndex];
+                              });
+                            },
 //Other buttons
-                          leading: Column(
-                            children: [
-                              Container(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                child: Column(
-                                  children: [
-                                    isManager
-                                    ? Column(
-                                        children: [
-                                          const Icon(Icons.account_box, size: 30),
-                                          Text('Manager', 
+                            leading: Column(
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                  child: Column(
+                                    children: [
+                                      isManager
+                                      ? Column(
+                                          children: const [
+                                            Icon(Icons.account_box, size: 30),
+                                            Text('Manager', 
+                                              // style: TextStyle(
+                                              //   color: (Theme.of(context).toggleableActiveColor))
+                                              )
+                                          ],
+                                        )
+                                      : Column(
+                                          children: const [
+                                            Icon(Icons.account_circle,
+                                                size: 30),
+                                            Text('Employee',
                                             // style: TextStyle(
                                             //   color: (Theme.of(context).toggleableActiveColor))
                                             )
-                                        ],
-                                      )
-                                    : Column(
-                                        children: [
-                                          const Icon(Icons.account_circle,
-                                              size: 30),
-                                          Text('Employee',
-                                          // style: TextStyle(
-                                          //   color: (Theme.of(context).toggleableActiveColor))
-                                          )
-                                        ],
-                                      )
-                                  ],
-                                )
-                              ),
-                              //Spacer
-                              // SizedBox(
-                              //   height: 2,
-                              //   width: 60,
-                              //   child: Container(
-                              //     padding: const EdgeInsets.only(bottom: 5),
-                              //     color: Theme.of(context).hintColor)
-                              // ),
+                                          ],
+                                        )
+                                    ],
+                                  )
+                                ),
+                                //Spacer
+                                // SizedBox(
+                                //   height: 2,
+                                //   width: 60,
+                                //   child: Container(
+                                //     padding: const EdgeInsets.only(bottom: 5),
+                                //     color: Theme.of(context).hintColor)
+                                // ),
 
 //Logout Button
-                              MaterialButton(
-                                onPressed: (() {
-                                  _logoutDialog();
-                                }),
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 4, bottom: 2),
-                                        child: Icon(
-                                          Icons.logout,
+                                MaterialButton(
+                                  onPressed: (() {
+                                    _logoutDialog();
+                                  }),
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: const <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 4, bottom: 2),
+                                          child: Icon(
+                                            Icons.logout,
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(2.0),
-                                        child: Text(
-                                          "Logout",
-                                        ),
-                                      )
-                                    ]),
-                              ),
+                                        Padding(
+                                          padding: EdgeInsets.all(2.0),
+                                          child: Text(
+                                            "Logout",
+                                          ),
+                                        )
+                                      ]),
+                                ),
 //DarkMode Switch
-                              Container(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: ToggleSwitch(
-                                    minWidth: 35.0,
-                                    minHeight: 28.0,
-                                    initialLabelIndex: darkModeOn,
-                                    cornerRadius: 90.0,
-                                    borderColor: [
-                                      Theme.of(context).hintColor,
-                                    ],
-                                    borderWidth: 1.5,
-                                    activeFgColor: Colors.white,
-                                    inactiveBgColor:
-                                        const Color.fromARGB(255, 122, 122, 122),
-                                    inactiveFgColor: Colors.white,
-                                    totalSwitches: 2,
-                                    icons: const [
-                                      Icons.light_mode,
-                                      Icons.dark_mode
-                                    ],
-                                    iconSize: 26.0,
-                                    animate: true,
-                                    curve: Curves.bounceInOut,
-                                    onToggle: (darkModeOn) async {
-                                      // obtain shared preferences
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      setState(() {
-                                        if (MyApp.themeNotifier.value ==
-                                            ThemeMode.light) {
-                                          darkModeOn = 0;
-                                          prefs.setBool('isDarkMode', true);
-                                          MyApp.themeNotifier.value =
-                                              ThemeMode.dark;
-                                        } else {
-                                          darkModeOn = 1;
-                                          MyApp.themeNotifier.value =
-                                              ThemeMode.light;
-                                          prefs.setBool('isDarkMode', false);
-                                        }
-                                      });
-                                    }),
-                                //const Text('Dark Theme'),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: ToggleSwitch(
+                                      minWidth: 35.0,
+                                      minHeight: 28.0,
+                                      initialLabelIndex: darkModeOn,
+                                      cornerRadius: 90.0,
+                                      borderColor: [
+                                        Theme.of(context).hintColor,
+                                      ],
+                                      borderWidth: 1.5,
+                                      activeFgColor: Colors.white,
+                                      inactiveBgColor:
+                                          const Color.fromARGB(255, 122, 122, 122),
+                                      inactiveFgColor: Colors.white,
+                                      totalSwitches: 2,
+                                      icons: const [
+                                        Icons.light_mode,
+                                        Icons.dark_mode
+                                      ],
+                                      iconSize: 26.0,
+                                      animate: true,
+                                      curve: Curves.bounceInOut,
+                                      onToggle: (darkModeOn) async {
+                                        // obtain shared preferences
+                                        final prefs =
+                                            await SharedPreferences.getInstance();
+                                        setState(() {
+                                          if (MyApp.themeNotifier.value ==
+                                              ThemeMode.light) {
+                                            darkModeOn = 0;
+                                            prefs.setBool('isDarkMode', true);
+                                            MyApp.themeNotifier.value =
+                                                ThemeMode.dark;
+                                          } else {
+                                            darkModeOn = 1;
+                                            MyApp.themeNotifier.value =
+                                                ThemeMode.light;
+                                            prefs.setBool('isDarkMode', false);
+                                          }
+                                        });
+                                      }),
+                                  //const Text('Dark Theme'),
+                                ),
+                              ],
+                            ),
+
+//Screens buttons
+                            groupAlignment: 1.0,
+                            labelType: NavigationRailLabelType.all,
+                            destinations: <NavigationRailDestination>[
+                              if (context.watch<checkoutNotif>().isCheckout)
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.shopping_basket_outlined),
+                                selectedIcon: Icon(Icons.shopping_basket),
+                                label: Text('Checkout'),
+                              ),
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.menu_book_outlined),
+                                selectedIcon: Icon(Icons.menu_book),
+                                label: Text('Books'),
+                              ),
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.library_books_outlined),
+                                selectedIcon: Icon(Icons.library_books),
+                                label: Text('Authors'),
+                              ),
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.receipt_outlined),
+                                selectedIcon: Icon(Icons.receipt),
+                                label: Text('Orders'),
+                              ),
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.receipt_long_outlined),
+                                selectedIcon: Icon(Icons.receipt_long),
+                                label: Text('Sales'),
+                              ),
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.people_alt_outlined),
+                                selectedIcon: Icon(Icons.people_alt),
+                                label: Text('Customers'),
+                              ),
+                              if (isManager)
+                              const NavigationRailDestination(
+                                icon: Icon(Icons.emoji_people_outlined),
+                                selectedIcon: Icon(Icons.emoji_people),
+                                label: Text('Employees'),
                               ),
                             ],
                           ),
-
-//Screens buttons
-                          groupAlignment: 1.0,
-                          labelType: NavigationRailLabelType.all,
-                          destinations: <NavigationRailDestination>[
-                            if (context.watch<checkoutNotif>().isCheckout)
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.shopping_basket_outlined),
-                              selectedIcon: Icon(Icons.shopping_basket),
-                              label: Text('Checkout'),
-                            ),
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.menu_book_outlined),
-                              selectedIcon: Icon(Icons.menu_book),
-                              label: Text('Books'),
-                            ),
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.library_books_outlined),
-                              selectedIcon: Icon(Icons.library_books),
-                              label: Text('Authors'),
-                            ),
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.receipt_outlined),
-                              selectedIcon: Icon(Icons.receipt),
-                              label: Text('Orders'),
-                            ),
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.receipt_long_outlined),
-                              selectedIcon: Icon(Icons.receipt_long),
-                              label: Text('Sales'),
-                            ),
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.people_alt_outlined),
-                              selectedIcon: Icon(Icons.people_alt),
-                              label: Text('Customers'),
-                            ),
-                            if (isManager)
-                            const NavigationRailDestination(
-                              icon: Icon(Icons.emoji_people_outlined),
-                              selectedIcon: Icon(Icons.emoji_people),
-                              label: Text('Employees'),
-                            ),
-                          ],
                         ),
                       )));
             },

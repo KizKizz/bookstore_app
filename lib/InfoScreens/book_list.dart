@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../Data/employee_data_handler.dart';
 import '../main_appbar.dart';
+import '../main_page.dart';
 import 'customer_list.dart';
 
 final searchbookController = TextEditingController();
@@ -654,6 +655,14 @@ class MenuItems {
         break;
       case MenuItems.checkout:
         context.read<checkoutNotif>().checkoutOn();
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => const MainPage(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
         break;
       default:
         final getBookID = item.text.split(' - ');

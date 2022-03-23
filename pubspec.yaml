@@ -39,6 +39,7 @@ dependencies:
   dropdown_button2: ^1.2.2
   multi_split_view: ^1.11.0
   flutter_rating_bar: ^4.0.0
+  font_awesome_flutter: ^10.0.0
 
 
 
@@ -77,6 +78,7 @@ flutter:
     - assets/jsondatabase/author_data.json
     - assets/jsondatabase/employee_data.json
     - assets/jsondatabase/customer_data.json
+    - assets/jsondatabase/order_data.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
