@@ -328,7 +328,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           hintAlignment: Alignment.center,
                           valueAlignment: Alignment.center,
                           icon: const Icon(Icons.arrow_drop_down),
+                          iconSize: 20,
                           dropdownWidth: 250,
+                          dropdownHeight: double.maxFinite,
                           dropdownItems: _employeesDropDownVal,
                           value: _curEmployeeChoice,
                           onChanged: (value) {
@@ -398,38 +400,38 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 color: Theme.of(context)
                                                     .hintColor)),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 15.0),
-                                        child: ToggleSwitch(
-                                          minWidth: 78.0,
-                                          minHeight: 25,
-                                          borderColor: [
-                                            Theme.of(context).primaryColorLight
-                                          ],
-                                          borderWidth: 1.0,
-                                          initialLabelIndex: _customerInfoIndex,
-                                          cornerRadius: 50.0,
-                                          activeFgColor: Colors.white,
-                                          inactiveBgColor: Colors.grey,
-                                          inactiveFgColor: Colors.white,
-                                          totalSwitches: 2,
-                                          labels: const ['Returned', 'New'],
-                                          // activeBgColors: const [
-                                          //   [Colors.blue],
-                                          //   [Colors.pink]
-                                          // ],
-                                          onToggle: (index) {
-                                            if (index == 0) {
-                                              _customerInfoIndex = 0;
-                                              setState(() {});
-                                            } else if (index == 1) {
-                                              _customerInfoIndex = 1;
-                                              setState(() {});
-                                            }
-                                          },
-                                        ),
-                                      )
+                                      // Padding(
+                                      //   padding:
+                                      //       const EdgeInsets.only(right: 15.0),
+                                      //   child: ToggleSwitch(
+                                      //     minWidth: 78.0,
+                                      //     minHeight: 25,
+                                      //     borderColor: [
+                                      //       Theme.of(context).primaryColorLight
+                                      //     ],
+                                      //     borderWidth: 1.0,
+                                      //     initialLabelIndex: _customerInfoIndex,
+                                      //     cornerRadius: 50.0,
+                                      //     activeFgColor: Colors.white,
+                                      //     inactiveBgColor: Colors.grey,
+                                      //     inactiveFgColor: Colors.white,
+                                      //     totalSwitches: 2,
+                                      //     labels: const ['Returned', 'New'],
+                                      //     // activeBgColors: const [
+                                      //     //   [Colors.blue],
+                                      //     //   [Colors.pink]
+                                      //     // ],
+                                      //     onToggle: (index) {
+                                      //       if (index == 0) {
+                                      //         _customerInfoIndex = 0;
+                                      //         setState(() {});
+                                      //       } else if (index == 1) {
+                                      //         _customerInfoIndex = 1;
+                                      //         setState(() {});
+                                      //       }
+                                      //     },
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                   //Returned customer
@@ -692,131 +694,161 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             //Search results
                                             if (_searchCustomerController
                                                 .text.isNotEmpty)
-                                              Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20, right: 15),
-                                                //color: Colors.amber,
-                                                //height: 400,
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 2),
                                                 child: Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15, right: 15),
-                                                  color: Theme.of(context)
-                                                      .canvasColor,
-                                                  child: ListView(
-                                                    controller:
-                                                        ScrollController(),
-                                                    children: [
-                                                      for (var customer
-                                                          in _searchCustomerList)
-                                                        Container(
-                                                          height: 75,
-                                                          child: Card(
-                                                            elevation: 3,
-                                                            clipBehavior:
-                                                                Clip.antiAlias,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                5),
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .hintColor
-                                                                          .withOpacity(
-                                                                              0.3),
-                                                                      //color: Colors.grey.withOpacity(0.2),
-                                                                      width: 1,
-                                                                    )),
-                                                            child: ListTile(
-                                                              dense: true,
-                                                              //contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                                              onTap: () {
-                                                                existingCustomerInfoControllers[
-                                                                            0]
-                                                                        .text =
-                                                                    customer
-                                                                        .firstName;
-                                                                existingCustomerInfoControllers[
-                                                                            1]
-                                                                        .text =
-                                                                    customer
-                                                                        .lastName;
-                                                                existingCustomerInfoControllers[
-                                                                            2]
-                                                                        .text =
-                                                                    customer.id;
-                                                                existingCustomerInfoControllers[
-                                                                            3]
-                                                                        .text =
-                                                                    customer
-                                                                        .streetAddress;
-                                                                existingCustomerInfoControllers[
-                                                                            4]
-                                                                        .text =
-                                                                    customer
-                                                                        .suiteNum;
-                                                                existingCustomerInfoControllers[
-                                                                            5]
-                                                                        .text =
-                                                                    customer
-                                                                        .city;
-                                                                existingCustomerInfoControllers[
-                                                                            6]
-                                                                        .text =
-                                                                    customer
-                                                                        .state;
-                                                                existingCustomerInfoControllers[
-                                                                            7]
-                                                                        .text =
-                                                                    customer
-                                                                        .zipCode;
-                                                                existingCustomerInfoControllers[
-                                                                            8]
-                                                                        .text =
-                                                                    customer
-                                                                        .phoneNumber;
-                                                                existingCustomerInfoControllers[
-                                                                            9]
-                                                                        .text =
-                                                                    customer
-                                                                        .email;
+                                                  padding: const EdgeInsets.only(
+                                                      left: 20, right: 15),
+                                                  constraints: const BoxConstraints(maxHeight: double.maxFinite),
+                                                  //color: Colors.amber,
+                                                  height: (75 * double.parse(_searchCustomerList.length.toString())),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 15, right: 15),
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .dialogBackgroundColor,
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .only(
+                                                              topLeft: Radius
+                                                                  .circular(0),
+                                                              topRight: Radius
+                                                                  .circular(0),
+                                                              bottomLeft: Radius
+                                                                  .circular(3),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          3)),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .hintColor
+                                                              .withOpacity(0.3),
+                                                          spreadRadius: 1,
+                                                          blurRadius: 1,
+                                                          offset: const Offset(
+                                                              0, 1), // changes position of shadow
+                                                        ),
+                                                      ]),
+                                                    child: ListView(
+                                                      controller:
+                                                          ScrollController(),
+                                                      children: [
+                                                        for (var customer
+                                                            in _searchCustomerList)
+                                                          Container(
+                                                            height: 75,
+                                                            child: Card(
+                                                              elevation: 3,
+                                                              clipBehavior:
+                                                                  Clip.antiAlias,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                                  5),
+                                                                      side:
+                                                                          BorderSide(
+                                                                        color: Theme.of(
+                                                                                context)
+                                                                            .hintColor
+                                                                            .withOpacity(
+                                                                                0.3),
+                                                                        //color: Colors.grey.withOpacity(0.2),
+                                                                        width: 1,
+                                                                      )),
+                                                              child: ListTile(
+                                                                dense: true,
+                                                                //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                                                onTap: () {
+                                                                  existingCustomerInfoControllers[
+                                                                              0]
+                                                                          .text =
+                                                                      customer
+                                                                          .firstName;
+                                                                  existingCustomerInfoControllers[
+                                                                              1]
+                                                                          .text =
+                                                                      customer
+                                                                          .lastName;
+                                                                  existingCustomerInfoControllers[
+                                                                              2]
+                                                                          .text =
+                                                                      customer.id;
+                                                                  existingCustomerInfoControllers[
+                                                                              3]
+                                                                          .text =
+                                                                      customer
+                                                                          .streetAddress;
+                                                                  existingCustomerInfoControllers[
+                                                                              4]
+                                                                          .text =
+                                                                      customer
+                                                                          .suiteNum;
+                                                                  existingCustomerInfoControllers[
+                                                                              5]
+                                                                          .text =
+                                                                      customer
+                                                                          .city;
+                                                                  existingCustomerInfoControllers[
+                                                                              6]
+                                                                          .text =
+                                                                      customer
+                                                                          .state;
+                                                                  existingCustomerInfoControllers[
+                                                                              7]
+                                                                          .text =
+                                                                      customer
+                                                                          .zipCode;
+                                                                  existingCustomerInfoControllers[
+                                                                              8]
+                                                                          .text =
+                                                                      customer
+                                                                          .phoneNumber;
+                                                                  existingCustomerInfoControllers[
+                                                                              9]
+                                                                          .text =
+                                                                      customer
+                                                                          .email;
 
-                                                                curOrderingCustomer =
-                                                                    customer;
-                                                                _searchCustomerController
-                                                                    .clear();
+                                                                  curOrderingCustomer =
+                                                                      customer;
+                                                                  _searchCustomerController
+                                                                      .clear();
 
-                                                                setState(() {});
-                                                              },
-                                                              leading: const Icon(
-                                                                  Icons.person),
-                                                              title: Text(
-                                                                '${customer.firstName} ${customer.lastName}',
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            15),
+                                                                  setState(() {});
+                                                                },
+                                                                leading: const Icon(
+                                                                    Icons.person),
+                                                                title: Text(
+                                                                  '${customer.firstName} ${customer.lastName}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                ),
+                                                                subtitle: Text(
+                                                                  '${_getFullAddress(customer)}\n${customer.phoneNumber}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              14),
+                                                                ),
+                                                                trailing:
+                                                                    const Icon(
+                                                                        Icons
+                                                                            .add),
+                                                                isThreeLine: true,
                                                               ),
-                                                              subtitle: Text(
-                                                                '${_getFullAddress(customer)}\n${customer.phoneNumber}',
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            14),
-                                                              ),
-                                                              trailing:
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .add),
-                                                              isThreeLine: true,
                                                             ),
                                                           ),
-                                                        ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -825,172 +857,172 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       ]),
                                     ),
                                   //New customer
-                                  if (_customerInfoIndex == 1)
-                                    Expanded(
-                                        child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            //Name
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, right: 10),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'First Name*',
-                                              )),
-                                            )),
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 15),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Last Name*',
-                                              )),
-                                            )),
-                                          ],
-                                        ),
-                                        //Address
-                                        Row(children: [
-                                          Expanded(
-                                              child: Container(
-                                            padding: const EdgeInsets.only(
-                                                left: 20, right: 15),
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2),
-                                            child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                              hintText: '',
-                                              labelText: 'Street Address*',
-                                            )),
-                                          )),
-                                        ]),
-                                        //Address 2
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            //Name
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, right: 10),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Suite / Apt #',
-                                              )),
-                                            )),
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 15),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'City*',
-                                              )),
-                                            )),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            //Name
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, right: 10),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'State*',
-                                              )),
-                                            )),
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 15),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Postal Code*',
-                                              )),
-                                            )),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            //Name
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, right: 10),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Phone Number*',
-                                              )),
-                                            )),
-                                            Expanded(
-                                                child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 15),
-                                              child: TextFormField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'ID*',
-                                              )),
-                                            )),
-                                          ],
-                                        ),
-                                        Row(children: [
-                                          Expanded(
-                                              child: Container(
-                                            padding: const EdgeInsets.only(
-                                                left: 20, right: 15),
-                                            width: (MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2),
-                                            child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                              hintText: '',
-                                              labelText: 'Email',
-                                            )),
-                                          )),
-                                        ]),
-                                      ],
-                                    ))
+                                  // if (_customerInfoIndex == 1)
+                                  //   Expanded(
+                                  //       child: Column(
+                                  //     children: [
+                                  //       Row(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.start,
+                                  //         children: [
+                                  //           //Name
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 20, right: 10),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'First Name*',
+                                  //             )),
+                                  //           )),
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 10, right: 15),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'Last Name*',
+                                  //             )),
+                                  //           )),
+                                  //         ],
+                                  //       ),
+                                  //       //Address
+                                  //       Row(children: [
+                                  //         Expanded(
+                                  //             child: Container(
+                                  //           padding: const EdgeInsets.only(
+                                  //               left: 20, right: 15),
+                                  //           width: (MediaQuery.of(context)
+                                  //                   .size
+                                  //                   .width /
+                                  //               2),
+                                  //           child: TextFormField(
+                                  //               decoration:
+                                  //                   const InputDecoration(
+                                  //             hintText: '',
+                                  //             labelText: 'Street Address*',
+                                  //           )),
+                                  //         )),
+                                  //       ]),
+                                  //       //Address 2
+                                  //       Row(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.start,
+                                  //         children: [
+                                  //           //Name
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 20, right: 10),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'Suite / Apt #',
+                                  //             )),
+                                  //           )),
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 10, right: 15),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'City*',
+                                  //             )),
+                                  //           )),
+                                  //         ],
+                                  //       ),
+                                  //       Row(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.start,
+                                  //         children: [
+                                  //           //Name
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 20, right: 10),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'State*',
+                                  //             )),
+                                  //           )),
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 10, right: 15),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'Postal Code*',
+                                  //             )),
+                                  //           )),
+                                  //         ],
+                                  //       ),
+                                  //       Row(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.start,
+                                  //         children: [
+                                  //           //Name
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 20, right: 10),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'Phone Number*',
+                                  //             )),
+                                  //           )),
+                                  //           Expanded(
+                                  //               child: Container(
+                                  //             padding: const EdgeInsets.only(
+                                  //                 left: 10, right: 15),
+                                  //             child: TextFormField(
+                                  //                 decoration:
+                                  //                     const InputDecoration(
+                                  //               //icon: Icon(Icons.person),
+                                  //               hintText: '',
+                                  //               labelText: 'ID*',
+                                  //             )),
+                                  //           )),
+                                  //         ],
+                                  //       ),
+                                  //       Row(children: [
+                                  //         Expanded(
+                                  //             child: Container(
+                                  //           padding: const EdgeInsets.only(
+                                  //               left: 20, right: 15),
+                                  //           width: (MediaQuery.of(context)
+                                  //                   .size
+                                  //                   .width /
+                                  //               2),
+                                  //           child: TextFormField(
+                                  //               decoration:
+                                  //                   const InputDecoration(
+                                  //             hintText: '',
+                                  //             labelText: 'Email',
+                                  //           )),
+                                  //         )),
+                                  //       ]),
+                                  //     ],
+                                  //   ))
                                 ],
                               ),
                             ),

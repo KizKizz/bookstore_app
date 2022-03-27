@@ -640,7 +640,7 @@ Future<void> bookDataAdder(context) async {
                                                 }
 
                                                 if (_authorsExistedInList
-                                                    .isNotEmpty) {
+                                                    .isNotEmpty && text.isNotEmpty) {
                                                   _authorListVisible = true;
                                                 } else {
                                                   _authorListVisible = false;

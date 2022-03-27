@@ -28,6 +28,7 @@ class _AuthorListState extends State<AuthorList> {
   final List<Author> preSearchList = mainAuthorListCopy;
 
   final List<String> _searchDropDownVal = [
+    'All Fields',
     'Full Name',
     'ID',
     'Year of Birth',
@@ -65,81 +66,86 @@ class _AuthorListState extends State<AuthorList> {
   @override
   Widget _searchField() {
     return TextField(
-        controller: searchAuthorController,
-        onChanged: (String text) {
-          setState(() {
-            searchAuthorList = [];
-            Iterable<Author> foundAuthor = [];
-            if (_curSearchChoice == 'Full Name') {
-              foundAuthor = mainAuthorListCopy.where((element) =>
-                  element.fullName.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'ID') {
-              foundAuthor = mainAuthorListCopy.where((element) =>
-                  element.id.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Year of Birth') {
-              foundAuthor = mainAuthorListCopy.where((element) =>
-                  element.yearBirth.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Year of Dead') {
-              foundAuthor = mainAuthorListCopy.where((element) =>
-                  element.yearDead.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Description') {
-              foundAuthor = mainAuthorListCopy.where((element) => element
-                  .description
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            }
+      controller: searchAuthorController,
+      onChanged: (String text) {
+        setState(() {
+          searchAuthorList = [];
+          Iterable<Author> foundAuthor = [];
+          if (_curSearchChoice == 'All Fields') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.fullName.toLowerCase().contains(text.toLowerCase()) ||
+                element.id.toLowerCase().contains(text.toLowerCase()) ||
+                element.yearBirth.toLowerCase().contains(text.toLowerCase()) ||
+                element.yearDead.toLowerCase().contains(text.toLowerCase()) ||
+                element.description.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Full Name') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.fullName.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'ID') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.id.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Year of Birth') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.yearBirth.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Year of Dead') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.yearDead.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Description') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.description.toLowerCase().contains(text.toLowerCase()));
+          }
 
-            if (foundAuthor.isNotEmpty) {
-              for (var author in foundAuthor) {
-                Author tempAuthor = Author(author.fullName, author.id,
-                    author.yearBirth, author.yearDead, author.description);
-                searchAuthorList.add(tempAuthor);
-              }
-              setState(() {
-                authorSearchHelper(context, searchAuthorList).then((_) {
-                  setState(() {});
-                  //debugPrint('test ${mainBookList.toString()}');
-                });
-              });
-            } else {
-              setState(() {
-                authorSearchHelper(context, searchAuthorList).then((_) {
-                  setState(() {});
-                });
-              });
+          if (foundAuthor.isNotEmpty) {
+            for (var author in foundAuthor) {
+              Author tempAuthor = Author(author.fullName, author.id,
+                  author.yearBirth, author.yearDead, author.description);
+              searchAuthorList.add(tempAuthor);
             }
-          });
-        },
-        onSubmitted: (String text) {
-          setState(() {});
-        },
-        autofocus: false,
-        maxLines: 1,
-        cursorColor: Theme.of(context).hintColor,
-        style: const TextStyle(fontSize: 21),
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-            prefixIcon:
-                Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
-            filled: true,
-            fillColor: Theme.of(context).canvasColor,
-            enabledBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            isDense: true,
-            contentPadding: const EdgeInsets.all(8),
-            hintText: 'Search',
-            hintStyle: const TextStyle(
-              fontSize: 21,
-            )),
-        );
+            setState(() {
+              authorSearchHelper(context, searchAuthorList).then((_) {
+                setState(() {});
+                //debugPrint('test ${mainBookList.toString()}');
+              });
+            });
+          } else {
+            setState(() {
+              authorSearchHelper(context, searchAuthorList).then((_) {
+                setState(() {});
+              });
+            });
+          }
+        });
+      },
+      onSubmitted: (String text) {
+        setState(() {});
+      },
+      autofocus: false,
+      maxLines: 1,
+      cursorColor: Theme.of(context).hintColor,
+      style: const TextStyle(fontSize: 21),
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+          prefixIcon:
+              Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
+          filled: true,
+          fillColor: Theme.of(context).canvasColor,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          isDense: true,
+          contentPadding: const EdgeInsets.all(8),
+          hintText: 'Search',
+          hintStyle: const TextStyle(
+            fontSize: 21,
+          )),
+    );
   }
 
   @override
@@ -161,9 +167,9 @@ class _AuthorListState extends State<AuthorList> {
               right: 368,
             ),
             child: Container(
-              padding: const EdgeInsets.only(left: 2, right: 0),
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: _searchField()),
+                padding: const EdgeInsets.only(left: 2, right: 0),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -186,7 +192,7 @@ class _AuthorListState extends State<AuthorList> {
                       });
                     })
                   ],
-                  child:  Icon(
+                  child: Icon(
                     Icons.clear_sharp,
                     color: Theme.of(context).hintColor,
                   ),
@@ -195,12 +201,15 @@ class _AuthorListState extends State<AuthorList> {
 
             //Dropdown search
             Container(
-               padding: const EdgeInsets.only(left: 2, right: 2),
+                padding: const EdgeInsets.only(left: 2, right: 2),
                 margin: const EdgeInsets.only(right: 80, top: 10, bottom: 10),
                 child: CustomDropdownButton2(
                   hint: 'Select one',
                   // buttonHeight: 25,
                   buttonWidth: 128,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 20,
+                  buttonPadding: const EdgeInsets.symmetric(horizontal: 10),
                   dropdownWidth: 128,
                   offset: const Offset(0, 0),
                   dropdownHeight: double.maxFinite,

@@ -28,13 +28,14 @@ class _SalesRecordListState extends State<SalesRecordList> {
   final List<SalesRecord> preSearchList = mainSalesRecordListCopy;
 
   final List<String> _searchDropDownVal = [
+    'All Fields',
     'Book Title',
     'Book ID',
     'Customer Name',
     'Customer ID',
     'Salesperson Name',
     'Salesperson ID',
-    'Total Amount',
+    'Sold Price',
     'Order Date',
     'Delivery Date',
   ];
@@ -75,111 +76,118 @@ class _SalesRecordListState extends State<SalesRecordList> {
   @override
   Widget _searchField() {
     return TextField(
-        controller: searchSalesRecordController,
-        onChanged: (String text) {
-          setState(() {
-            searchSalesRecord = [];
-            Iterable<SalesRecord> foundSalesRecord = [];
-            if (_curSearchChoice == 'Book Title') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.bookTitle.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Book ID') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.bookId.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Customer Name') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.customerName
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Customer ID') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.customerId
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Salesperon Name') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.salesPersonName
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Salesperson ID') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.salesPersonId
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Total Amount') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.soldPrice
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Order Date') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.orderDate.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Delivery Date') {
-              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
-                  element.deliveryDate
-                      .toLowerCase()
-                      .contains(text.toLowerCase()));
-            }
+      controller: searchSalesRecordController,
+      onChanged: (String text) {
+        setState(() {
+          searchSalesRecord = [];
+          Iterable<SalesRecord> foundSalesRecord = [];
+          if (_curSearchChoice == 'All Fields') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.bookTitle.toLowerCase().contains(text.toLowerCase()) ||
+                element.bookId.toLowerCase().contains(text.toLowerCase()) ||
+                element.customerName.toLowerCase().contains(text.toLowerCase()) ||
+                element.customerId.toLowerCase().contains(text.toLowerCase()) ||
+                element.salesPersonName.toLowerCase().contains(text.toLowerCase()) ||
+                element.salesPersonId.toLowerCase().contains(text.toLowerCase()) ||
+                element.soldPrice.toLowerCase().contains(text.toLowerCase()) ||
+                element.orderDate.toLowerCase().contains(text.toLowerCase()) ||
+                element.deliveryDate.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Book Title') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.bookTitle.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Book ID') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.bookId.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Customer Name') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.customerName
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Customer ID') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.customerId.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Salesperon Name') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.salesPersonName
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Salesperson ID') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.salesPersonId
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Sold Price') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.soldPrice.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Order Date') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.orderDate.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Delivery Date') {
+            foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                element.deliveryDate
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          }
 
-            if (foundSalesRecord.isNotEmpty) {
-              for (var record in foundSalesRecord) {
-                SalesRecord tempSalesRecord = SalesRecord(
-                  record.bookTitle,
-                  record.bookId,
-                  record.customerName,
-                  record.customerId,
-                  record.salesPersonName,
-                  record.salesPersonId,
-                  record.soldPrice,
-                  record.orderDate,
-                  record.deliveryDate,
-                );
-                searchSalesRecord.add(tempSalesRecord);
-              }
-              setState(() {
-                salesRecordSearchHelper(context, searchSalesRecord).then((_) {
-                  setState(() {});
-                  //debugPrint('test ${mainBookList.toString()}');
-                });
-              });
-            } else {
-              setState(() {
-                salesRecordSearchHelper(context, searchSalesRecord).then((_) {
-                  setState(() {});
-                });
-              });
+          if (foundSalesRecord.isNotEmpty) {
+            for (var record in foundSalesRecord) {
+              SalesRecord tempSalesRecord = SalesRecord(
+                record.bookTitle,
+                record.bookId,
+                record.customerName,
+                record.customerId,
+                record.salesPersonName,
+                record.salesPersonId,
+                record.soldPrice,
+                record.orderDate,
+                record.deliveryDate,
+              );
+              searchSalesRecord.add(tempSalesRecord);
             }
-          });
-        },
-        onSubmitted: (String text) {
-          setState(() {});
-        },
-        autofocus: false,
-        maxLines: 1,
-        cursorColor: Theme.of(context).hintColor,
-        style: const TextStyle(fontSize: 21),
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-            prefixIcon:
-                Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
-            filled: true,
-            fillColor: Theme.of(context).canvasColor,
-            enabledBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            isDense: true,
-            contentPadding: const EdgeInsets.all(8),
-            hintText: 'Search',
-            hintStyle: const TextStyle(
-              fontSize: 21,
-            )),
+            setState(() {
+              salesRecordSearchHelper(context, searchSalesRecord).then((_) {
+                setState(() {});
+                //debugPrint('test ${mainBookList.toString()}');
+              });
+            });
+          } else {
+            setState(() {
+              salesRecordSearchHelper(context, searchSalesRecord).then((_) {
+                setState(() {});
+              });
+            });
+          }
+        });
+      },
+      onSubmitted: (String text) {
+        setState(() {});
+      },
+      autofocus: false,
+      maxLines: 1,
+      cursorColor: Theme.of(context).hintColor,
+      style: const TextStyle(fontSize: 21),
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+          prefixIcon:
+              Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
+          filled: true,
+          fillColor: Theme.of(context).canvasColor,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          isDense: true,
+          contentPadding: const EdgeInsets.all(8),
+          hintText: 'Search',
+          hintStyle: const TextStyle(
+            fontSize: 21,
+          )),
     );
   }
 
@@ -196,9 +204,9 @@ class _SalesRecordListState extends State<SalesRecordList> {
               right: 368,
             ),
             child: Container(
-              padding: const EdgeInsets.only(left: 2, right: 0),
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: _searchField()),
+                padding: const EdgeInsets.only(left: 2, right: 0),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -215,7 +223,8 @@ class _SalesRecordListState extends State<SalesRecordList> {
                       setState(() {
                         searchSalesRecordController.clear();
                         searchSalesRecord = preSearchList;
-                        salesRecordSearchHelper(context, searchSalesRecord).then((_) {
+                        salesRecordSearchHelper(context, searchSalesRecord)
+                            .then((_) {
                           setState(() {});
                         });
                       });
@@ -235,6 +244,9 @@ class _SalesRecordListState extends State<SalesRecordList> {
                 child: CustomDropdownButton2(
                   hint: 'Select one',
                   // buttonHeight: 25,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 20,
+                  buttonPadding: const EdgeInsets.symmetric(horizontal: 10),
                   buttonWidth: 160,
                   dropdownWidth: 160,
                   offset: const Offset(0, 0),
@@ -258,7 +270,7 @@ class _SalesRecordListState extends State<SalesRecordList> {
                     });
                   },
                 )),
-                const SizedBox(width: 128),
+            const SizedBox(width: 128),
 
             //Add Data Button
             // isManager
@@ -413,7 +425,6 @@ class _SalesRecordListState extends State<SalesRecordList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.deliveryDate, columnIndex, ascending),
                           ),
-                          
                         ],
                         rows: List<DataRow>.generate(
                             _salesRecordDataSource.rowCount,

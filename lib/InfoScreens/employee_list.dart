@@ -60,6 +60,7 @@ class _EmployeeListState extends State<EmployeeList> {
   final List<Employee> preSearchList = mainEmployeeListCopy;
 
   final List<String> _searchDropDownVal = [
+    'All Fields',
     'First Name',
     'Last Name',
     'ID',
@@ -113,7 +114,19 @@ class _EmployeeListState extends State<EmployeeList> {
           setState(() {
             searchEmployeeList = [];
             Iterable<Employee> foundEmployee = [];
-            if (curSearchChoice == 'First Name') {
+            if (curSearchChoice == 'All Fields') {
+              foundEmployee = mainEmployeeListCopy.where((element) =>
+                  element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                  element.lastName.toLowerCase().contains(text.toLowerCase()) ||
+                  element.id.toLowerCase().contains(text.toLowerCase()) ||
+                  element.address.toLowerCase().contains(text.toLowerCase()) ||
+                  element.phoneNumber.toLowerCase().contains(text.toLowerCase()) ||
+                  element.dateOfBirth.toLowerCase().contains(text.toLowerCase()) ||
+                  element.hireDate.toLowerCase().contains(text.toLowerCase()) ||
+                  element.position.toLowerCase().contains(text.toLowerCase()) ||
+                  element.numBookSold.toLowerCase().contains(text.toLowerCase()) ||
+                  element.description.toLowerCase().contains(text.toLowerCase()));
+            } else if (curSearchChoice == 'First Name') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
                   element.firstName.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Last Name') {
@@ -268,8 +281,11 @@ class _EmployeeListState extends State<EmployeeList> {
                 child: CustomDropdownButton2(
                   hint: 'Select one',
                   // buttonHeight: 25,
-                  buttonWidth: 128,
-                  dropdownWidth: 128,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 20,
+                  buttonPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  buttonWidth: 160,
+                  dropdownWidth: 160,
                   offset: const Offset(0, 0),
                   dropdownHeight: double.maxFinite,
                   dropdownDecoration: BoxDecoration(
@@ -293,7 +309,7 @@ class _EmployeeListState extends State<EmployeeList> {
                 )),
 
             //Add Data Button
-            if (isManager) const SizedBox(width: 80),
+            if (isManager) const SizedBox(width: 48),
             isManager
                 ? MaterialButton(
                     onPressed: () => [
@@ -324,7 +340,7 @@ class _EmployeeListState extends State<EmployeeList> {
                           )
                         ]),
                   )
-                : const SizedBox(width: 160)
+                : const SizedBox(width: 128)
           ],
         ),
         body: FutureBuilder(

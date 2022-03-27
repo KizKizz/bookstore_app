@@ -29,6 +29,7 @@ class _CustomerListState extends State<CustomerList> {
   final List<Customer> preSearchList = mainCustomerListCopy;
 
   final List<String> _searchDropDownVal = [
+    'All Fields',
     'First Name',
     'Last Name',
     'ID',
@@ -79,6 +80,18 @@ class _CustomerListState extends State<CustomerList> {
             searchCustomerList = [];
             Iterable<Customer> foundCustomer = [];
             if (_curSearchChoice == 'First Name') {
+              foundCustomer = mainCustomerListCopy.where((element) =>
+                  element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                  element.lastName.toLowerCase().contains(text.toLowerCase()) ||
+                  element.id.toLowerCase().contains(text.toLowerCase()) ||
+                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
+                  element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                  element.city.toLowerCase().contains(text.toLowerCase()) ||
+                  element.state.toLowerCase().contains(text.toLowerCase()) ||
+                  element.zipCode.toLowerCase().contains(text.toLowerCase()) ||
+                  element.phoneNumber.toLowerCase().contains(text.toLowerCase()) ||
+                  element.totalPurchases.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'First Name') {
               foundCustomer = mainCustomerListCopy.where((element) =>
                   element.firstName.toLowerCase().contains(text.toLowerCase()));
             } else if (_curSearchChoice == 'Last Name') {
@@ -234,8 +247,11 @@ class _CustomerListState extends State<CustomerList> {
                 child: CustomDropdownButton2(
                   hint: 'Select one',
                   // buttonHeight: 25,
-                  buttonWidth: 128,
-                  dropdownWidth: 128,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 20,
+                  buttonPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  buttonWidth: 160,
+                  dropdownWidth: 160,
                   offset: const Offset(0, 0),
                   dropdownHeight: double.maxFinite,
                   dropdownDecoration: BoxDecoration(
@@ -259,7 +275,7 @@ class _CustomerListState extends State<CustomerList> {
                 )),
 
             //Add Data Button
-            if (isManager) const SizedBox(width: 80),
+            if (isManager) const SizedBox(width: 48),
             isManager
                 ? MaterialButton(
                     onPressed: () => [
@@ -291,7 +307,7 @@ class _CustomerListState extends State<CustomerList> {
                         ]),
                   )
                 //Padding for nonmanager
-                : const SizedBox(width: 160),
+                : const SizedBox(width: 128),
           ],
         ),
         body: FutureBuilder(

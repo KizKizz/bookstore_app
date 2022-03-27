@@ -35,11 +35,12 @@ class _BookListState extends State<BookList> {
   final List<Book> preSearchList = mainBookListCopy;
 
   final List<String> _searchDropDownVal = [
+    'All Fields',
     'Title',
     'ID',
     'Author',
     'Publisher',
-    'Publisher Date',
+    'Publish Date',
     'Edition',
     'Cost',
     'Retail Price',
@@ -88,7 +89,19 @@ class _BookListState extends State<BookList> {
           setState(() {
             searchBookList = [];
             Iterable<Book> foundBook = [];
-            if (curSearchChoice == 'Title') {
+            if (curSearchChoice == 'All Fields') {
+              foundBook = mainBookListCopy.where((element) =>
+                  element.title.toLowerCase().contains(text.toLowerCase()) ||
+                  element.id.toLowerCase().contains(text.toLowerCase()) ||
+                  element.author.toLowerCase().contains(text.toLowerCase()) ||
+                  element.publisher.toLowerCase().contains(text.toLowerCase()) ||
+                  element.publishDate.toLowerCase().contains(text.toLowerCase()) ||
+                  element.edition.toLowerCase().contains(text.toLowerCase()) ||
+                  element.cost.toLowerCase().contains(text.toLowerCase()) ||
+                  element.retailPrice.toLowerCase().contains(text.toLowerCase()) ||
+                  element.condition.toLowerCase().contains(text.toLowerCase()) ||
+                  element.sold.toLowerCase().contains(text.toLowerCase()));
+            } else if (curSearchChoice == 'Title') {
               foundBook = mainBookListCopy.where((element) =>
                   element.title.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'ID') {
@@ -100,7 +113,7 @@ class _BookListState extends State<BookList> {
             } else if (curSearchChoice == 'Publisher') {
               foundBook = mainBookListCopy.where((element) =>
                   element.publisher.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Publisher Date') {
+            } else if (curSearchChoice == 'Publish Date') {
               foundBook = mainBookListCopy.where((element) => element
                   .publishDate
                   .toLowerCase()
@@ -241,6 +254,9 @@ class _BookListState extends State<BookList> {
                   buttonWidth: 128,
                   dropdownWidth: 128,
                   offset: const Offset(0, 0),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 20,
+                  buttonPadding: const EdgeInsets.symmetric(horizontal: 10),
                   dropdownHeight: double.maxFinite,
                   dropdownDecoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
