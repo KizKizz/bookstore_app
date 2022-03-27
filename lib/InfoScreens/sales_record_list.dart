@@ -296,7 +296,7 @@ class _SalesRecordListState extends State<SalesRecordList> {
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
-                .loadString('assets/jsondatabase/order_data.json'),
+                .loadString('assets/jsondatabase/sales_record_data.json'),
             builder: (context, snapshot) {
               if (snapshot.data.toString().isNotEmpty &&
                   snapshot.hasData &&
