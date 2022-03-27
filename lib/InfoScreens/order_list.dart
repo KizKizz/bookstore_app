@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:bookstore_project/login_page.dart';
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -130,18 +131,21 @@ class _OrderListState extends State<OrderList> {
             }
 
             if (foundOrder.isNotEmpty) {
-              for (var customer in foundOrder) {
+              for (var order in foundOrder) {
                 Order tempOrder = Order(
-                    customer.orderNum,
-                    customer.customerName,
-                    customer.customerId,
-                    customer.salesPersonName,
-                    customer.salesPersonId,
-                    customer.orderDate,
-                    customer.deliveryDate,
-                    customer.paymentMethod,
-                    customer.orderStatus,
-                    customer.bookIds);
+                    order.orderNum,
+                    order.customerName,
+                    order.customerId,
+                    order.salesPersonName,
+                    order.salesPersonId,
+                    order.orderDate,
+                    order.deliveryDate,
+                    order.totalOrderCost,
+                    order.paymentMethod,
+                    order.orderStatus,
+                    order.bookIds,
+                    order.bookSoldPrices,
+                    );
                 searchOrderList.add(tempOrder);
               }
               setState(() {
@@ -163,17 +167,32 @@ class _OrderListState extends State<OrderList> {
           setState(() {});
         },
         autofocus: false,
-        cursorColor: Colors.white,
-        style: const TextStyle(fontSize: 20, color: Colors.white),
+        maxLines: 1,
+        cursorColor: Theme.of(context).hintColor,
+        style: const TextStyle(fontSize: 21),
         textInputAction: TextInputAction.search,
-        decoration: const InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow)),
+        decoration: InputDecoration(
+            prefixIcon:
+                Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
+            filled: true,
+            fillColor: Theme.of(context).canvasColor,
+            enabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                borderSide: BorderSide(
+                  color: Theme.of(context).hintColor,
+                )),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                borderSide: BorderSide(
+                  color: Theme.of(context).hintColor,
+                )),
+            isDense: true,
+            contentPadding: const EdgeInsets.all(8),
             hintText: 'Search',
-            hintStyle: TextStyle(
-                fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
+            hintStyle: const TextStyle(
+              fontSize: 21,
+            )),
+    );
   }
 
   @override
@@ -184,11 +203,16 @@ class _OrderListState extends State<OrderList> {
           title: const Text('Order Data'),
           appBar: AppBar(),
           flexSpace: Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 12),
-            margin: const EdgeInsets.only(left: 250, right: 368),
+            margin: const EdgeInsets.only(
+              left: 200,
+              right: 368,
+            ),
             // decoration: BoxDecoration(
             //   border: Border.all(color: Colors.white10)),
-            child: _searchField(),
+            child: Container(
+              padding: const EdgeInsets.only(left: 2, right: 0),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -196,9 +220,9 @@ class _OrderListState extends State<OrderList> {
               Container(
                 width: 50,
                 height: 50,
-                padding: const EdgeInsets.only(
-                    left: 2, right: 2, top: 10, bottom: 10),
-                margin: const EdgeInsets.only(right: 0, top: 5, bottom: 4),
+               padding: const EdgeInsets.only(
+                    left: 0, right: 0, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(right: 0, top: 3, bottom: 3),
                 child: MaterialButton(
                   onPressed: () => [
                     setState(() {
@@ -212,83 +236,77 @@ class _OrderListState extends State<OrderList> {
                       });
                     })
                   ],
-                  child: const Icon(
+                  child: Icon(
                     Icons.clear_sharp,
-                    color: Color.fromARGB(255, 240, 240, 240),
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ),
 
             //Dropdown search
             Container(
-                padding: const EdgeInsets.only(
-                    left: 2, right: 2, top: 10, bottom: 0),
-                margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
-                child: DropdownButton2(
-                  buttonHeight: 25,
-                  buttonWidth: 123,
-                  offset: const Offset(0, 2),
-                  // buttonDecoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(5),
-                  //   border: Border.all(
-                  //     color: Colors.white54,
-                  //   ),),
+                padding: const EdgeInsets.only(left: 2, right: 2),
+                margin: const EdgeInsets.only(right: 80, top: 10, bottom: 10),
+                child: CustomDropdownButton2(
+                  hint: 'Select one',
+                  // buttonHeight: 25,
+                  buttonWidth: 160,
+                  dropdownWidth: 160,
+                  offset: const Offset(0, 0),
+                  dropdownHeight: double.maxFinite,
+                  dropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(color: Theme.of(context).cardColor),
+                    //color: Colors.redAccent,
+                  ),
+                  buttonDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(color: Theme.of(context).hintColor),
+                    color: Theme.of(context).canvasColor,
+                  ),
+                  dropdownElevation: 2,
                   value: _curSearchChoice,
-                  itemHeight: 35,
-                  dropdownDecoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 54, 54, 54)),
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  items: _searchDropDownVal
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                        value: value,
-                        child: SizedBox(
-                            width: 98,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                  fontSize: 14.5, color: Colors.white),
-                            )));
-                  }).toList(),
+                  dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
                       _curSearchChoice = newValue!;
                     });
                   },
                 )),
+                const SizedBox(width: 128),
 
             //Add Data Button
-            isManager
-                ? MaterialButton(
-                    onPressed: () => [
-                      setState(() {
-                        setState(() {
-                          customerDataAdder(context).then((_) {
-                            setState(() {});
-                          });
-                        });
-                      })
-                    ],
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Icon(
-                              Icons.add_circle_outline_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Text(
-                              "Add",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ]),
-                  )
-                : const SizedBox(width: 80)
+            // isManager
+            //     ? MaterialButton(
+            //         onPressed: () => [
+            //           setState(() {
+            //             setState(() {
+            //               customerDataAdder(context).then((_) {
+            //                 setState(() {});
+            //               });
+            //             });
+            //           })
+            //         ],
+            //         child: Column(
+            //             mainAxisSize: MainAxisSize.min,
+            //             children: const <Widget>[
+            //               Padding(
+            //                 padding: EdgeInsets.all(2.0),
+            //                 child: Icon(
+            //                   Icons.add_circle_outline_outlined,
+            //                   color: Colors.white,
+            //                 ),
+            //               ),
+            //               Padding(
+            //                 padding: EdgeInsets.all(2.0),
+            //                 child: Text(
+            //                   "Add",
+            //                   style: TextStyle(color: Colors.white),
+            //                 ),
+            //               )
+            //             ]),
+            //       )
+            //     : const SizedBox(width: 80)
           ],
         ),
         body: FutureBuilder(
@@ -340,16 +358,16 @@ class _OrderListState extends State<OrderList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.customerName, columnIndex, ascending),
                           ),
-                          DataColumn2(
-                            label: const Text(
-                              'Customer\nID',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.customerId, columnIndex, ascending),
-                          ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Customer\nID',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.S,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.customerId, columnIndex, ascending),
+                          // ),
                           DataColumn2(
                             label: const Text(
                               'Salesperson\nName',
@@ -360,16 +378,16 @@ class _OrderListState extends State<OrderList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.salesPersonName, columnIndex, ascending),
                           ),
-                          DataColumn2(
-                            label: const Text(
-                              'Salesperson\nID',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.salesPersonId, columnIndex, ascending),
-                          ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Salesperson\nID',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.S,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.salesPersonId, columnIndex, ascending),
+                          // ),
                           DataColumn2(
                             label: const Text(
                               'Order Date',
@@ -392,6 +410,16 @@ class _OrderListState extends State<OrderList> {
                           ),
                           DataColumn2(
                             label: const Text(
+                              'Total Cost',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.totalOrderCost, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
                               'Payment\nMethod',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -410,16 +438,26 @@ class _OrderListState extends State<OrderList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.orderStatus, columnIndex, ascending),
                           ),
-                          DataColumn2(
-                            label: const Text(
-                              'BookIDs',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.bookIds, columnIndex, ascending),
-                          ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'BookIDs',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.L,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.bookIds, columnIndex, ascending),
+                          // ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Prices',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.L,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.bookIds, columnIndex, ascending),
+                          // ),
                       
                         ],
                         rows: List<DataRow>.generate(

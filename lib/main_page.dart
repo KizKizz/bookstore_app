@@ -2,7 +2,7 @@ import 'package:bookstore_project/InfoScreens/author_list.dart';
 import 'package:bookstore_project/InfoScreens/checkout_page.dart';
 import 'package:bookstore_project/InfoScreens/customer_list.dart';
 import 'package:bookstore_project/InfoScreens/order_list.dart';
-import 'package:bookstore_project/InfoScreens/sale_record_list.dart';
+import 'package:bookstore_project/InfoScreens/sales_record_list.dart';
 import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +46,7 @@ class _MainPageState extends State<MainPage> {
       const BookList(),
       const AuthorList(),
       const OrderList(),
-      const SaleRecordList(),
+      const SalesRecordList(),
       const CustomerList(),
       const EmployeeList()
     ];

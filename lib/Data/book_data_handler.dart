@@ -180,7 +180,7 @@ class Book {
       editResults[5] = editedVal;
     else if (info == 'Cost')
       editResults[6] = editedVal;
-    else if (info == 'RetailPrice')
+    else if (info == 'Retail Price')
       editResults[7] = editedVal;
     else if (info == 'Condition')
       editResults[8] = editedVal;
@@ -523,7 +523,7 @@ class BookDatabase extends DataTableSource {
                     }),
                 TextButton(
                     child: const Text('SAVE'),
-                    onPressed: () {
+                    onPressed: () async {
                       int _bookMatchIndex = mainBookListCopy
                           .indexWhere((element) => element.id == curBook.id);
                       //debugPrint('curafter: ${_bookMatchIndex}');
@@ -531,12 +531,20 @@ class BookDatabase extends DataTableSource {
                         curBook.setInfo(item);
                       }
 
+                      String _authorDataGet = await authorDataJson.readAsString();
+                      if (_authorDataGet.isEmpty) {
+                        getAuthorsFromBook();
+                      } else if (_authorDataGet.isNotEmpty && mainAuthorListCopy.isEmpty) {
+                        var _jsonResponse = await jsonDecode(_authorDataGet);
+                        convertauthorData(_jsonResponse);
+                      }
+
                       if (_bookMatchIndex >= 0) {
                         mainBookListCopy[_bookMatchIndex] = curBook;
                       }
 
                       //Fetch author data again?
-                      final foundAuthor = mainAuthorList.singleWhere(
+                      final foundAuthor = mainAuthorListCopy.singleWhere(
                           (element) => element.fullName
                               .toLowerCase()
                               .contains(_curBookAuthor.toLowerCase()));
@@ -567,28 +575,229 @@ class BookDatabase extends DataTableSource {
 //Add book
 Future<void> bookDataAdder(context) async {
   Book newBook = Book('', '', '', '', '', '', '', '', '', '');
+  String _authorDataGet = await authorDataJson.readAsString();
+  if (_authorDataGet.isEmpty) {
+    getAuthorsFromBook();
+  } else if (_authorDataGet.isNotEmpty && mainAuthorListCopy.isEmpty) {
+    var _jsonResponse = await jsonDecode(_authorDataGet);
+    convertauthorData(_jsonResponse);
+  }
+  Author newAuthor = Author('', '', '', '', '');
+  Iterable<Author> _authorsExistedInList = [];
+  bool _authorListVisible = false;
+  TextEditingController _authorNameController = TextEditingController();
+  int _statusIndex = 0;
+  double _ratingIndex = 3.0;
+
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return _SystemPadding(
-          child: AlertDialog(
-            contentPadding: const EdgeInsets.all(16.0),
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
-                  mainAxisSize: MainAxisSize.min,
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(0),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     const Text('Add Book'),
                     for (var item in newBook.allInfoHeaders)
-                      if (item == 'Condition')
+                      if (item == 'Author')
+                        Column(
+                          children: [
+                            TextField(
+                                controller: _authorNameController,
+                                onChanged: (text) => {
+                                      setState(
+                                        () {
+                                          _authorsExistedInList =
+                                              mainAuthorListCopy.where(
+                                                  (element) => element.fullName
+                                                      .toLowerCase()
+                                                      .contains(
+                                                          text.toLowerCase()));
+                                          if (_authorsExistedInList.isEmpty) {
+                                            newBook.infoEdited(item, text);
+                                            newAuthor.fullName = text;
+                                          }
+
+                                          if (_authorsExistedInList
+                                              .isNotEmpty) {
+                                            _authorListVisible = true;
+                                          } else {
+                                            _authorListVisible = false;
+                                          }
+                                        },
+                                      )
+                                    },
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                    labelText: item + ':',
+                                    hintText: 'Full Name')),
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                          controller: TextEditingController()
+                                            ..text = newAuthor.id,
+                                          onChanged: (text) =>
+                                              {newAuthor.id = text},
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                              labelText: item + '\'s ID:',
+                                              hintText: 'Author ID')),
+                                      TextField(
+                                          controller: TextEditingController()
+                                            ..text = newAuthor.yearBirth,
+                                          onChanged: (text) =>
+                                              {newAuthor.yearBirth = text},
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                              labelText:
+                                                  item + '\'s Year of Birth:',
+                                              hintText: 'YYYY')),
+                                      TextField(
+                                          controller: TextEditingController()
+                                            ..text = newAuthor.yearDead,
+                                          onChanged: (text) =>
+                                              {newAuthor.yearDead = text},
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                              labelText:
+                                                  item + '\'s Year of Dead:',
+                                              hintText: 'YYYY')),
+                                      TextField(
+                                          controller: TextEditingController()
+                                            ..text = newAuthor.description,
+                                          onChanged: (text) =>
+                                              {newAuthor.description = text},
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                              labelText:
+                                                  item + '\'s Description:',
+                                              hintText: 'Optional')),
+                                    ],
+                                  ),
+                                ),
+                                if (_authorListVisible)
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .dialogBackgroundColor,
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(0),
+                                            topRight: Radius.circular(0),
+                                            bottomLeft: Radius.circular(3),
+                                            bottomRight: Radius.circular(3)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Theme.of(context)
+                                                .shadowColor
+                                                .withOpacity(0.3),
+                                            spreadRadius: 1,
+                                            blurRadius: 1,
+                                            // offset: const Offset(
+                                            //     1, 1), // changes position of shadow
+                                          ),
+                                        ]),
+                                    width: 248,
+                                    height: (50.0 *
+                                        double.parse(_authorsExistedInList
+                                            .length
+                                            .toString())),
+                                    constraints: const BoxConstraints(
+                                        maxHeight: 212,
+                                        maxWidth: double.maxFinite),
+                                    child: ListView(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6),
+                                        controller: ScrollController(),
+                                        children: [
+                                          for (var author
+                                              in _authorsExistedInList)
+                                            Container(
+                                              //height: 50,
+                                              child: Card(
+                                                margin:
+                                                    const EdgeInsets.all(0.5),
+                                                elevation: 3,
+                                                clipBehavior: Clip.antiAlias,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    side: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .hintColor
+                                                          .withOpacity(0.3),
+                                                      width: 1,
+                                                    )),
+                                                child: ListTile(
+                                                  dense: true,
+                                                  visualDensity:
+                                                      const VisualDensity(
+                                                          horizontal: 0,
+                                                          vertical: -4),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 10.0,
+                                                          vertical: 0.0),
+                                                  onTap: () {
+                                                    setState(
+                                                      () {
+                                                        newBook.author =
+                                                            author.fullName;
+                                                        newAuthor = author;
+                                                        _authorNameController
+                                                                .text =
+                                                            author.fullName;
+                                                        newBook.infoEdited(
+                                                            item,
+                                                            _authorNameController
+                                                                .text);
+                                                        _authorListVisible =
+                                                            false;
+                                                        _authorsExistedInList =
+                                                            [];
+                                                      },
+                                                    );
+                                                  },
+                                                  // leading:
+                                                  //     const Icon(Icons.person),
+                                                  title: Text(
+                                                    author.fullName,
+                                                    style: const TextStyle(
+                                                        fontSize: 15),
+                                                  ),
+                                                  subtitle: Text(
+                                                    'ID: ${author.id}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  trailing:
+                                                      const Icon(Icons.add),
+                                                  isThreeLine: false,
+                                                ),
+                                              ),
+                                            ),
+                                        ]),
+                                  )
+                              ],
+                            )
+                          ],
+                        )
+                      else if (item == 'Condition')
                         Container(
-                            padding: EdgeInsets.only(top: 10),
+                            padding: const EdgeInsets.only(top: 10),
                             child: Column(children: [
                               Container(
-                                alignment: Alignment(-1, 0),
-                                padding: EdgeInsets.only(bottom: 5),
+                                alignment: const Alignment(-1, 0),
+                                padding: const EdgeInsets.only(bottom: 5),
                                 child: Text(
                                   'Condition:',
                                   style: TextStyle(
@@ -597,7 +806,7 @@ Future<void> bookDataAdder(context) async {
                               ),
                               RatingBar.builder(
                                 itemSize: 40,
-                                initialRating: 3,
+                                initialRating: _ratingIndex,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: false,
@@ -610,15 +819,15 @@ Future<void> bookDataAdder(context) async {
                                 ),
                                 onRatingUpdate: (rating) {
                                   if (rating == 1.0) {
-                                    newBook.infoEdited(item, 'Poor');
+                                    _ratingIndex = 1.0;
                                   } else if (rating == 2.0) {
-                                    newBook.infoEdited(item, 'Fair');
+                                    _ratingIndex = 2.0;
                                   } else if (rating == 3.0) {
-                                    newBook.infoEdited(item, 'Good');
+                                    _ratingIndex = 3.0;
                                   } else if (rating == 4.0) {
-                                    newBook.infoEdited(item, 'Excellent');
+                                    _ratingIndex = 4.0;
                                   } else if (rating == 5.0) {
-                                    newBook.infoEdited(item, 'Superb');
+                                    _ratingIndex = 5.0;
                                   }
                                 },
                               )
@@ -643,7 +852,7 @@ Future<void> bookDataAdder(context) async {
                                   Theme.of(context).primaryColorLight
                                 ],
                                 borderWidth: 1.5,
-                                initialLabelIndex: 0,
+                                initialLabelIndex: _statusIndex,
                                 cornerRadius: 50.0,
                                 activeFgColor: Colors.white,
                                 inactiveBgColor: Colors.grey,
@@ -656,17 +865,15 @@ Future<void> bookDataAdder(context) async {
                                 ],
                                 onToggle: (index) {
                                   if (index == 0) {
-                                    newBook.infoEdited(item, 'Available');
+                                    _statusIndex = 0;
                                   } else if (index == 1) {
-                                    newBook.infoEdited(item, 'Sold');
+                                    _statusIndex = 1;
                                   }
                                 },
                               )
                             ]))
                       else
                         TextField(
-                            // controller: TextEditingController()
-                            //   ..text = item.toString(),
                             onChanged: (text) =>
                                 {newBook.infoEdited(item, text)},
                             autofocus: true,
@@ -674,8 +881,8 @@ Future<void> bookDataAdder(context) async {
                                 labelText: item + ':',
                                 hintText: item + ' of the book')),
                   ],
-                )))
-              ],
+                ),
+              ),
             ),
             actions: <Widget>[
               TextButton(
@@ -686,11 +893,46 @@ Future<void> bookDataAdder(context) async {
               TextButton(
                   child: const Text('ADD'),
                   onPressed: () {
+                    if (_statusIndex == 0) {
+                      newBook.infoEdited('Sold', 'Available');
+                    } else if (_statusIndex == 1) {
+                      newBook.infoEdited('Sold', 'Sold');
+                    }
+
+                    if (_ratingIndex == 1.0) {
+                      newBook.infoEdited('Condition', 'Poor');
+                    } else if (_ratingIndex == 2.0) {
+                      newBook.infoEdited('Condition', 'Fair');
+                    } else if (_ratingIndex == 3.0) {
+                      newBook.infoEdited('Condition', 'Good');
+                    } else if (_ratingIndex == 4.0) {
+                      newBook.infoEdited('Condition', 'Excellent');
+                    } else if (_ratingIndex == 5.0) {
+                      newBook.infoEdited('Condition', 'Superb');
+                    }
+                    //Update Book List
                     for (var item in newBook.allInfoHeaders) {
                       newBook.setInfo(item);
                     }
                     mainBookList.add(newBook);
                     mainBookListCopy.add(newBook);
+
+                    //Update Author List
+                    if ((mainAuthorListCopy.indexWhere((element) => element.fullName == newAuthor.fullName) == -1)) {
+                      mainAuthorList.add(newAuthor);
+                      mainAuthorListCopy.add(newAuthor);
+                    }
+
+                    //write to json
+                    if (!kIsWeb) {
+                      mainAuthorList
+                          .map(
+                            (author) => author.toJson(),
+                          )
+                          .toList();
+                      authorDataJson
+                          .writeAsStringSync(json.encode(mainAuthorList));
+                    }
 
                     if (!kIsWeb) {
                       mainBookListCopy
@@ -705,8 +947,8 @@ Future<void> bookDataAdder(context) async {
                     //debugPrint(newBook.allInfo.toString());
                   })
             ],
-          ),
-        );
+          );
+        });
       });
 }
 

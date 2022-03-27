@@ -4,22 +4,24 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-final File customerDataJson = File('assets/jsondatabase/order_data.json');
+import 'book_data_handler.dart';
+
+final File orderDataJson = File('assets/jsondatabase/order_data.json');
 List<Order> mainOrderList = [];
 List<Order> mainOrderListCopy = [];
-final List<String> _jobPosDropDownVal = [
-  'Owner',
-  'Assistant Manager',
-  'Full Time Sales Clerk',
-  'Part Time Sales Clerk',
+final List<String> _orderStatusDropDownVal = [
+  'Picked Up',
+  'Customer Will Pickup',
+  'To Be shipped',
+  'Shipped'
 ];
-late String _curJobPosChoice = _jobPosDropDownVal[0];
+late String _curOrderStatusChoice = _orderStatusDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -73,17 +75,19 @@ class RestorableOrderSelections extends RestorableProperty<Set<int>> {
 /// Domain model entity
 class Order {
   Order(
-      this.orderNum,
-      this.customerName,
-      this.customerId,
-      this.salesPersonName,
-      this.salesPersonId,
-      this.orderDate,
-      this.deliveryDate,
-      this.paymentMethod,
-      this.orderStatus,
-      this.bookIds,
-      );
+    this.orderNum,
+    this.customerName,
+    this.customerId,
+    this.salesPersonName,
+    this.salesPersonId,
+    this.orderDate,
+    this.deliveryDate,
+    this.totalOrderCost,
+    this.paymentMethod,
+    this.orderStatus,
+    this.bookIds,
+    this.bookSoldPrices,
+  );
 
   String orderNum;
   String customerName;
@@ -92,13 +96,15 @@ class Order {
   String salesPersonId;
   String orderDate;
   String deliveryDate;
+  String totalOrderCost;
   String paymentMethod;
   String orderStatus;
   String bookIds;
+  String bookSoldPrices;
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(11, null);
+  List editResults = List.filled(12, null);
 
   List get allInfo {
     return [
@@ -109,9 +115,11 @@ class Order {
       salesPersonId,
       orderDate,
       deliveryDate,
+      totalOrderCost,
       paymentMethod,
       orderStatus,
       bookIds,
+      bookSoldPrices,
     ];
   }
 
@@ -124,9 +132,11 @@ class Order {
       'Salesperson ID',
       'Order Date',
       'Delivery Date',
+      'Total Cost',
       'Payment Method',
       'Order Status',
       'BookIDs',
+      'BookSoldPrices'
     ];
   }
 
@@ -145,12 +155,16 @@ class Order {
       orderDate = editResults[5];
     else if (info == 'Delivery Date' && editResults[6] != null)
       deliveryDate = editResults[6];
-    else if (info == 'Payment Method' && editResults[7] != null)
-      paymentMethod = editResults[7];
-    else if (info == 'Order Status' && editResults[8] != null)
-      orderStatus = editResults[8];
-    else if (info == 'BookIDs' && editResults[9] != null)
-      bookIds = editResults[9];
+    else if (info == 'Total Cost' && editResults[7] != null)
+      totalOrderCost = editResults[7];
+    else if (info == 'Payment Method' && editResults[8] != null)
+      paymentMethod = editResults[8];
+    else if (info == 'Order Status' && editResults[9] != null)
+      orderStatus = editResults[9];
+    else if (info == 'BookIDs' && editResults[10] != null)
+      bookIds = editResults[10];
+    else if (info == 'BookSoldPrices' && editResults[11] != null)
+      bookIds = editResults[11];
   }
 
   String headerToInfo(var header) {
@@ -168,12 +182,16 @@ class Order {
       return orderDate;
     else if (header == 'Delivery Date')
       return deliveryDate;
+    else if (header == 'Total Cost')
+      return totalOrderCost;
     else if (header == 'Payment Method')
       return paymentMethod;
     else if (header == 'Order Status')
       return orderStatus;
     else if (header == 'BookIDs')
       return bookIds;
+    else if (header == 'BookSoldPrices')
+      return bookSoldPrices;
     else
       return 'error';
   }
@@ -193,14 +211,16 @@ class Order {
       editResults[5] = editedVal;
     else if (info == 'Delivery Date')
       editResults[6] = editedVal;
-    else if (info == 'Payment Method')
+     else if (info == 'Total Cost')
       editResults[7] = editedVal;
-    else if (info == 'Order Status')
+    else if (info == 'Payment Method')
       editResults[8] = editedVal;
-    else if (info == 'BookIDs')
+    else if (info == 'Order Status')
       editResults[9] = editedVal;
-    else if (info == 'Total Purchases')
+    else if (info == 'BookIDs')
       editResults[10] = editedVal;
+    else if (info == 'BookSoldPrices')
+      editResults[11] = editedVal;
     else
       editResults[0] = editedVal;
   }
@@ -211,11 +231,13 @@ class Order {
     customerId = json['customerId'];
     salesPersonName = json['salesPersonName'];
     salesPersonId = json['salesPersonId'];
-    orderDate = json['suite'];
+    orderDate = json['orderDate'];
     deliveryDate = json['deliveryDate'];
+    totalOrderCost = json['totalCost'];
     paymentMethod = json['paymentMethod'];
     orderStatus = json['orderStatus'];
     bookIds = json['bookIds'];
+    bookSoldPrices = json['BookSoldPrices'];
   }
 
   Map<String, dynamic> toJson() {
@@ -227,9 +249,11 @@ class Order {
     data['salesPersonId'] = salesPersonId;
     data['orderDate'] = orderDate;
     data['deliveryDate'] = deliveryDate;
+    data['totalCost'] = totalOrderCost;
     data['paymentMethod'] = paymentMethod;
     data['orderStatus'] = orderStatus;
     data['bookIds'] = bookIds;
+    data['bookSoldPrices'] = bookSoldPrices;
 
     return data;
   }
@@ -354,14 +378,16 @@ class OrderDatabase extends DataTableSource {
       cells: [
         DataCell(Text(customer.orderNum)),
         DataCell(Text(customer.customerName)),
-        DataCell(Text(customer.customerId)),
+        //DataCell(Text(customer.customerId)),
         DataCell(Text(customer.salesPersonName)),
-        DataCell(Text(customer.salesPersonId)),
+        //DataCell(Text(customer.salesPersonId)),
         DataCell(Text(customer.orderDate)),
         DataCell(Text(customer.deliveryDate)),
+        DataCell(Text(customer.totalOrderCost)),
         DataCell(Text(customer.paymentMethod)),
         DataCell(Text(customer.orderStatus)),
-        DataCell(Text(customer.bookIds)),
+        //DataCell(Text(customer.bookIds)),
+        //DataCell(Text(customer.bookSoldPrices)),
       ],
     );
   }
@@ -385,32 +411,313 @@ class OrderDatabase extends DataTableSource {
 
   //Edit Popup
   _showDialog(context, Order curOrder) async {
+    List<String> _tempBookIDList = curOrder.bookIds.split(' ');
+    List<Book> _orderedBooks = [];
+    for (var id in _tempBookIDList) {
+      _orderedBooks
+          .add(mainBookListCopy.firstWhere((element) => element.id == id));
+    }
+
+    List<String> _tempOrderPrices = curOrder.bookSoldPrices.split(' ');
+
+    _curOrderStatusChoice = _orderStatusDropDownVal
+        .firstWhere((element) => element == curOrder.orderStatus);
+
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Edit Order Info'),
-                      for (var item in curOrder.allInfoHeaders)
-                        TextField(
-                            controller: TextEditingController()
-                              ..text = curOrder.headerToInfo(item),
-                            onChanged: (text) =>
-                                {curOrder.infoEdited(item, text)},
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                labelText: item + ':', hintText: item)),
-                    ],
-                  )))
-                ],
+              contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                //padding: const EdgeInsets.only(right: 20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Order #${curOrder.orderNum} Info'),
+                            // for (var item in curOrder.allInfoHeaders)
+                            //   TextField(
+                            //       controller: TextEditingController()
+                            //         ..text = curOrder.headerToInfo(item),
+                            //       onChanged: (text) =>
+                            //           {curOrder.infoEdited(item, text)},
+                            //       autofocus: true,
+                            //       decoration: InputDecoration(
+                            //           labelText: item + ':', hintText: item)),
+
+                            //for (var item in curOrder.allInfoHeaders)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Customer Name'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Customer Name', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Customer Name',
+                                      )),
+                                )),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Customer ID'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Customer ID', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Customer ID',
+                                      )),
+                                )),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Salesperson Name'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Salesperson Name', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Salesperson Name',
+                                      )),
+                                )),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Salesperson ID'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Salesperson ID', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Salesperson ID',
+                                      )),
+                                )),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text =
+                                            curOrder.headerToInfo('Order Date'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Order Date', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Order Date',
+                                      )),
+                                )),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Delivery Date'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Delivery Date', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Delivery Date',
+                                      )),
+                                )),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Payment Method'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Payment Method', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Payment Method',
+                                      )),
+                                )),
+                                Expanded(
+                                    child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.only(
+                                          left: 10, top: 11, bottom: 7),
+                                      child: Text(
+                                        'Order Status',
+                                        style: TextStyle(
+                                            color: Theme.of(context).hintColor,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                    Container(
+                                        width: double.infinity,
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: CustomDropdownButton2(
+                                          buttonHeight: 25,
+                                          buttonPadding:
+                                              const EdgeInsets.only(bottom: 3),
+                                          hint: 'Select Status',
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .cardColor),
+                                            //color: Colors.redAccent,
+                                          ),
+                                          buttonDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .hintColor),
+                                            //color: Colors.redAccent,
+                                          ),
+                                          dropdownElevation: 2,
+                                          offset: const Offset(0, 0),
+                                          valueAlignment: Alignment.center,
+                                          icon:
+                                              const Icon(Icons.arrow_drop_down),
+                                          dropdownWidth: 190,
+                                          dropdownItems:
+                                              _orderStatusDropDownVal,
+                                          value: _curOrderStatusChoice,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _curOrderStatusChoice = value!;
+                                            });
+                                          },
+                                        )),
+                                  ],
+                                )),
+                              ],
+                            ),
+
+                            //List of Books
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text('Ordered books',
+                                  style: TextStyle(
+                                      color: Theme.of(context).hintColor,
+                                      fontSize: 15)),
+                            ),
+                            Container(
+                              height: double.maxFinite,
+                              width: 400,
+                              constraints: const BoxConstraints(
+                                  minHeight: 100, maxHeight: 330),
+                              child: ListView(
+                                padding:
+                                    const EdgeInsets.only(left: 7, right: 7),
+                                clipBehavior: Clip.antiAlias,
+                                shrinkWrap: true,
+                                //controller: ScrollController(),
+                                children: [
+                                  for (int i = 0; i < _orderedBooks.length; i++)
+                                    Container(
+                                      height: 75,
+                                      child: Card(
+                                        elevation: 2,
+                                        clipBehavior: Clip.antiAlias,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            side: BorderSide(
+                                              color: Theme.of(context)
+                                                  .hintColor
+                                                  .withOpacity(0.3),
+                                              //color: Colors.grey.withOpacity(0.2),
+                                              width: 1,
+                                            )),
+                                        child: ListTile(
+                                          dense: true,
+                                          //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                          onTap: () {
+                                            setState(() {});
+                                          },
+                                          leading: const Icon(
+                                              Icons.menu_book_outlined),
+                                          title: Text(
+                                            _orderedBooks[i].title,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          subtitle: Text(
+                                            '${_orderedBooks[i].author}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
+                                            style:
+                                                const TextStyle(fontSize: 14),
+                                          ),
+                                          trailing: const Icon(Icons.clear),
+                                          isThreeLine: true,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
+                ),
               ),
               actions: <Widget>[
                 TextButton(
@@ -428,6 +735,9 @@ class OrderDatabase extends DataTableSource {
                         curOrder.setInfo(item);
                       }
 
+                      //Set status addon
+                      curOrder.orderStatus = _curOrderStatusChoice;
+
                       if (_orderMatchIndex >= 0) {
                         mainOrderListCopy[_orderMatchIndex] = curOrder;
                       }
@@ -436,11 +746,11 @@ class OrderDatabase extends DataTableSource {
                       if (!kIsWeb) {
                         mainOrderListCopy
                             .map(
-                              (customer) => customer.toJson(),
+                              (order) => order.toJson(),
                             )
                             .toList();
-                        customerDataJson.writeAsStringSync(
-                            json.encode(mainOrderListCopy));
+                        orderDataJson
+                            .writeAsStringSync(json.encode(mainOrderListCopy));
                       }
                     })
               ],
@@ -451,9 +761,21 @@ class OrderDatabase extends DataTableSource {
 }
 
 //Add
-Future<void> customerDataAdder(context) async {
-  _curJobPosChoice = _jobPosDropDownVal[2];
-  Order newOrder = Order('', '', '', '', '', '', '', '', '', '',);
+Future<void> orderDataAdder(context) async {
+  Order newOrder = Order(
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+  );
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -499,10 +821,10 @@ Future<void> customerDataAdder(context) async {
                     if (!kIsWeb) {
                       mainOrderListCopy
                           .map(
-                            (customer) => customer.toJson(),
+                            (order) => order.toJson(),
                           )
                           .toList();
-                      customerDataJson
+                      orderDataJson
                           .writeAsStringSync(json.encode(mainOrderListCopy));
                     }
 
@@ -517,7 +839,7 @@ Future<void> customerDataAdder(context) async {
 //JSON Helper
 void convertOrderData(var jsonResponse) {
   for (var b in jsonResponse) {
-    Order customer = Order(
+    Order order = Order(
       b['orderNum'],
       b['customerName'],
       b['customerId'],
@@ -525,12 +847,14 @@ void convertOrderData(var jsonResponse) {
       b['salesPersonId'],
       b['orderDate'],
       b['deliveryDate'],
+      b['totalCost'],
       b['paymentMethod'],
       b['orderStatus'],
       b['bookIds'],
+      b['bookSoldPrices'],
     );
-    mainOrderList.add(customer);
-    mainOrderListCopy.add(customer);
+    mainOrderList.add(order);
+    mainOrderListCopy.add(order);
   }
   //debugPrint('test ${mainBookList.length}');
 }
@@ -539,8 +863,20 @@ void convertOrderData(var jsonResponse) {
 Future<void> orderSearchHelper(context, List<Order> foundList) async {
   if (foundList.isEmpty) {
     mainOrderList.removeRange(1, mainOrderList.length);
-    mainOrderList.first =
-        Order('', '', '', '', '', '', '', '', '', '',);
+    mainOrderList.first = Order(
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
   } else {
     if (mainOrderList.length > 1) {
       mainOrderList.removeRange(1, mainOrderList.length);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -113,17 +114,32 @@ class _AuthorListState extends State<AuthorList> {
           setState(() {});
         },
         autofocus: false,
-        cursorColor: Colors.white,
-        style: const TextStyle(fontSize: 20, color: Colors.white),
+        maxLines: 1,
+        cursorColor: Theme.of(context).hintColor,
+        style: const TextStyle(fontSize: 21),
         textInputAction: TextInputAction.search,
-        decoration: const InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow)),
+        decoration: InputDecoration(
+            prefixIcon:
+                Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
+            filled: true,
+            fillColor: Theme.of(context).canvasColor,
+            enabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                borderSide: BorderSide(
+                  color: Theme.of(context).hintColor,
+                )),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                borderSide: BorderSide(
+                  color: Theme.of(context).hintColor,
+                )),
+            isDense: true,
+            contentPadding: const EdgeInsets.all(8),
             hintText: 'Search',
-            hintStyle: TextStyle(
-                fontSize: 20, color: Color.fromARGB(255, 236, 236, 236))));
+            hintStyle: const TextStyle(
+              fontSize: 21,
+            )),
+        );
   }
 
   @override
@@ -140,11 +156,14 @@ class _AuthorListState extends State<AuthorList> {
           title: const Text('Author Data'),
           appBar: AppBar(),
           flexSpace: Container(
-            padding: const EdgeInsets.only(top: 5, bottom: 12),
-            margin: const EdgeInsets.only(left: 250, right: 368),
-            // decoration: BoxDecoration(
-            //   border: Border.all(color: Colors.white10)),
-            child: _searchField(),
+            margin: const EdgeInsets.only(
+              left: 200,
+              right: 368,
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(left: 2, right: 0),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -153,8 +172,8 @@ class _AuthorListState extends State<AuthorList> {
                 width: 50,
                 height: 50,
                 padding: const EdgeInsets.only(
-                    left: 2, right: 2, top: 10, bottom: 10),
-                margin: const EdgeInsets.only(right: 0, top: 5, bottom: 4),
+                    left: 0, right: 0, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(right: 0, top: 3, bottom: 3),
                 child: MaterialButton(
                   onPressed: () => [
                     setState(() {
@@ -167,51 +186,44 @@ class _AuthorListState extends State<AuthorList> {
                       });
                     })
                   ],
-                  child: const Icon(
+                  child:  Icon(
                     Icons.clear_sharp,
-                    color: Color.fromARGB(255, 240, 240, 240),
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ),
 
             //Dropdown search
             Container(
-                padding: const EdgeInsets.only(
-                    left: 2, right: 2, top: 10, bottom: 0),
-                margin: const EdgeInsets.only(right: 160, top: 5, bottom: 4),
-                child: DropdownButton2(
-                  buttonHeight: 25,
-                  buttonWidth: 123,
-                  offset: const Offset(0, 2),
-                  // buttonDecoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(5),
-                  //   border: Border.all(
-                  //     color: Colors.white54,
-                  //   ),),
+               padding: const EdgeInsets.only(left: 2, right: 2),
+                margin: const EdgeInsets.only(right: 80, top: 10, bottom: 10),
+                child: CustomDropdownButton2(
+                  hint: 'Select one',
+                  // buttonHeight: 25,
+                  buttonWidth: 128,
+                  dropdownWidth: 128,
+                  offset: const Offset(0, 0),
+                  dropdownHeight: double.maxFinite,
+                  dropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(color: Theme.of(context).cardColor),
+                    //color: Colors.redAccent,
+                  ),
+                  buttonDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(color: Theme.of(context).hintColor),
+                    color: Theme.of(context).canvasColor,
+                  ),
+                  dropdownElevation: 2,
                   value: _curSearchChoice,
-                  itemHeight: 35,
-                  dropdownDecoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 54, 54, 54)),
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  items: _searchDropDownVal
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                        value: value,
-                        child: SizedBox(
-                            width: 98,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                  fontSize: 14.5, color: Colors.white),
-                            )));
-                  }).toList(),
+                  dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
                       _curSearchChoice = newValue!;
                     });
                   },
                 )),
-            const SizedBox(width: 80)
+            const SizedBox(width: 160)
             // MaterialButton(
             //   onPressed: () => [
             //     setState(() {

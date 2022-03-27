@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,13 +12,6 @@ import 'package:data_table_2/data_table_2.dart';
 final File customerDataJson = File('assets/jsondatabase/customer_data.json');
 List<Customer> mainCustomerList = [];
 List<Customer> mainCustomerListCopy = [];
-final List<String> _jobPosDropDownVal = [
-  'Owner',
-  'Assistant Manager',
-  'Full Time Sales Clerk',
-  'Part Time Sales Clerk',
-];
-late String _curJobPosChoice = _jobPosDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -73,7 +65,7 @@ class RestorableCustomerSelections extends RestorableProperty<Set<int>> {
 /// Domain model entity
 class Customer {
   Customer(this.firstName, this.lastName, this.id, this.streetAddress, this.suiteNum,
-     this.city, this.state, this.zipCode, this.phoneNumber, this.totalPurchases, this.email);
+     this.city, this.state, this.zipCode, this.phoneNumber, this.email, this.totalPurchases);
 
   String firstName;
   String lastName;
@@ -89,7 +81,7 @@ class Customer {
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(11, null);
+  List editResults = List.filled(12, null);
 
   List get allInfo {
     return [
@@ -354,11 +346,15 @@ class CustomerDatabase extends DataTableSource {
         DataCell(Text(customer.firstName)),
         DataCell(Text(customer.lastName)),
         DataCell(Text(customer.id)),
-        DataCell(Text(customer.streetAddress)),
-        DataCell(Text(customer.suiteNum)),
-        DataCell(Text(customer.city)),
-        DataCell(Text(customer.state)),
-        DataCell(Text(customer.zipCode)),
+        if (customer.suiteNum.isNotEmpty)
+        DataCell(Text('${customer.streetAddress} ${customer.suiteNum} ${customer.city} ${customer.state}, ${customer.zipCode}')),
+        if (customer.suiteNum.isEmpty)
+        DataCell(Text('${customer.streetAddress} ${customer.city} ${customer.state}, ${customer.zipCode}')),
+        // DataCell(Text(customer.streetAddress)),
+        // DataCell(Text(customer.suiteNum)),
+        // DataCell(Text(customer.city)),
+        // DataCell(Text(customer.state)),
+        // DataCell(Text(customer.zipCode)),
         DataCell(Text(customer.phoneNumber)),
         DataCell(Text(customer.email)),
         DataCell(Text(customer.totalPurchases)),
@@ -452,7 +448,6 @@ class CustomerDatabase extends DataTableSource {
 
 //Add
 Future<void> customerDataAdder(context) async {
-  _curJobPosChoice = _jobPosDropDownVal[2];
   Customer newCustomer = Customer(
     '', '', '', '', '', '', '', '', '', '', ''
   );

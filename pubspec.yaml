@@ -79,6 +79,7 @@ flutter:
     - assets/jsondatabase/employee_data.json
     - assets/jsondatabase/customer_data.json
     - assets/jsondatabase/order_data.json
+    - assets/jsondatabase/sales_record_data.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

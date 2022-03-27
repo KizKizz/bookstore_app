@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:bookstore_project/Data/book_data_handler.dart';
+import 'package:bookstore_project/Data/order_data_handler.dart';
+import 'package:bookstore_project/Data/sales_record_data_handler.dart';
 import 'package:bookstore_project/InfoScreens/book_list.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +21,8 @@ List<String> _employeesDropDownVal = [];
 String? _curEmployeeChoice;
 int _customerInfoIndex = 0;
 int _shippingAddressIndex = 0;
-int orderNumber = 1;
+int orderNumber = 0;
+String curPaymentMethod = '';
 
 double subTotal = 0.0;
 double shippingCost = 0.0;
@@ -28,11 +32,30 @@ double totalCost = 0.0;
 List<TextEditingController> priceControllers = [];
 List<TextEditingController> existingCustomerInfoControllers = [];
 List<String> checkoutPrices = [];
+Customer curOrderingCustomer =
+    Customer('', '', '', '', '', '', '', '', '', '', '');
+Employee curSalesperson = Employee(
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+);
 
-DateTime now = DateTime.now();
-String _orderDate = DateFormat('MM-dd-yyyy HH:mm').format(now);
+final List<String> _orderStatusList = [
+  'Picked Up',
+  'Customer Will Pickup',
+  'To Be shipped',
+  'Shipped'
+];
+String _orderStatus = _orderStatusList[0];
 
-enum ShippingOptions { inStore, nextDay, express, standard }
+enum ShippingOptions { inPerson, inStore, nextDay, express, standard }
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({Key? key}) : super(key: key);
@@ -45,16 +68,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final MultiSplitViewController _checkoutMvController =
       MultiSplitViewController(weights: [0.65]);
 
-  double _shippingInfoHeight = 280;
+  double _shippingInfoHeight = 330;
   double _customerInfoHeight = 360;
-  ShippingOptions? _curShippingOption = ShippingOptions.inStore;
+  ShippingOptions? _curShippingOption = ShippingOptions.inPerson;
   final _searchCustomerController = TextEditingController();
   List<Customer> _searchCustomerList = [];
   FocusNode searchFieldFocusNode = FocusNode();
 
+  late DateTime now;
+  late String _orderDate = '';
+  String _deliveryDate = '';
+
   @override
   void initState() {
     super.initState();
+
+    now = DateTime.now();
+    _orderDate = DateFormat('MM-dd-yyyy HH:mm').format(now);
+    _deliveryDate = DateFormat('MM-dd-yyyy HH:mm').format(now);
 
     //Get prices to a separated list
     if (checkoutPrices.isEmpty) {
@@ -89,7 +120,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     priceControllers.forEach((c) => c.dispose());
     existingCustomerInfoControllers.forEach((e) => e.dispose());
     super.dispose();
-    
   }
 
   String _getFullAddress(Customer curCustomer) {
@@ -150,7 +180,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 _searchCustomerList.add(tempCustomer);
               }
               setState(() {
-                print(_searchCustomerList.length);
+                //print(_searchCustomerList.length);
                 // customerSearchHelper(context, _searchCustomerList).then((_) {
                 //   setState(() {});
                 //   //debugPrint('test ${mainBookList.toString()}');
@@ -201,33 +231,49 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _customerInfoHeight = 360;
     }
     //Shipping page height
-    if (_curShippingOption == ShippingOptions.inStore) {
-      _shippingInfoHeight = 280;
-    } else if (_curShippingOption != ShippingOptions.inStore) {
+    if (_curShippingOption == ShippingOptions.inStore ||
+        _curShippingOption == ShippingOptions.inPerson) {
+      _shippingInfoHeight = 330;
+    } else if (_curShippingOption != ShippingOptions.inStore ||
+        _curShippingOption != ShippingOptions.inPerson) {
       if (_shippingAddressIndex == 1) {
-        _shippingInfoHeight = 550;
+        _shippingInfoHeight = 600;
       } else {
-        _shippingInfoHeight = 300;
+        _shippingInfoHeight = 363;
       }
     }
 
-    Widget checkoutInfo = Column(
-      children: [
+    Widget checkoutInfo = Column(children: [
       FocusTraversalGroup(
         policy: OrderedTraversalPolicy(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              //height: 100,
-              padding: const EdgeInsets.only(top: 10, left: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Order #$orderNumber',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 30),
-              ),
-            ),
+                //height: 100,
+                padding: const EdgeInsets.only(top: 10, left: 20),
+                alignment: Alignment.centerLeft,
+                child: FutureBuilder(
+                    future: DefaultAssetBundle.of(context)
+                        .loadString('assets/jsondatabase/order_data.json'),
+                    builder: (context, snapshot) {
+                      if (snapshot.data.toString().isNotEmpty &&
+                          snapshot.hasData &&
+                          mainOrderListCopy.isEmpty) {
+                        var jsonResponse = jsonDecode(snapshot.data.toString());
+                        convertOrderData(jsonResponse);
+                      }
+
+                      //Get orderNum if 0 in orderlist
+                      orderNumber = mainOrderListCopy.length + 1;
+                      //print('OrderNum: $orderNumber');
+                      //Build table
+                      return Text(
+                        'Order #${orderNumber}',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 30),
+                      );
+                    })),
             Row(
               children: [
                 Container(
@@ -248,7 +294,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         if (snapshot.data.toString().isNotEmpty &&
                             snapshot.hasData &&
                             mainEmployeeListCopy.isEmpty) {
-                          var jsonResponse = jsonDecode(snapshot.data.toString());
+                          var jsonResponse =
+                              jsonDecode(snapshot.data.toString());
                           convertEmployeeData(jsonResponse);
                           if (mainEmployeeListCopy.isNotEmpty) {
                             _employeesDropDownVal.clear();
@@ -264,8 +311,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         //Build table
                         return CustomDropdownButton2(
                           hint: 'Select Employee',
+                          dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            border:
+                                Border.all(color: Theme.of(context).cardColor),
+                            //color: Colors.redAccent,
+                          ),
+                          buttonDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            border:
+                                Border.all(color: Theme.of(context).hintColor),
+                            //color: Colors.redAccent,
+                          ),
                           dropdownElevation: 3,
                           offset: const Offset(-20, 0),
+                          hintAlignment: Alignment.center,
                           valueAlignment: Alignment.center,
                           icon: const Icon(Icons.arrow_drop_down),
                           dropdownWidth: 250,
@@ -274,6 +334,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           onChanged: (value) {
                             setState(() {
                               _curEmployeeChoice = value;
+                              List<String> _getEmployeeInfo =
+                                  value.toString().split(' - ');
+                              List<String> _getEmployeeName =
+                                  _getEmployeeInfo.first.split(' ');
+                              curSalesperson = mainEmployeeListCopy.firstWhere(
+                                  (element) =>
+                                      element.id == _getEmployeeInfo.last &&
+                                      element.firstName ==
+                                          _getEmployeeName.first &&
+                                      element.lastName ==
+                                          _getEmployeeName.last);
                             });
                           },
                         );
@@ -318,13 +389,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.only(left: 20),
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
                                         //color: Colors.amber,
                                         child: Text('Billing Info:',
                                             style: TextStyle(
                                                 fontSize: 20,
-                                                color:
-                                                    Theme.of(context).hintColor)),
+                                                color: Theme.of(context)
+                                                    .hintColor)),
                                       ),
                                       Padding(
                                         padding:
@@ -365,7 +437,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     Expanded(
                                       child: Column(children: [
                                         FutureBuilder(
-                                            future: DefaultAssetBundle.of(context)
+                                            future: DefaultAssetBundle.of(
+                                                    context)
                                                 .loadString(
                                                     'assets/jsondatabase/customer_data.json'),
                                             builder: (context, snapshot) {
@@ -373,15 +446,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       .toString()
                                                       .isNotEmpty &&
                                                   snapshot.hasData &&
-                                                  mainCustomerListCopy.isEmpty) {
+                                                  mainCustomerListCopy
+                                                      .isEmpty) {
                                                 var jsonResponse = jsonDecode(
                                                     snapshot.data.toString());
-                                                convertCustomerData(jsonResponse);
+                                                convertCustomerData(
+                                                    jsonResponse);
                                               }
                                               //Build table
                                               return Container(
                                                 padding: const EdgeInsets.only(
-                                                    top: 5, left: 20, right: 15),
+                                                    top: 5,
+                                                    left: 20,
+                                                    right: 15),
                                                 height: 40,
                                                 child: _searchField(),
                                               );
@@ -621,8 +698,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 //color: Colors.amber,
                                                 //height: 400,
                                                 child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 15, right: 15),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15, right: 15),
                                                   color: Theme.of(context)
                                                       .canvasColor,
                                                   child: ListView(
@@ -706,6 +784,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                         .text =
                                                                     customer
                                                                         .email;
+
+                                                                curOrderingCustomer =
+                                                                    customer;
                                                                 _searchCustomerController
                                                                     .clear();
 
@@ -747,169 +828,169 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   if (_customerInfoIndex == 1)
                                     Expanded(
                                         child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                //Name
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 20, right: 10),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'First Name*',
-                                                  )),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 10, right: 15),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'Last Name*',
-                                                  )),
-                                                )),
-                                              ],
-                                            ),
-                                            //Address
-                                            Row(children: [
-                                              Expanded(
-                                                  child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20, right: 15),
-                                                width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2),
-                                                child: TextFormField(
-                                                    decoration:
-                                                        const InputDecoration(
-                                                  hintText: '',
-                                                  labelText: 'Street Address*',
-                                                )),
+                                            //Name
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20, right: 10),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'First Name*',
                                               )),
-                                            ]),
-                                            //Address 2
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                //Name
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 20, right: 10),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'Suite / Apt #',
-                                                  )),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 10, right: 15),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'City*',
-                                                  )),
-                                                )),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                //Name
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 20, right: 10),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'State*',
-                                                  )),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 10, right: 15),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'Postal Code*',
-                                                  )),
-                                                )),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                //Name
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 20, right: 10),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'Phone Number*',
-                                                  )),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 10, right: 15),
-                                                  child: TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                    //icon: Icon(Icons.person),
-                                                    hintText: '',
-                                                    labelText: 'ID*',
-                                                  )),
-                                                )),
-                                              ],
-                                            ),
-                                            Row(children: [
-                                              Expanded(
-                                                  child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20, right: 15),
-                                                width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2),
-                                                child: TextFormField(
-                                                    decoration:
-                                                        const InputDecoration(
-                                                  hintText: '',
-                                                  labelText: 'Email',
-                                                )),
+                                            )),
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 15),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Last Name*',
                                               )),
-                                            ]),
+                                            )),
                                           ],
-                                        ))
+                                        ),
+                                        //Address
+                                        Row(children: [
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 15),
+                                            width: (MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2),
+                                            child: TextFormField(
+                                                decoration:
+                                                    const InputDecoration(
+                                              hintText: '',
+                                              labelText: 'Street Address*',
+                                            )),
+                                          )),
+                                        ]),
+                                        //Address 2
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            //Name
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20, right: 10),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Suite / Apt #',
+                                              )),
+                                            )),
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 15),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'City*',
+                                              )),
+                                            )),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            //Name
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20, right: 10),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'State*',
+                                              )),
+                                            )),
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 15),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Postal Code*',
+                                              )),
+                                            )),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            //Name
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20, right: 10),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Phone Number*',
+                                              )),
+                                            )),
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 15),
+                                              child: TextFormField(
+                                                  decoration:
+                                                      const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'ID*',
+                                              )),
+                                            )),
+                                          ],
+                                        ),
+                                        Row(children: [
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 15),
+                                            width: (MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2),
+                                            child: TextFormField(
+                                                decoration:
+                                                    const InputDecoration(
+                                              hintText: '',
+                                              labelText: 'Email',
+                                            )),
+                                          )),
+                                        ]),
+                                      ],
+                                    ))
                                 ],
                               ),
                             ),
@@ -921,6 +1002,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             style: TextStyle(fontSize: 20),
                           ),
                           //subtitle: Text('Trailing expansion arrow icon'),
+                          initiallyExpanded: true,
                           children: <Widget>[
                             Container(
                                 padding:
@@ -932,10 +1014,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     Container(
                                         width: double.infinity,
                                         child: RadioListTile(
+                                            title: const Text(
+                                                'In Person (Immediate)'),
+                                            subtitle: const Text('Free'),
+                                            secondary: const Text('\$0.00'),
+                                            value: ShippingOptions.inPerson,
+                                            groupValue: _curShippingOption,
+                                            onChanged:
+                                                (ShippingOptions? value) {
+                                              setState(() {
+                                                _curShippingOption = value;
+                                                shippingCost = 0.00;
+                                                _deliveryDate = _orderDate;
+                                                _orderStatus =
+                                                    _orderStatusList[0];
+                                              });
+                                            })),
+                                    Container(
+                                        width: double.infinity,
+                                        child: RadioListTile(
                                             title:
                                                 const Text('In-Store Pickup'),
                                             subtitle: const Text('Free'),
-                                            secondary: const Text('\$ 0.00'),
+                                            secondary: const Text('\$0.00'),
                                             value: ShippingOptions.inStore,
                                             groupValue: _curShippingOption,
                                             onChanged:
@@ -943,6 +1044,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 0.00;
+                                                _deliveryDate = _orderDate;
+                                                _orderStatus =
+                                                    _orderStatusList[1];
                                               });
                                             })),
                                     Container(
@@ -952,7 +1056,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 const Text('Next Day Shipping'),
                                             subtitle:
                                                 const Text('1 Business Day'),
-                                            secondary: const Text('\$ 30.00'),
+                                            secondary: const Text('\$30.00'),
                                             value: ShippingOptions.nextDay,
                                             groupValue: _curShippingOption,
                                             onChanged:
@@ -960,6 +1064,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 30.00;
+                                                final _deliverTimeGet =
+                                                    DateTime(
+                                                        now.year,
+                                                        now.month,
+                                                        now.day + 1,
+                                                        now.hour,
+                                                        now.minute);
+                                                _deliveryDate = DateFormat(
+                                                        'MM-dd-yyyy HH:mm')
+                                                    .format(_deliverTimeGet);
+                                                _orderStatus =
+                                                    _orderStatusList[2];
                                               });
                                             })),
                                     Container(
@@ -969,7 +1085,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 const Text('Express Shipping'),
                                             subtitle: const Text(
                                                 '2 - 3 Business Days'),
-                                            secondary: const Text('\$ 20.00'),
+                                            secondary: const Text('\$20.00'),
                                             value: ShippingOptions.express,
                                             groupValue: _curShippingOption,
                                             onChanged:
@@ -977,6 +1093,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 20.00;
+                                                final _deliverTimeGet =
+                                                    DateTime(
+                                                        now.year,
+                                                        now.month,
+                                                        now.day + 3,
+                                                        now.hour,
+                                                        now.minute);
+                                                _deliveryDate = DateFormat(
+                                                        'MM-dd-yyyy HH:mm')
+                                                    .format(_deliverTimeGet);
+                                                _orderStatus =
+                                                    _orderStatusList[2];
                                               });
                                             })),
                                     Container(
@@ -986,7 +1114,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 const Text('Standard Shipping'),
                                             subtitle: const Text(
                                                 '4 - 6 Business Days'),
-                                            secondary: const Text('\$ 10.00'),
+                                            secondary: const Text('\$10.00'),
                                             value: ShippingOptions.standard,
                                             groupValue: _curShippingOption,
                                             onChanged:
@@ -994,11 +1122,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 10.00;
+                                                final _deliverTimeGet =
+                                                    DateTime(
+                                                        now.year,
+                                                        now.month,
+                                                        now.day + 6,
+                                                        now.hour,
+                                                        now.minute);
+                                                _deliveryDate = DateFormat(
+                                                        'MM-dd-yyyy HH:mm')
+                                                    .format(_deliverTimeGet);
+                                                _orderStatus =
+                                                    _orderStatusList[2];
                                               });
                                             })),
                                     //Shipping Adress
                                     if (_curShippingOption !=
-                                        ShippingOptions.inStore)
+                                            ShippingOptions.inStore &&
+                                        _curShippingOption !=
+                                            ShippingOptions.inPerson)
                                       Divider(
                                         height: 10,
                                         thickness: 1,
@@ -1007,7 +1149,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         color: Theme.of(context).hintColor,
                                       ),
                                     if (_curShippingOption !=
-                                        ShippingOptions.inStore)
+                                            ShippingOptions.inStore &&
+                                        _curShippingOption !=
+                                            ShippingOptions.inPerson)
                                       ToggleSwitch(
                                         minWidth: 200.0,
                                         minHeight: 25,
@@ -1168,68 +1312,80 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ),
                         ExpansionTile(
                           title: const Text(
-                            'Payment',
+                            'Payment Methods',
                             style: TextStyle(fontSize: 20),
                           ),
                           //subtitle: Text('Trailing expansion arrow icon'),
+                          initiallyExpanded: true,
                           children: <Widget>[
                             Container(
                               height: 500,
-                              child: Expanded(
-                                child: Column(
-                                  children: [
-                                    const Padding(padding: EdgeInsets.only(top: 5)),
-                                    ToggleSwitch(
-                                      minWidth: 60.0,
-                                      minHeight: 36.0,
-                                      cornerRadius: 0.0,
-                                      //borderWidth: 1,
-                                      //borderColor: [Theme.of(context).hintColor],
-                                      // activeBgColors: const [
-                                      //   [Color(0xfffdbb0a)],
-                                      //   [Colors.black54],
-                                      //   [Colors.white54]
-                                      // ],
-                                      //inactiveFgColor: Colors.blue,
-                                      inactiveBgColor: Theme.of(context).canvasColor,
-                                      initialLabelIndex: 0,
-                                      totalSwitches: 5,
-                                      customIcons: const [
-                                        Icon(
-                                          FontAwesomeIcons.moneyBill1,
-                                          //color: Color.fromARGB(255, 214, 226, 103),
-                                          size: 30,
-                                        ),
-                                        Icon(
-                                          FontAwesomeIcons.ccVisa,
-                                          //color: Colors.yellow,
-                                          size: 30,
-                                        ),
-                                        Icon(
-                                          FontAwesomeIcons.ccMastercard,
-                                          //color: Color(0xffF79E1B),
-                                          size:30,
-                                        ),
-                                        Icon(
-                                          FontAwesomeIcons.ccAmex,
-                                          //color: Color(0xff27AEE3),
-                                          size: 30,
-                                        ),
-                                        Icon(
-                                          FontAwesomeIcons.moneyCheckDollar,
-                                          //color: Color(0xffF79E1B),
-                                          size:30,
-                                        ),
-                                      ],
-                                      //labels: ['Cash', 'Visa', 'Master Card', 'American\nExpress'],
-                                      onToggle: (index) {
-                                        print('switched to: $index');
-                                      },
-                                    ),
-                                    
-                                  ],
-                                )
-                                ),
+                              child: Column(
+                                children: [
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 5)),
+                                  ToggleSwitch(
+                                    minWidth: 60.0,
+                                    minHeight: 36.0,
+                                    cornerRadius: 0.0,
+                                    //borderWidth: 1,
+                                    //borderColor: [Theme.of(context).hintColor],
+                                    // activeBgColors: const [
+                                    //   [Color(0xfffdbb0a)],
+                                    //   [Colors.black54],
+                                    //   [Colors.white54]
+                                    // ],
+                                    //inactiveFgColor: Colors.blue,
+                                    inactiveBgColor:
+                                        Theme.of(context).canvasColor,
+                                    initialLabelIndex: 0,
+                                    totalSwitches: 5,
+                                    customIcons: const [
+                                      Icon(
+                                        FontAwesomeIcons.moneyBill1,
+                                        //color: Color.fromARGB(255, 214, 226, 103),
+                                        size: 30,
+                                      ),
+                                      Icon(
+                                        FontAwesomeIcons.ccVisa,
+                                        //color: Colors.yellow,
+                                        size: 30,
+                                      ),
+                                      Icon(
+                                        FontAwesomeIcons.ccMastercard,
+                                        //color: Color(0xffF79E1B),
+                                        size: 30,
+                                      ),
+                                      Icon(
+                                        FontAwesomeIcons.ccAmex,
+                                        //color: Color(0xff27AEE3),
+                                        size: 30,
+                                      ),
+                                      Icon(
+                                        FontAwesomeIcons.moneyCheckDollar,
+                                        //color: Color(0xffF79E1B),
+                                        size: 30,
+                                      ),
+                                    ],
+                                    //labels: ['Cash', 'Visa', 'Master Card', 'American\nExpress'],
+                                    onToggle: (index) {
+                                      if (index == 0) {
+                                        curPaymentMethod = 'Cash';
+                                      } else if (index == 1) {
+                                        curPaymentMethod = 'Visa';
+                                      } else if (index == 2) {
+                                        curPaymentMethod = 'Master Card';
+                                      } else if (index == 3) {
+                                        curPaymentMethod = 'American Express';
+                                      } else if (index == 4) {
+                                        curPaymentMethod = 'Money Check';
+                                      }
+
+                                      //print('switched to: $index');
+                                    },
+                                  ),
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -1252,27 +1408,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            // Container(
-            //   //height: 30,
-            //   //color: Colors.amber,
-            //   padding: const EdgeInsets.only(right: 10, top: 26),
-            //   alignment: Alignment.bottomRight,
-            //   child: TextButton(
-            //     onPressed: () {
-            //       subTotal = 0.00;
-            //       for (var book in checkoutCartList) {
-            //         book.sold = 'Available';
-            //       }
-            //       checkoutCartList.clear();
-            //       checkoutPrices.clear();
-            //       priceControllers.clear();
-            //       MenuItems.booksMenu.clear();
-
-            //       setState(() {});
-            //     },
-            //     child: const Text('Remove All'),
-            //   ),
-            // ),
           ],
         ),
         Expanded(
@@ -1330,16 +1465,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         FontWeight.w600)),
                                             Text(checkoutCartList[i].id),
                                             const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 10)),
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
                                             const Text('Edition: ',
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.w600)),
                                             Text(checkoutCartList[i].edition),
                                             const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 10)),
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
                                           ],
                                         ),
                                         const Padding(
@@ -1350,11 +1485,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.w600)),
-                                            Text(checkoutCartList[i]
-                                                .publisher),
+                                            Text(checkoutCartList[i].publisher),
                                             const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 10)),
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
                                             const Text('Date: ',
                                                 style: TextStyle(
                                                     fontWeight:
@@ -1362,8 +1496,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             Text(checkoutCartList[i]
                                                 .publishDate),
                                             const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 10)),
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
                                           ],
                                         ),
                                         const Padding(
@@ -1374,11 +1508,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.w600)),
-                                            Text(checkoutCartList[i]
-                                                .condition),
+                                            Text(checkoutCartList[i].condition),
                                             const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 10)),
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
                                           ],
                                         ),
                                       ],
@@ -1432,8 +1565,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           checkoutCartList.removeAt(i);
                                           checkoutPrices.removeAt(i);
                                           priceControllers.removeAt(i);
-                                          MenuItems.getItems(
-                                              checkoutCartList);
+                                          MenuItems.getItems(checkoutCartList);
 
                                           setState(() {});
                                         },
@@ -1505,28 +1637,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         Container(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
-                              '\$ ${subTotal.toStringAsFixed(2)}',
+                              '\$${subTotal.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
                               style: TextStyle(fontSize: 19),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              '\$ ${shippingCost.toStringAsFixed(2)}',
+                              '\$${shippingCost.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
                               style: TextStyle(fontSize: 17),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              '\$ ${subTotalTax.toStringAsFixed(2)}',
+                              '\$${subTotalTax.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
                               style: TextStyle(fontSize: 17),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              '\$ ${totalCost.toStringAsFixed(2)}',
+                              '\$${totalCost.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
                               style: TextStyle(fontSize: 20),
                             )),
@@ -1583,20 +1715,161 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              orderNumber++;
                               //Add database here
                               subTotal = 0.00;
+                              //print('checkout $orderNumber');
+
+                              //Update Order page
+                              Order newOrder = Order(
+                                  orderNumber.toString(),
+                                  '${curOrderingCustomer.firstName} ${curOrderingCustomer.lastName}',
+                                  curOrderingCustomer.id,
+                                  '${curSalesperson.firstName} ${curSalesperson.lastName}',
+                                  curSalesperson.id,
+                                  _orderDate,
+                                  _deliveryDate,
+                                  totalCost.toStringAsFixed(2),
+                                  curPaymentMethod,
+                                  _orderStatus,
+                                  '',
+                                  '');
+                              String _allBookIDs = '';
+                              int _numOfBook = 0;
                               for (var book in checkoutCartList) {
-                                book.sold = 'Available';
+                                //book.sold = 'Available';
+                                _numOfBook++;
+                                if (_allBookIDs.isNotEmpty) {
+                                  _allBookIDs = _allBookIDs + ' ' + book.id;
+                                } else {
+                                  _allBookIDs = book.id;
+                                }
                               }
+
+                              String _allSoldPrices = '';
+                              for (var price in checkoutPrices) {
+                                if (_allSoldPrices.isNotEmpty) {
+                                  _allSoldPrices = _allSoldPrices + ' ' + price;
+                                } else {
+                                  _allSoldPrices = price;
+                                }
+                              }
+                              newOrder.bookIds = _allBookIDs;
+                              newOrder.bookSoldPrices = _allSoldPrices;
+
+                              //Sales record update
+                              if (mainSalesRecordListCopy.isEmpty) {
+                                for (int i = 0;
+                                    i < checkoutCartList.length;
+                                    i++) {
+                                  SalesRecord newRecord = SalesRecord(
+                                      checkoutCartList[i].title,
+                                      checkoutCartList[i].id,
+                                      '${curOrderingCustomer.firstName} ${curOrderingCustomer.lastName}',
+                                      curOrderingCustomer.id,
+                                      '${curSalesperson.firstName} ${curSalesperson.lastName}',
+                                      curSalesperson.id,
+                                      checkoutPrices[i],
+                                      _orderDate,
+                                      _deliveryDate);
+                                  mainSalesRecordList.add(newRecord);
+                                  mainSalesRecordListCopy.add(newRecord);
+                                }
+                              } else {
+                                for (int i = 0;
+                                    i < checkoutCartList.length;
+                                    i++) {
+                                  final existingBookIndex =
+                                      mainSalesRecordListCopy.indexWhere(
+                                          (element) =>
+                                              element.bookId ==
+                                              checkoutCartList[i].id);
+                                  if (existingBookIndex == -1) {
+                                    SalesRecord newRecord = SalesRecord(
+                                        checkoutCartList[i].title,
+                                        checkoutCartList[i].id,
+                                        '${curOrderingCustomer.firstName} ${curOrderingCustomer.lastName}',
+                                        curOrderingCustomer.id,
+                                        '${curSalesperson.firstName} ${curSalesperson.lastName}',
+                                        curSalesperson.id,
+                                        checkoutPrices[i],
+                                        _orderDate,
+                                        _deliveryDate);
+                                    mainSalesRecordList.add(newRecord);
+                                    mainSalesRecordListCopy.add(newRecord);
+                                  }
+                                }
+                              }
+
+                              //General updates
+                              mainOrderList.add(newOrder);
+                              mainOrderListCopy.add(newOrder);
+                              curSalesperson.numBookSold =
+                                  (int.parse(curSalesperson.numBookSold) +
+                                          _numOfBook)
+                                      .toString();
+                              curOrderingCustomer.totalPurchases = (int.parse(
+                                          curOrderingCustomer.totalPurchases) +
+                                      _numOfBook)
+                                  .toString();
+                              final _curCustomerFromData =
+                                  mainCustomerListCopy.firstWhere((element) =>
+                                      element.id == curOrderingCustomer.id);
+                              _curCustomerFromData.totalPurchases =
+                                  curOrderingCustomer.totalPurchases;
 
                               _curShippingOption = ShippingOptions.inStore;
                               checkoutCartList.clear();
                               checkoutPrices.clear();
                               priceControllers.clear();
                               MenuItems.booksMenu.clear();
+                              //orderNumber++;
 
                               context.read<checkoutNotif>().checkoutOff();
+
+                              //Save to databases
+                              if (!kIsWeb) {
+                                mainCustomerListCopy
+                                    .map(
+                                      (customer) => customer.toJson(),
+                                    )
+                                    .toList();
+                                customerDataJson.writeAsStringSync(
+                                    json.encode(mainCustomerListCopy));
+                             
+                                mainEmployeeListCopy
+                                    .map(
+                                      (employee) => employee.toJson(),
+                                    )
+                                    .toList();
+                                employeeDataJson.writeAsStringSync(
+                                    json.encode(mainEmployeeListCopy));
+                                
+                                mainBookListCopy
+                                    .map(
+                                      (book) => book.toJson(),
+                                    )
+                                    .toList();
+                                bookDataJson.writeAsStringSync(
+                                    json.encode(mainBookListCopy));
+                                
+                                mainOrderListCopy
+                                    .map(
+                                      (order) => order.toJson(),
+                                    )
+                                    .toList();
+                                orderDataJson.writeAsStringSync(
+                                    json.encode(mainOrderListCopy));
+                                
+                                mainSalesRecordListCopy
+                                    .map(
+                                      (salesRecord) => salesRecord.toJson(),
+                                    )
+                                    .toList();
+                                salesRecordDataJson.writeAsStringSync(
+                                    json.encode(mainSalesRecordListCopy));
+                              }
+
+
                             });
                           },
                         ),
@@ -1609,12 +1882,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ],
     );
 
-
     MultiSplitView checkoutSplitView = MultiSplitView(
         controller: _checkoutMvController,
         axis: Axis.horizontal,
         children: [
-          MultiSplitView(children: [checkoutInfo, orderSummary], initialWeights: const [0.55], minimalWeight: 0.45,), 
+          MultiSplitView(
+            children: [checkoutInfo, orderSummary],
+            initialWeights: const [0.55],
+            minimalWeight: 0.45,
+          ),
         ]);
 
     MultiSplitViewTheme theme = MultiSplitViewTheme(

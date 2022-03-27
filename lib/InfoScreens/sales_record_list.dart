@@ -1,40 +1,42 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-import '../Data/customer_data_helper.dart';
+import '../Data/sales_record_data_handler.dart';
 import '../main_appbar.dart';
 
-final searchCustomerController = TextEditingController();
+final searchSalesRecordController = TextEditingController();
 //String _searchDropDownVal = 'Title';
 
-class CustomerList extends StatefulWidget {
-  const CustomerList({Key? key}) : super(key: key);
+class SalesRecordList extends StatefulWidget {
+  const SalesRecordList({Key? key}) : super(key: key);
 
   @override
-  _CustomerListState createState() => _CustomerListState();
+  _SalesRecordListState createState() => _SalesRecordListState();
 }
 
-class _CustomerListState extends State<CustomerList> {
+class _SalesRecordListState extends State<SalesRecordList> {
   bool _sortAscending = true;
   int? _sortColumnIndex;
-  late CustomerDatabase _customersDataSource;
+  late SalesRecordDatabase _salesRecordDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
-  List<Customer> searchCustomerList = [];
-  final List<Customer> preSearchList = mainCustomerListCopy;
+  List<SalesRecord> searchSalesRecord = [];
+  final List<SalesRecord> preSearchList = mainSalesRecordListCopy;
 
   final List<String> _searchDropDownVal = [
-    'First Name',
-    'Last Name',
-    'ID',
-    'Address',
-    'Phone Number',
-    'Total Purchases',
+    'Book Title',
+    'Book ID',
+    'Customer Name',
+    'Customer ID',
+    'Salesperson Name',
+    'Salesperson ID',
+    'Total Amount',
+    'Order Date',
+    'Delivery Date',
   ];
   late String _curSearchChoice;
 
@@ -43,21 +45,21 @@ class _CustomerListState extends State<CustomerList> {
     super.didChangeDependencies();
     if (!_initialized) {
       setState(() {});
-      _customersDataSource = CustomerDatabase(context);
+      _salesRecordDataSource = SalesRecordDatabase(context);
       _curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
-      _customersDataSource.addListener(() {
+      _salesRecordDataSource.addListener(() {
         setState(() {});
       });
     }
   }
 
   void _sort<T>(
-    Comparable<T> Function(Customer d) getField,
+    Comparable<T> Function(SalesRecord d) getField,
     int columnIndex,
     bool ascending,
   ) {
-    _customersDataSource.sort<T>(getField, ascending);
+    _salesRecordDataSource.sort<T>(getField, ascending);
     setState(() {
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
@@ -66,83 +68,83 @@ class _CustomerListState extends State<CustomerList> {
 
   @override
   void dispose() {
-    _customersDataSource.dispose();
+    _salesRecordDataSource.dispose();
     super.dispose();
   }
 
   @override
   Widget _searchField() {
     return TextField(
-        controller: searchCustomerController,
+        controller: searchSalesRecordController,
         onChanged: (String text) {
           setState(() {
-            searchCustomerList = [];
-            Iterable<Customer> foundCustomer = [];
-            if (_curSearchChoice == 'First Name') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.firstName.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Last Name') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.lastName.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'ID') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.id.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Address') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.streetAddress.toLowerCase().contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .suiteNum
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .city
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .state
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .zipCode
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));  
-            } else if (_curSearchChoice == 'Phone Number') {
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .phoneNumber
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Date of Birth') {
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .totalPurchases
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } 
+            searchSalesRecord = [];
+            Iterable<SalesRecord> foundSalesRecord = [];
+            if (_curSearchChoice == 'Book Title') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.bookTitle.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Book ID') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.bookId.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Customer Name') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.customerName
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Customer ID') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.customerId
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Salesperon Name') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.salesPersonName
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Salesperson ID') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.salesPersonId
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Total Amount') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.soldPrice
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Order Date') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.orderDate.toLowerCase().contains(text.toLowerCase()));
+            } else if (_curSearchChoice == 'Delivery Date') {
+              foundSalesRecord = mainSalesRecordListCopy.where((element) =>
+                  element.deliveryDate
+                      .toLowerCase()
+                      .contains(text.toLowerCase()));
+            }
 
-            if (foundCustomer.isNotEmpty) {
-              for (var customer in foundCustomer) {
-                Customer tempCustomer = Customer(
-                    customer.firstName,
-                    customer.lastName,
-                    customer.id,
-                    customer.streetAddress,
-                    customer.suiteNum,
-                    customer.city,
-                    customer.state,
-                    customer.zipCode,
-                    customer.phoneNumber,
-                    customer.email,
-                    customer.totalPurchases);
-                searchCustomerList.add(tempCustomer);
+            if (foundSalesRecord.isNotEmpty) {
+              for (var record in foundSalesRecord) {
+                SalesRecord tempSalesRecord = SalesRecord(
+                  record.bookTitle,
+                  record.bookId,
+                  record.customerName,
+                  record.customerId,
+                  record.salesPersonName,
+                  record.salesPersonId,
+                  record.soldPrice,
+                  record.orderDate,
+                  record.deliveryDate,
+                );
+                searchSalesRecord.add(tempSalesRecord);
               }
               setState(() {
-                customerSearchHelper(context, searchCustomerList).then((_) {
+                salesRecordSearchHelper(context, searchSalesRecord).then((_) {
                   setState(() {});
                   //debugPrint('test ${mainBookList.toString()}');
                 });
               });
             } else {
               setState(() {
-                customerSearchHelper(context, searchCustomerList).then((_) {
+                salesRecordSearchHelper(context, searchSalesRecord).then((_) {
                   setState(() {});
                 });
               });
@@ -186,7 +188,7 @@ class _CustomerListState extends State<CustomerList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Customer Data'),
+          title: const Text('Sales Records'),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(
@@ -200,7 +202,7 @@ class _CustomerListState extends State<CustomerList> {
           ),
           widgets: <Widget>[
             // Clear
-            if (searchCustomerController.text.isNotEmpty)
+            if (searchSalesRecordController.text.isNotEmpty)
               Container(
                 width: 50,
                 height: 50,
@@ -211,10 +213,9 @@ class _CustomerListState extends State<CustomerList> {
                   onPressed: () => [
                     setState(() {
                       setState(() {
-                        searchCustomerController.clear();
-                        searchCustomerList = preSearchList;
-                        customerSearchHelper(context, searchCustomerList)
-                            .then((_) {
+                        searchSalesRecordController.clear();
+                        searchSalesRecord = preSearchList;
+                        salesRecordSearchHelper(context, searchSalesRecord).then((_) {
                           setState(() {});
                         });
                       });
@@ -234,8 +235,8 @@ class _CustomerListState extends State<CustomerList> {
                 child: CustomDropdownButton2(
                   hint: 'Select one',
                   // buttonHeight: 25,
-                  buttonWidth: 128,
-                  dropdownWidth: 128,
+                  buttonWidth: 160,
+                  dropdownWidth: 160,
                   offset: const Offset(0, 0),
                   dropdownHeight: double.maxFinite,
                   dropdownDecoration: BoxDecoration(
@@ -257,52 +258,51 @@ class _CustomerListState extends State<CustomerList> {
                     });
                   },
                 )),
+                const SizedBox(width: 128),
 
             //Add Data Button
-            if (isManager) const SizedBox(width: 80),
-            isManager
-                ? MaterialButton(
-                    onPressed: () => [
-                      setState(() {
-                        setState(() {
-                          customerDataAdder(context).then((_) {
-                            setState(() {});
-                          });
-                        });
-                      })
-                    ],
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Icon(
-                              Icons.add_circle_outline_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Text(
-                              "Add",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ]),
-                  )
-                //Padding for nonmanager
-                : const SizedBox(width: 160),
+            // isManager
+            //     ? MaterialButton(
+            //         onPressed: () => [
+            //           setState(() {
+            //             setState(() {
+            //               customerDataAdder(context).then((_) {
+            //                 setState(() {});
+            //               });
+            //             });
+            //           })
+            //         ],
+            //         child: Column(
+            //             mainAxisSize: MainAxisSize.min,
+            //             children: const <Widget>[
+            //               Padding(
+            //                 padding: EdgeInsets.all(2.0),
+            //                 child: Icon(
+            //                   Icons.add_circle_outline_outlined,
+            //                   color: Colors.white,
+            //                 ),
+            //               ),
+            //               Padding(
+            //                 padding: EdgeInsets.all(2.0),
+            //                 child: Text(
+            //                   "Add",
+            //                   style: TextStyle(color: Colors.white),
+            //                 ),
+            //               )
+            //             ]),
+            //       )
+            //     : const SizedBox(width: 80)
           ],
         ),
         body: FutureBuilder(
             future: DefaultAssetBundle.of(context)
-                .loadString('assets/jsondatabase/customer_data.json'),
+                .loadString('assets/jsondatabase/order_data.json'),
             builder: (context, snapshot) {
               if (snapshot.data.toString().isNotEmpty &&
                   snapshot.hasData &&
-                  _customersDataSource.customers.isEmpty) {
+                  _salesRecordDataSource.salesRecords.isEmpty) {
                 var jsonResponse = jsonDecode(snapshot.data.toString());
-                convertCustomerData(jsonResponse);
+                convertSalesRecordData(jsonResponse);
                 //getAuthorsFromBook();
                 //debugPrint('test ${jsonResponse}');
               }
@@ -322,131 +322,102 @@ class _CustomerListState extends State<CustomerList> {
                         lmRatio: 1.5,
                         sortColumnIndex: _sortColumnIndex,
                         sortAscending: _sortAscending,
-                        onSelectAll: (val) =>
-                            setState(() => _customersDataSource.selectAll(val)),
+                        onSelectAll: (val) => setState(
+                            () => _salesRecordDataSource.selectAll(val)),
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'First\nName',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Last\nName',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.lastName, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'ID',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.id, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Address',
+                              'Book Title',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.L,
-                            numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.streetAddress, columnIndex, ascending),
+                                (d) => d.bookTitle, columnIndex, ascending),
                           ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'Street Address',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.L,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.streetAddress, columnIndex, ascending),
-                        //   ),
-                        //  DataColumn2(
-                        //     label: const Text(
-                        //       'Suite\nApt #',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.suiteNum, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'City',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.M,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.city, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'State',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.state, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'Postal\nCode',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.streetAddress, columnIndex, ascending),
-                        //   ),
                           DataColumn2(
                             label: const Text(
-                              'Phone Number',
+                              'Book ID',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.bookId, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Customer\nName',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.customerName, columnIndex, ascending),
+                          ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Customer\nID',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.S,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.customerId, columnIndex, ascending),
+                          // ),
+                          DataColumn2(
+                            label: const Text(
+                              'Salesperson\nName',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.M,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.phoneNumber, columnIndex, ascending),
+                                (d) => d.salesPersonName,
+                                columnIndex,
+                                ascending),
                           ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Salesperson\nID',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.S,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.salesPersonId, columnIndex, ascending),
+                          // ),
                           DataColumn2(
                             label: const Text(
-                              'Email',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.email, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Total Book\nPurchased',
+                              'Sold Price',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.totalPurchases), columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.soldPrice, columnIndex, ascending),
                           ),
+                          DataColumn2(
+                            label: const Text(
+                              'Order Date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.orderDate, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Delivery Date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.deliveryDate, columnIndex, ascending),
+                          ),
+                          
                         ],
                         rows: List<DataRow>.generate(
-                            _customersDataSource.rowCount,
-                            (index) => _customersDataSource.getRow(index))),
+                            _salesRecordDataSource.rowCount,
+                            (index) => _salesRecordDataSource.getRow(index))),
                     _ScrollUpButton(_controller)
                   ]));
             }));

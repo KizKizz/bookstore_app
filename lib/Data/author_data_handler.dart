@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -250,7 +251,7 @@ class AuthorDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                _showDialog(context, author),
+                if (isManager) _showDialog(context, author),
               ]
           : null,
       onDoubleTap: hasRowTaps
