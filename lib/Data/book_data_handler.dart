@@ -408,15 +408,21 @@ class BookDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return _SystemPadding(
             child: AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(
+              contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                //padding: const EdgeInsets.only(right: 20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Edit Book Info'),
+                      const Text('Edit Book Info',
+                          style: TextStyle(fontWeight: FontWeight.w700)),
                       for (var item in curBook.allInfoHeaders)
                         if (item == 'Condition')
                           Container(
@@ -475,12 +481,12 @@ class BookDatabase extends DataTableSource {
                                   ),
                                 ),
                                 ToggleSwitch(
-                                  minWidth: 80.0,
+                                  minWidth: 110,
                                   minHeight: 30,
                                   borderColor: [
-                                    Theme.of(context).primaryColorLight
+                                    Theme.of(context).hintColor
                                   ],
-                                  borderWidth: 1.5,
+                                  borderWidth: 1,
                                   initialLabelIndex: _statusRating,
                                   cornerRadius: 50.0,
                                   activeFgColor: Colors.white,
@@ -510,11 +516,12 @@ class BookDatabase extends DataTableSource {
                               autofocus: true,
                               decoration: InputDecoration(
                                   labelText: item + ':',
-                                  hintText: item + ' of the book')),
+                                  hintText: item + ' of the book',
+                                  )),
                     ],
-                  )))
+                  ))
                 ],
-              ),
+              )))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
@@ -608,14 +615,21 @@ Future<void> bookDataAdder(context) async {
                 }
                 //Build table
                 return AlertDialog(
-                  contentPadding: const EdgeInsets.all(0),
-                  content: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
+                  contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                //padding: const EdgeInsets.only(right: 20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text('Add Book'),
+                          const Text('Add New Book',
+                              style: TextStyle(fontWeight: FontWeight.w700)),
                           for (var item in newBook.allInfoHeaders)
                             if (item == 'Author')
                               Column(
@@ -927,9 +941,8 @@ Future<void> bookDataAdder(context) async {
                                       labelText: item + ':',
                                       hintText: item + ' of the book')),
                         ],
-                      ),
+                        ))])))
                     ),
-                  ),
                   actions: <Widget>[
                     TextButton(
                         child: const Text('CANCEL'),

@@ -353,7 +353,9 @@ class OrderDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                if (isManager) {_showDialog(context, customer)}
+                //if (isManager) {
+                  _showDialog(context, customer)
+                //}
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -441,7 +443,8 @@ class OrderDatabase extends DataTableSource {
                             child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('Order #${curOrder.orderNum} Info'),
+                            Text('Order #${curOrder.orderNum} Info',
+                              style: const TextStyle(fontWeight: FontWeight.w700)),
                             // for (var item in curOrder.allInfoHeaders)
                             //   TextField(
                             //       controller: TextEditingController()
@@ -591,12 +594,33 @@ class OrderDatabase extends DataTableSource {
                                       )),
                                 )),
                                 Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                      controller: TextEditingController()
+                                        ..text = curOrder
+                                            .headerToInfo('Total Cost'),
+                                      onChanged: (text) => {
+                                            curOrder.infoEdited(
+                                                'Total Cost', text)
+                                          },
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Total Cost',
+                                      )),
+                                )),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [ 
+                                Expanded(
                                     child: Column(
                                   children: [
                                     Container(
                                       alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(
-                                          left: 10, top: 11, bottom: 7),
+                                      padding: const EdgeInsets.only(top: 11, bottom: 7),
                                       child: Text(
                                         'Order Status',
                                         style: TextStyle(
@@ -606,8 +630,6 @@ class OrderDatabase extends DataTableSource {
                                     ),
                                     Container(
                                         width: double.infinity,
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
                                         child: CustomDropdownButton2(
                                           buttonHeight: 25,
                                           buttonPadding:
@@ -634,7 +656,8 @@ class OrderDatabase extends DataTableSource {
                                           valueAlignment: Alignment.center,
                                           icon:
                                               const Icon(Icons.arrow_drop_down),
-                                          dropdownWidth: 190,
+                                          iconSize: 20,
+                                          dropdownWidth: 400,
                                           dropdownItems:
                                               _orderStatusDropDownVal,
                                           value: _curOrderStatusChoice,
@@ -656,13 +679,12 @@ class OrderDatabase extends DataTableSource {
                               child: Text('Ordered books',
                                   style: TextStyle(
                                       color: Theme.of(context).hintColor,
-                                      fontSize: 15)),
+                                      fontSize: 14)),
                             ),
                             Container(
-                              height: double.maxFinite,
+                              height: 75 * double.parse(_orderedBooks.length.toString()),
                               width: 400,
-                              constraints: const BoxConstraints(
-                                  minHeight: 100, maxHeight: 330),
+                              constraints: const BoxConstraints(maxHeight: 330),
                               child: ListView(
                                 padding:
                                     const EdgeInsets.only(left: 7, right: 7),

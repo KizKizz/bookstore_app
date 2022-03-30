@@ -386,15 +386,20 @@ class CustomerDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(
+              contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                  //padding: const EdgeInsets.only(right: 20),
+                  child: SingleChildScrollView(
+                      child: Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Edit Customer Info'),
+                      Text('Edit ${curCustomer.firstName} ${curCustomer.lastName}\'s Info'),
                       for (var item in curCustomer.allInfoHeaders)
                         TextField(
                             controller: TextEditingController()
@@ -405,9 +410,9 @@ class CustomerDatabase extends DataTableSource {
                             decoration: InputDecoration(
                                 labelText: item + ':', hintText: item)),
                     ],
-                  )))
+                  ))
                 ],
-              ),
+              )))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
@@ -456,15 +461,22 @@ Future<void> customerDataAdder(context) async {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            contentPadding: const EdgeInsets.all(16.0),
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
+            contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                //padding: const EdgeInsets.only(right: 20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Add Customer'),
+                    const Text('Add New Customer',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700)),
                     for (var item in newCustomer.allInfoHeaders)
                       TextField(
                           // controller: TextEditingController()
@@ -475,9 +487,9 @@ Future<void> customerDataAdder(context) async {
                           decoration: InputDecoration(
                               labelText: item + ':', hintText: item)),
                   ],
-                )))
+                ))
               ],
-            ),
+            )))),
             actions: <Widget>[
               TextButton(
                   child: const Text('CANCEL'),

@@ -4,14 +4,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-import 'book_data_handler.dart';
 
 final File salesRecordDataJson =
     File('assets/jsondatabase/sales_record_data.json');
@@ -394,7 +391,9 @@ class SalesRecordDatabase extends DataTableSource {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                                'Sale Info'),
+                                'Sale Info',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700)),
                             for (var item in curSalesRecord.allInfoHeaders)
                               TextField(
                                   controller: TextEditingController()

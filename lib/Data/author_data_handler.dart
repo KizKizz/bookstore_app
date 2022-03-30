@@ -307,15 +307,21 @@ class AuthorDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return _SystemPadding(
             child: AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(
+              contentPadding:
+                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+              content: Container(
+                //padding: const EdgeInsets.only(right: 20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Edit author Info'),
+                      Text('Edit ${curAuthor.fullName}\'s Info',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
                       for (var item in curAuthor.allInfoHeaders)
                         TextField(
                             controller: TextEditingController()
@@ -327,9 +333,9 @@ class AuthorDatabase extends DataTableSource {
                                 labelText: item + ':',
                                 hintText: item + ' of the author')),
                     ],
-                  )))
+                  ))
                 ],
-              ),
+              )))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
