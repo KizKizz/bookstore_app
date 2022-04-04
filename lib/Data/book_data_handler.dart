@@ -418,109 +418,359 @@ class BookDatabase extends DataTableSource {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                            child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Edit Book Info',
-                          style: TextStyle(fontWeight: FontWeight.w700)),
-                      for (var item in curBook.allInfoHeaders)
-                        if (item == 'Condition')
-                          Container(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Column(children: [
-                                Container(
-                                  alignment: Alignment(-1, 0),
-                                  padding: EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    'Condition:',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).hintColor),
-                                  ),
-                                ),
-                                RatingBar.builder(
-                                  itemSize: 40,
-                                  initialRating: _conditionRating,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: false,
-                                  itemCount: 5,
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  itemBuilder: (context, _) => const Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  onRatingUpdate: (rating) {
-                                    if (rating == 1.0) {
-                                      curBook.infoEdited(item, 'Poor');
-                                    } else if (rating == 2.0) {
-                                      curBook.infoEdited(item, 'Fair');
-                                    } else if (rating == 3.0) {
-                                      curBook.infoEdited(item, 'Good');
-                                    } else if (rating == 4.0) {
-                                      curBook.infoEdited(item, 'Excellent');
-                                    } else if (rating == 5.0) {
-                                      curBook.infoEdited(item, 'Superb');
-                                    }
-                                  },
-                                )
-                              ]))
-                        else if (item == 'Sold')
-                          Container(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Column(children: [
-                                Container(
-                                  alignment: const Alignment(-1, 0),
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    'Status:',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).hintColor),
-                                  ),
-                                ),
-                                ToggleSwitch(
-                                  minWidth: 110,
-                                  minHeight: 30,
-                                  borderColor: [
-                                    Theme.of(context).hintColor
-                                  ],
-                                  borderWidth: 1,
-                                  initialLabelIndex: _statusRating,
-                                  cornerRadius: 50.0,
-                                  activeFgColor: Colors.white,
-                                  inactiveBgColor: Colors.grey,
-                                  inactiveFgColor: Colors.white,
-                                  totalSwitches: 2,
-                                  labels: const ['Available', 'Sold'],
-                                  activeBgColors: const [
-                                    [Colors.blue],
-                                    [Colors.pink]
-                                  ],
-                                  onToggle: (index) {
-                                    if (index == 0) {
-                                      curBook.infoEdited(item, 'Available');
-                                    } else if (index == 1) {
-                                      curBook.infoEdited(item, 'Sold');
-                                    }
-                                  },
-                                )
-                              ]))
-                        else
-                          TextField(
-                              controller: TextEditingController()
-                                ..text = curBook.headerToInfo(item),
-                              onChanged: (text) =>
-                                  {curBook.infoEdited(item, text)},
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                  labelText: item + ':',
-                                  hintText: item + ' of the book',
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('Book Info',
+                                  style: TextStyle(fontWeight: FontWeight.w700)),
+                              // for (var item in curBook.allInfoHeaders)
+                              //   if (item == 'Condition')
+                              //     Container(
+                              //         padding: EdgeInsets.only(top: 10),
+                              //         child: Column(children: [
+                              //           Container(
+                              //             alignment: Alignment(-1, 0),
+                              //             padding: EdgeInsets.only(bottom: 5),
+                              //             child: Text(
+                              //               'Condition:',
+                              //               style: TextStyle(
+                              //                   fontSize: 14,
+                              //                   color: Theme.of(context).hintColor),
+                              //             ),
+                              //           ),
+                              //           RatingBar.builder(
+                              //             itemSize: 40,
+                              //             initialRating: _conditionRating,
+                              //             minRating: 1,
+                              //             direction: Axis.horizontal,
+                              //             allowHalfRating: false,
+                              //             itemCount: 5,
+                              //             itemPadding: const EdgeInsets.symmetric(
+                              //                 horizontal: 4.0),
+                              //             itemBuilder: (context, _) => const Icon(
+                              //               Icons.star,
+                              //               color: Colors.amber,
+                              //             ),
+                              //             onRatingUpdate: (rating) {
+                              //               if (rating == 1.0) {
+                              //                 curBook.infoEdited(item, 'Poor');
+                              //               } else if (rating == 2.0) {
+                              //                 curBook.infoEdited(item, 'Fair');
+                              //               } else if (rating == 3.0) {
+                              //                 curBook.infoEdited(item, 'Good');
+                              //               } else if (rating == 4.0) {
+                              //                 curBook.infoEdited(item, 'Excellent');
+                              //               } else if (rating == 5.0) {
+                              //                 curBook.infoEdited(item, 'Superb');
+                              //               }
+                              //             },
+                              //           )
+                              //         ]))
+                              //   else if (item == 'Sold')
+                              //     Container(
+                              //         padding: const EdgeInsets.only(top: 5),
+                              //         child: Column(children: [
+                              //           Container(
+                              //             alignment: const Alignment(-1, 0),
+                              //             padding: const EdgeInsets.only(bottom: 5),
+                              //             child: Text(
+                              //               'Status:',
+                              //               style: TextStyle(
+                              //                   fontSize: 14,
+                              //                   color: Theme.of(context).hintColor),
+                              //             ),
+                              //           ),
+                              //           ToggleSwitch(
+                              //             minWidth: 110,
+                              //             minHeight: 30,
+                              //             borderColor: [
+                              //               Theme.of(context).hintColor
+                              //             ],
+                              //             borderWidth: 1,
+                              //             initialLabelIndex: _statusRating,
+                              //             cornerRadius: 50.0,
+                              //             activeFgColor: Colors.white,
+                              //             inactiveBgColor: Colors.grey,
+                              //             inactiveFgColor: Colors.white,
+                              //             totalSwitches: 2,
+                              //             labels: const ['Available', 'Sold'],
+                              //             activeBgColors: const [
+                              //               [Colors.blue],
+                              //               [Colors.pink]
+                              //             ],
+                              //             onToggle: (index) {
+                              //               if (index == 0) {
+                              //                 curBook.infoEdited(item, 'Available');
+                              //               } else if (index == 1) {
+                              //                 curBook.infoEdited(item, 'Sold');
+                              //               }
+                              //             },
+                              //           )
+                              //         ]))
+                              //   else
+                              //     TextField(
+                              //         controller: TextEditingController()
+                              //           ..text = curBook.headerToInfo(item),
+                              //         onChanged: (text) =>
+                              //             {curBook.infoEdited(item, text)},
+                              //         autofocus: true,
+                              //         decoration: InputDecoration(
+                              //             labelText: item + ':',
+                              //             hintText: item + ' of the book',
+                              //             )),
+                            
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook.headerToInfo(
+                                              'Title'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Title', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Title',
+                                  )),)),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook.headerToInfo(
+                                              'Edition'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Edition', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Edition',
+                                        )),
                                   )),
-                    ],
-                  ))
-                ],
+                                  Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text =
+                                                  curBook.headerToInfo('ID'),
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited('ID', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'ID',
+                                            )),
+                                      )),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 0),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook
+                                              .headerToInfo('Author'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Author', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Author',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook
+                                              .headerToInfo('Publisher'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Publisher', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Publisher',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text =
+                                              curBook.headerToInfo('Publish Date'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited('Publish Date', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Publish Date',
+                                        )),
+                                  )),
+                                ],
+                              ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook
+                                              .headerToInfo('Cost'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Cost', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Cost',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curBook
+                                              .headerToInfo('Retail Price'),
+                                        onChanged: (text) => {
+                                              curBook.infoEdited(
+                                                  'Retail Price', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Retail Price',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              
+                              Container(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Column(children: [
+                                  Container(
+                                    //alignment: const Alignment(-1, 0),
+                                    //padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      'Condition',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor),
+                                    ),
+                                  ),
+                                  RatingBar.builder(
+                                    itemSize: 40,
+                                    initialRating: _conditionRating,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: false,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      if (rating == 1.0) {
+                                        curBook.infoEdited('Condition', 'Poor');
+                                      } else if (rating == 2.0) {
+                                        curBook.infoEdited('Condition', 'Fair');
+                                      } else if (rating == 3.0) {
+                                        curBook.infoEdited('Condition', 'Good');
+                                      } else if (rating == 4.0) {
+                                        curBook.infoEdited('Condition', 'Excellent');
+                                      } else if (rating == 5.0) {
+                                        curBook.infoEdited('Condition', 'Superb');
+                                      }
+                                    },
+                                  )
+                                ])),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Column(children: [
+                                    Container(
+                                      //alignment: const Alignment(-1, 0),
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        'Status',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).hintColor),
+                                      ),
+                                    ),
+                                    ToggleSwitch(
+                                      minWidth: 110,
+                                      minHeight: 30,
+                                      borderColor: [
+                                        Theme.of(context).hintColor
+                                      ],
+                                      borderWidth: 1,
+                                      initialLabelIndex: _statusRating,
+                                      cornerRadius: 50.0,
+                                      activeFgColor: Colors.white,
+                                      inactiveBgColor: Colors.grey,
+                                      inactiveFgColor: Colors.white,
+                                      totalSwitches: 2,
+                                      labels: const ['Available', 'Sold'],
+                                      activeBgColors: const [
+                                        [Colors.blue],
+                                        [Colors.pink]
+                                      ],
+                                      onToggle: (index) {
+                                        if (index == 0) {
+                                          curBook.infoEdited('Sold', 'Available');
+                                        } else if (index == 1) {
+                                          curBook.infoEdited('Sold', 'Sold');
+                                        }
+                                      },
+                                    )
+                                ]))
+                            
+                            ],
+                          ))
+                      ],
               )))),
               actions: <Widget>[
                 TextButton(
@@ -617,330 +867,800 @@ Future<void> bookDataAdder(context) async {
                 return AlertDialog(
                   contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
+                  content: Container(
+                    constraints: const BoxConstraints(minWidth: 400),
+                    //padding: const EdgeInsets.only(right: 20),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
                             child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Text('Add New Book',
-                              style: TextStyle(fontWeight: FontWeight.w700)),
-                          for (var item in newBook.allInfoHeaders)
-                            if (item == 'Author')
-                              Column(
-                                children: [
-                                  TextField(
-                                      controller: _authorNameController,
-                                      onChanged: (text) => {
-                                            setState(
-                                              () {
-                                                _authorsExistedInList =
-                                                    mainAuthorListCopy.where(
-                                                        (element) => element
-                                                            .fullName
-                                                            .toLowerCase()
-                                                            .contains(text
-                                                                .toLowerCase()));
-                                                if (_authorsExistedInList
-                                                    .isEmpty) {
-                                                  newBook.infoEdited(
-                                                      item, text);
-                                                  newAuthor.fullName = text;
-                                                }
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              const Text('Add New Book',
+                                  style: TextStyle(fontWeight: FontWeight.w700)),
+                              // for (var item in newBook.allInfoHeaders)
+                              //   if (item == 'Author')
+                              //     Column(
+                              //       children: [
+                              //         TextField(
+                              //             controller: _authorNameController,
+                              //             onChanged: (text) => {
+                              //                   setState(
+                              //                     () {
+                              //                       _authorsExistedInList =
+                              //                           mainAuthorListCopy.where(
+                              //                               (element) => element
+                              //                                   .fullName
+                              //                                   .toLowerCase()
+                              //                                   .contains(text
+                              //                                       .toLowerCase()));
+                              //                       if (_authorsExistedInList
+                              //                           .isEmpty) {
+                              //                         newBook.infoEdited(
+                              //                             item, text);
+                              //                         newAuthor.fullName = text;
+                              //                       }
 
-                                                if (_authorsExistedInList
-                                                    .isNotEmpty && text.isNotEmpty) {
-                                                  _authorListVisible = true;
-                                                } else {
-                                                  _authorListVisible = false;
-                                                }
-                                              },
-                                            )
+                              //                       if (_authorsExistedInList
+                              //                           .isNotEmpty && text.isNotEmpty) {
+                              //                         _authorListVisible = true;
+                              //                       } else {
+                              //                         _authorListVisible = false;
+                              //                       }
+                              //                     },
+                              //                   )
+                              //                 },
+                              //             autofocus: true,
+                              //             decoration: InputDecoration(
+                              //                 labelText: item + ':',
+                              //                 hintText: 'Full Name')),
+                              //         Stack(
+                              //           children: [
+                              //             Padding(
+                              //               padding:
+                              //                   const EdgeInsets.only(left: 15),
+                              //               child: Column(
+                              //                 children: [
+                              //                   TextField(
+                              //                       controller:
+                              //                           TextEditingController()
+                              //                             ..text = newAuthor.id,
+                              //                       onChanged: (text) =>
+                              //                           {newAuthor.id = text},
+                              //                       autofocus: true,
+                              //                       decoration: InputDecoration(
+                              //                           labelText: item + '\'s ID:',
+                              //                           hintText: 'Author ID')),
+                              //                   TextField(
+                              //                       controller:
+                              //                           TextEditingController()
+                              //                             ..text =
+                              //                                 newAuthor.yearBirth,
+                              //                       onChanged: (text) => {
+                              //                             newAuthor.yearBirth = text
+                              //                           },
+                              //                       autofocus: true,
+                              //                       decoration: InputDecoration(
+                              //                           labelText: item +
+                              //                               '\'s Year of Birth:',
+                              //                           hintText: 'YYYY')),
+                              //                   TextField(
+                              //                       controller:
+                              //                           TextEditingController()
+                              //                             ..text =
+                              //                                 newAuthor.yearDead,
+                              //                       onChanged: (text) =>
+                              //                           {newAuthor.yearDead = text},
+                              //                       autofocus: true,
+                              //                       decoration: InputDecoration(
+                              //                           labelText: item +
+                              //                               '\'s Year of Dead:',
+                              //                           hintText: 'YYYY')),
+                              //                   TextField(
+                              //                       controller:
+                              //                           TextEditingController()
+                              //                             ..text =
+                              //                                 newAuthor.description,
+                              //                       onChanged: (text) => {
+                              //                             newAuthor.description =
+                              //                                 text
+                              //                           },
+                              //                       autofocus: true,
+                              //                       decoration: InputDecoration(
+                              //                           labelText: item +
+                              //                               '\'s Description:',
+                              //                           hintText: 'Optional')),
+                              //                 ],
+                              //               ),
+                              //             ),
+                              //             if (_authorListVisible)
+                              //               Container(
+                              //                 decoration: BoxDecoration(
+                              //                     color: Theme.of(context)
+                              //                         .dialogBackgroundColor,
+                              //                     borderRadius:
+                              //                         const BorderRadius.only(
+                              //                             topLeft:
+                              //                                 Radius.circular(0),
+                              //                             topRight:
+                              //                                 Radius.circular(0),
+                              //                             bottomLeft:
+                              //                                 Radius.circular(3),
+                              //                             bottomRight:
+                              //                                 Radius.circular(3)),
+                              //                     boxShadow: [
+                              //                       BoxShadow(
+                              //                         color: Theme.of(context)
+                              //                             .shadowColor
+                              //                             .withOpacity(0.3),
+                              //                         spreadRadius: 1,
+                              //                         blurRadius: 1,
+                              //                         // offset: const Offset(
+                              //                         //     1, 1), // changes position of shadow
+                              //                       ),
+                              //                     ]),
+                              //                 width: 248,
+                              //                 height: (50.0 *
+                              //                     double.parse(_authorsExistedInList
+                              //                         .length
+                              //                         .toString())),
+                              //                 constraints: const BoxConstraints(
+                              //                     maxHeight: 212,
+                              //                     maxWidth: double.maxFinite),
+                              //                 child: ListView(
+                              //                     padding:
+                              //                         const EdgeInsets.symmetric(
+                              //                             horizontal: 6),
+                              //                     controller: ScrollController(),
+                              //                     children: [
+                              //                       for (var author
+                              //                           in _authorsExistedInList)
+                              //                         Container(
+                              //                           //height: 50,
+                              //                           child: Card(
+                              //                             margin:
+                              //                                 const EdgeInsets.all(
+                              //                                     0.5),
+                              //                             elevation: 3,
+                              //                             clipBehavior:
+                              //                                 Clip.antiAlias,
+                              //                             shape:
+                              //                                 RoundedRectangleBorder(
+                              //                                     borderRadius:
+                              //                                         BorderRadius
+                              //                                             .circular(
+                              //                                                 5),
+                              //                                     side: BorderSide(
+                              //                                       color: Theme.of(
+                              //                                               context)
+                              //                                           .hintColor
+                              //                                           .withOpacity(
+                              //                                               0.3),
+                              //                                       width: 1,
+                              //                                     )),
+                              //                             child: ListTile(
+                              //                               dense: true,
+                              //                               visualDensity:
+                              //                                   const VisualDensity(
+                              //                                       horizontal: 0,
+                              //                                       vertical: -4),
+                              //                               contentPadding:
+                              //                                   const EdgeInsets
+                              //                                           .symmetric(
+                              //                                       horizontal:
+                              //                                           10.0,
+                              //                                       vertical: 0.0),
+                              //                               onTap: () {
+                              //                                 setState(
+                              //                                   () {
+                              //                                     newBook.author =
+                              //                                         author
+                              //                                             .fullName;
+                              //                                     newAuthor =
+                              //                                         author;
+                              //                                     _authorNameController
+                              //                                             .text =
+                              //                                         author
+                              //                                             .fullName;
+                              //                                     newBook.infoEdited(
+                              //                                         item,
+                              //                                         _authorNameController
+                              //                                             .text);
+                              //                                     _authorListVisible =
+                              //                                         false;
+                              //                                     _authorsExistedInList =
+                              //                                         [];
+                              //                                   },
+                              //                                 );
+                              //                               },
+                              //                               // leading:
+                              //                               //     const Icon(Icons.person),
+                              //                               title: Text(
+                              //                                 author.fullName,
+                              //                                 style:
+                              //                                     const TextStyle(
+                              //                                         fontSize: 15),
+                              //                               ),
+                              //                               subtitle: Text(
+                              //                                 'ID: ${author.id}',
+                              //                                 style:
+                              //                                     const TextStyle(
+                              //                                         fontSize: 14),
+                              //                               ),
+                              //                               trailing: const Icon(
+                              //                                   Icons.add),
+                              //                               isThreeLine: false,
+                              //                             ),
+                              //                           ),
+                              //                         ),
+                              //                     ]),
+                              //               )
+                              //           ],
+                              //         )
+                              //       ],
+                              //     )
+                              //   else if (item == 'Condition')
+                              //     Container(
+                              //         padding: const EdgeInsets.only(top: 10),
+                              //         child: Column(children: [
+                              //           Container(
+                              //             alignment: const Alignment(-1, 0),
+                              //             padding: const EdgeInsets.only(bottom: 5),
+                              //             child: Text(
+                              //               'Condition:',
+                              //               style: TextStyle(
+                              //                   color: Theme.of(context).hintColor),
+                              //             ),
+                              //           ),
+                              //           RatingBar.builder(
+                              //             itemSize: 40,
+                              //             initialRating: _ratingIndex,
+                              //             minRating: 1,
+                              //             direction: Axis.horizontal,
+                              //             allowHalfRating: false,
+                              //             itemCount: 5,
+                              //             itemPadding: const EdgeInsets.symmetric(
+                              //                 horizontal: 4.0),
+                              //             itemBuilder: (context, _) => const Icon(
+                              //               Icons.star,
+                              //               color: Colors.amber,
+                              //             ),
+                              //             onRatingUpdate: (rating) {
+                              //               if (rating == 1.0) {
+                              //                 _ratingIndex = 1.0;
+                              //               } else if (rating == 2.0) {
+                              //                 _ratingIndex = 2.0;
+                              //               } else if (rating == 3.0) {
+                              //                 _ratingIndex = 3.0;
+                              //               } else if (rating == 4.0) {
+                              //                 _ratingIndex = 4.0;
+                              //               } else if (rating == 5.0) {
+                              //                 _ratingIndex = 5.0;
+                              //               }
+                              //             },
+                              //           )
+                              //         ]))
+                              //   else if (item == 'Sold')
+                              //     Container(
+                              //         padding: const EdgeInsets.only(top: 5),
+                              //         child: Column(children: [
+                              //           Container(
+                              //             alignment: const Alignment(-1, 0),
+                              //             padding: const EdgeInsets.only(bottom: 5),
+                              //             child: Text(
+                              //               'Status:',
+                              //               style: TextStyle(
+                              //                   color: Theme.of(context).hintColor),
+                              //             ),
+                              //           ),
+                              //           ToggleSwitch(
+                              //             minWidth: 80.0,
+                              //             minHeight: 30,
+                              //             borderColor: [
+                              //               Theme.of(context).primaryColorLight
+                              //             ],
+                              //             borderWidth: 1.5,
+                              //             initialLabelIndex: _statusIndex,
+                              //             cornerRadius: 50.0,
+                              //             activeFgColor: Colors.white,
+                              //             inactiveBgColor: Colors.grey,
+                              //             inactiveFgColor: Colors.white,
+                              //             totalSwitches: 2,
+                              //             labels: const ['Available', 'Sold'],
+                              //             activeBgColors: const [
+                              //               [Colors.blue],
+                              //               [Colors.pink]
+                              //             ],
+                              //             onToggle: (index) {
+                              //               if (index == 0) {
+                              //                 _statusIndex = 0;
+                              //               } else if (index == 1) {
+                              //                 _statusIndex = 1;
+                              //               }
+                              //             },
+                              //           )
+                              //         ]))
+                              //   else
+                              //     TextField(
+                              //         onChanged: (text) =>
+                              //             {newBook.infoEdited(item, text)},
+                              //         autofocus: true,
+                              //         decoration: InputDecoration(
+                              //             labelText: item + ':',
+                              //             hintText: item + ' of the book')),
+                        
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                      onChanged: (text) => {
+                                            newBook.infoEdited(
+                                                'Title', text)
                                           },
                                       autofocus: true,
-                                      decoration: InputDecoration(
-                                          labelText: item + ':',
-                                          hintText: 'Full Name')),
-                                  Stack(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          children: [
-                                            TextField(
-                                                controller:
-                                                    TextEditingController()
-                                                      ..text = newAuthor.id,
-                                                onChanged: (text) =>
-                                                    {newAuthor.id = text},
-                                                autofocus: true,
-                                                decoration: InputDecoration(
-                                                    labelText: item + '\'s ID:',
-                                                    hintText: 'Author ID')),
-                                            TextField(
-                                                controller:
-                                                    TextEditingController()
-                                                      ..text =
-                                                          newAuthor.yearBirth,
-                                                onChanged: (text) => {
-                                                      newAuthor.yearBirth = text
-                                                    },
-                                                autofocus: true,
-                                                decoration: InputDecoration(
-                                                    labelText: item +
-                                                        '\'s Year of Birth:',
-                                                    hintText: 'YYYY')),
-                                            TextField(
-                                                controller:
-                                                    TextEditingController()
-                                                      ..text =
-                                                          newAuthor.yearDead,
-                                                onChanged: (text) =>
-                                                    {newAuthor.yearDead = text},
-                                                autofocus: true,
-                                                decoration: InputDecoration(
-                                                    labelText: item +
-                                                        '\'s Year of Dead:',
-                                                    hintText: 'YYYY')),
-                                            TextField(
-                                                controller:
-                                                    TextEditingController()
-                                                      ..text =
-                                                          newAuthor.description,
-                                                onChanged: (text) => {
-                                                      newAuthor.description =
-                                                          text
-                                                    },
-                                                autofocus: true,
-                                                decoration: InputDecoration(
-                                                    labelText: item +
-                                                        '\'s Description:',
-                                                    hintText: 'Optional')),
-                                          ],
-                                        ),
-                                      ),
-                                      if (_authorListVisible)
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .dialogBackgroundColor,
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(0),
-                                                      topRight:
-                                                          Radius.circular(0),
-                                                      bottomLeft:
-                                                          Radius.circular(3),
-                                                      bottomRight:
-                                                          Radius.circular(3)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .shadowColor
-                                                      .withOpacity(0.3),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
-                                                  // offset: const Offset(
-                                                  //     1, 1), // changes position of shadow
-                                                ),
-                                              ]),
-                                          width: 248,
-                                          height: (50.0 *
-                                              double.parse(_authorsExistedInList
-                                                  .length
-                                                  .toString())),
-                                          constraints: const BoxConstraints(
-                                              maxHeight: 212,
-                                              maxWidth: double.maxFinite),
-                                          child: ListView(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 6),
-                                              controller: ScrollController(),
-                                              children: [
-                                                for (var author
-                                                    in _authorsExistedInList)
-                                                  Container(
-                                                    //height: 50,
-                                                    child: Card(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              0.5),
-                                                      elevation: 3,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              side: BorderSide(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .hintColor
-                                                                    .withOpacity(
-                                                                        0.3),
-                                                                width: 1,
-                                                              )),
-                                                      child: ListTile(
-                                                        dense: true,
-                                                        visualDensity:
-                                                            const VisualDensity(
-                                                                horizontal: 0,
-                                                                vertical: -4),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    10.0,
-                                                                vertical: 0.0),
-                                                        onTap: () {
-                                                          setState(
-                                                            () {
-                                                              newBook.author =
-                                                                  author
-                                                                      .fullName;
-                                                              newAuthor =
-                                                                  author;
-                                                              _authorNameController
-                                                                      .text =
-                                                                  author
-                                                                      .fullName;
-                                                              newBook.infoEdited(
-                                                                  item,
-                                                                  _authorNameController
-                                                                      .text);
-                                                              _authorListVisible =
-                                                                  false;
-                                                              _authorsExistedInList =
-                                                                  [];
-                                                            },
-                                                          );
-                                                        },
-                                                        // leading:
-                                                        //     const Icon(Icons.person),
-                                                        title: Text(
-                                                          author.fullName,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 15),
-                                                        ),
-                                                        subtitle: Text(
-                                                          'ID: ${author.id}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 14),
-                                                        ),
-                                                        trailing: const Icon(
-                                                            Icons.add),
-                                                        isThreeLine: false,
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ]),
-                                        )
-                                    ],
-                                  )
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Title',
+                                      )),
+                                  )),
                                 ],
-                              )
-                            else if (item == 'Condition')
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'Edition', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Edition',
+                                        )),
+                                  )),
+                                  Expanded(
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'ID', text)
+                                            },
+                                        decoration:
+                                            const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'ID',
+                                        )),
+                                  )),
+                                ]
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                        child: Column(children: [
+                                          TextFormField(
+                                            controller:
+                                                _authorNameController,
+                                            onChanged: (text) => {
+                                                  setState(
+                                                    () {
+                                                      _authorsExistedInList =
+                                                          mainAuthorListCopy.where((element) => element
+                                                              .fullName
+                                                              .toLowerCase()
+                                                              .contains(
+                                                                  text.toLowerCase()));
+                                                      if (_authorsExistedInList
+                                                          .isEmpty) {
+                                                        newBook.infoEdited(
+                                                            'Author',
+                                                            text);
+                                                        newAuthor
+                                                                .fullName =
+                                                            text;
+                                                      }
+
+                                                      if (_authorsExistedInList
+                                                              .isNotEmpty &&
+                                                          text.isNotEmpty) {
+                                                        _authorListVisible =
+                                                            true;
+                                                      } else {
+                                                        _authorListVisible =
+                                                            false;
+                                                      }
+                                                    },
+                                                  )
+                                                },
+                                              decoration:
+                                                  const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Author',
+                                              )),
+                                          Stack(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets
+                                                        .only(left: 15),
+                                                child: Column(
+                                                  children: [
+                                                    TextField(
+                                                        controller: TextEditingController()
+                                                          ..text =
+                                                              newAuthor
+                                                                  .id,
+                                                        onChanged:
+                                                            (text) => {
+                                                                  newAuthor.id =
+                                                                      text
+                                                                },
+                                                        autofocus: false,
+                                                        decoration: const InputDecoration(
+                                                            labelText:
+                                                                'Author\'s ID:',
+                                                            hintText:
+                                                                'Author ID')),
+                                                    TextField(
+                                                        controller:
+                                                            TextEditingController()
+                                                              ..text =
+                                                                  newAuthor
+                                                                      .yearBirth,
+                                                        onChanged:
+                                                            (text) => {
+                                                                  newAuthor.yearBirth =
+                                                                      text
+                                                                },
+                                                        autofocus: false,
+                                                        decoration: const InputDecoration(
+                                                            labelText:
+                                                                'Author\'s Year of Birth:',
+                                                            hintText:
+                                                                'YYYY')),
+                                                    TextField(
+                                                        controller:
+                                                            TextEditingController()
+                                                              ..text =
+                                                                  newAuthor
+                                                                      .yearDead,
+                                                        onChanged:
+                                                            (text) => {
+                                                                  newAuthor.yearDead =
+                                                                      text
+                                                                },
+                                                        autofocus: false,
+                                                        decoration: const InputDecoration(
+                                                            labelText:
+                                                                'Author\'s Year of Dead:',
+                                                            hintText:
+                                                                'YYYY')),
+                                                    TextField(
+                                                        controller:
+                                                            TextEditingController()
+                                                              ..text =
+                                                                  newAuthor
+                                                                      .description,
+                                                        onChanged:
+                                                            (text) => {
+                                                                  newAuthor.description =
+                                                                      text
+                                                                },
+                                                        autofocus: false,
+                                                        decoration: const InputDecoration(
+                                                            labelText:
+                                                                'Author\'s Description:',
+                                                            hintText:
+                                                                'Optional')),
+                                                  ],
+                                                ),
+                                              ),
+                                              if (_authorListVisible)
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Theme.of(
+                                                              context).primaryColorLight,
+                                                      borderRadius: const BorderRadius
+                                                              .only(
+                                                          topLeft: Radius
+                                                              .circular(
+                                                                  0),
+                                                          topRight: Radius
+                                                              .circular(
+                                                                  0),
+                                                          bottomLeft: Radius
+                                                              .circular(
+                                                                  3),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  3)),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .hintColor,
+                                                          spreadRadius:
+                                                              1,
+                                                          blurRadius: 1,
+                                                          offset: const Offset(
+                                                              0, 1), // changes position of shadow
+                                                        ),
+                                                      ]),
+                                                  width: 385,
+                                                  height: (50.0 *
+                                                      double.parse(
+                                                          _authorsExistedInList
+                                                              .length
+                                                              .toString())),
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                          maxHeight:
+                                                              212,
+                                                          minWidth: 385,
+                                                          maxWidth: double
+                                                              .maxFinite),
+                                                  child: ListView(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal:
+                                                              10),
+                                                      controller:
+                                                          ScrollController(),
+                                                      children: [
+                                                        for (var author
+                                                            in _authorsExistedInList)
+                                                          Container(
+                                                            //height: 50,
+                                                            child: Card(
+                                                              margin: const EdgeInsets
+                                                                      .all(
+                                                                  0.5),
+                                                              elevation:
+                                                                  3,
+                                                              clipBehavior:
+                                                                  Clip.antiAlias,
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(5),
+                                                                  side: BorderSide(
+                                                                    color:
+                                                                        Theme.of(context).hintColor.withOpacity(0.3),
+                                                                    width:
+                                                                        1,
+                                                                  )),
+                                                              child:
+                                                                  ListTile(
+                                                                dense:
+                                                                    true,
+                                                                visualDensity: const VisualDensity(
+                                                                    horizontal:
+                                                                        0,
+                                                                    vertical:
+                                                                        -4),
+                                                                contentPadding: const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.0,
+                                                                    vertical:
+                                                                        0.0),
+                                                                onTap:
+                                                                    () {
+                                                                  setState(
+                                                                    () {
+                                                                      newBook.author = author.fullName;
+                                                                      newAuthor = author;
+                                                                      _authorNameController.text = author.fullName;
+                                                                      newBook.infoEdited('Author', _authorNameController.text);
+                                                                      _authorListVisible = false;
+                                                                      _authorsExistedInList = [];
+                                                                    },
+                                                                  );
+                                                                },
+                                                                // leading:
+                                                                //     const Icon(Icons.person),
+                                                                title:
+                                                                    Text(
+                                                                  author
+                                                                      .fullName,
+                                                                  style:
+                                                                      const TextStyle(fontSize: 15),
+                                                                ),
+                                                                subtitle:
+                                                                    Text(
+                                                                  'ID: ${author.id}',
+                                                                  style:
+                                                                      const TextStyle(fontSize: 14),
+                                                                ),
+                                                                trailing:
+                                                                    const Icon(Icons.add),
+                                                                isThreeLine:
+                                                                    false,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                      ]),
+                                                ),
+                                            ],
+                                          ),
+                                        ]))),
+                                
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'Publisher', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Publisher',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'Publish Date', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Publish Date',
+                                        )),
+                                  )),
+                                ],
+                              ),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'Cost', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Cost',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding:
+                                        const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) => {
+                                              newBook.infoEdited(
+                                                  'Retail Price', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Retail Price',
+                                        )),
+                                  )),
+                                ],
+                              ),
+
                               Container(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Column(children: [
-                                    Container(
-                                      alignment: const Alignment(-1, 0),
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Text(
-                                        'Condition:',
-                                        style: TextStyle(
-                                            color: Theme.of(context).hintColor),
-                                      ),
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Column(children: [
+                                  Container(
+                                    //alignment: const Alignment(-1, 0),
+                                    //padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      'Condition',
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor),
                                     ),
-                                    RatingBar.builder(
-                                      itemSize: 40,
-                                      initialRating: _ratingIndex,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: false,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 4.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      onRatingUpdate: (rating) {
-                                        if (rating == 1.0) {
-                                          _ratingIndex = 1.0;
-                                        } else if (rating == 2.0) {
-                                          _ratingIndex = 2.0;
-                                        } else if (rating == 3.0) {
-                                          _ratingIndex = 3.0;
-                                        } else if (rating == 4.0) {
-                                          _ratingIndex = 4.0;
-                                        } else if (rating == 5.0) {
-                                          _ratingIndex = 5.0;
-                                        }
-                                      },
-                                    )
-                                  ]))
-                            else if (item == 'Sold')
-                              Container(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Column(children: [
-                                    Container(
-                                      alignment: const Alignment(-1, 0),
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Text(
-                                        'Status:',
-                                        style: TextStyle(
-                                            color: Theme.of(context).hintColor),
-                                      ),
+                                  ),
+                                  RatingBar.builder(
+                                    itemSize: 40,
+                                    initialRating: _ratingIndex,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: false,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
                                     ),
-                                    ToggleSwitch(
-                                      minWidth: 80.0,
-                                      minHeight: 30,
-                                      borderColor: [
-                                        Theme.of(context).primaryColorLight
-                                      ],
-                                      borderWidth: 1.5,
-                                      initialLabelIndex: _statusIndex,
-                                      cornerRadius: 50.0,
-                                      activeFgColor: Colors.white,
-                                      inactiveBgColor: Colors.grey,
-                                      inactiveFgColor: Colors.white,
-                                      totalSwitches: 2,
-                                      labels: const ['Available', 'Sold'],
-                                      activeBgColors: const [
-                                        [Colors.blue],
-                                        [Colors.pink]
-                                      ],
-                                      onToggle: (index) {
-                                        if (index == 0) {
-                                          _statusIndex = 0;
-                                        } else if (index == 1) {
-                                          _statusIndex = 1;
-                                        }
-                                      },
-                                    )
-                                  ]))
-                            else
-                              TextField(
-                                  onChanged: (text) =>
-                                      {newBook.infoEdited(item, text)},
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                      labelText: item + ':',
-                                      hintText: item + ' of the book')),
-                        ],
+                                    onRatingUpdate: (rating) {
+                                      if (rating == 1.0) {
+                                        _ratingIndex = 1.0;
+                                      } else if (rating == 2.0) {
+                                        _ratingIndex = 2.0;
+                                      } else if (rating == 3.0) {
+                                        _ratingIndex = 3.0;
+                                      } else if (rating == 4.0) {
+                                        _ratingIndex = 4.0;
+                                      } else if (rating == 5.0) {
+                                        _ratingIndex = 5.0;
+                                      }
+                                    },
+                                  )
+                                ])),
+                          
+                            Container(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Column(children: [
+                                  Container(
+                                    //alignment: const Alignment(-1, 0),
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      'Status',
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor),
+                                    ),
+                                  ),
+                                  ToggleSwitch(
+                                    minWidth: 80.0,
+                                    minHeight: 30,
+                                    borderColor: [
+                                      Theme.of(context).primaryColorLight
+                                    ],
+                                    borderWidth: 1.5,
+                                    initialLabelIndex: _statusIndex,
+                                    cornerRadius: 50.0,
+                                    activeFgColor: Colors.white,
+                                    inactiveBgColor: Colors.grey,
+                                    inactiveFgColor: Colors.white,
+                                    totalSwitches: 2,
+                                    labels: const ['Available', 'Sold'],
+                                    activeBgColors: const [
+                                      [Colors.blue],
+                                      [Colors.pink]
+                                    ],
+                                    onToggle: (index) {
+                                      if (index == 0) {
+                                        _statusIndex = 0;
+                                      } else if (index == 1) {
+                                        _statusIndex = 1;
+                                      }
+                                    },
+                                  )
+                                ]))
+
+                            ],
                         ))])))
                     ),
                   actions: <Widget>[
