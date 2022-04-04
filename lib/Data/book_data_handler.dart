@@ -1380,7 +1380,7 @@ Future<void> bookDataAdder(context) async {
                                                 Container(
                                                   decoration: BoxDecoration(
                                                       color: Theme.of(
-                                                              context).primaryColorLight,
+                                                              context).canvasColor,
                                                       borderRadius: const BorderRadius
                                                               .only(
                                                           topLeft: Radius
@@ -1391,40 +1391,38 @@ Future<void> bookDataAdder(context) async {
                                                                   0),
                                                           bottomLeft: Radius
                                                               .circular(
-                                                                  3),
+                                                                  5),
                                                           bottomRight:
                                                               Radius.circular(
-                                                                  3)),
+                                                                  5)),
                                                       boxShadow: [
                                                         BoxShadow(
                                                           color: Theme.of(
                                                                   context)
-                                                              .hintColor,
+                                                              .shadowColor.withOpacity(0.4),
                                                           spreadRadius:
-                                                              1,
-                                                          blurRadius: 1,
+                                                              2,
+                                                          blurRadius: 2,
                                                           offset: const Offset(
                                                               0, 1), // changes position of shadow
                                                         ),
                                                       ]),
                                                   width: 385,
-                                                  height: (50.0 *
+                                                  height: (55 *
                                                       double.parse(
                                                           _authorsExistedInList
                                                               .length
-                                                              .toString())),
+                                                              .toString())) + 5,
                                                   constraints:
                                                       const BoxConstraints(
                                                           maxHeight:
-                                                              212,
+                                                              205,
                                                           minWidth: 385,
                                                           maxWidth: double
                                                               .maxFinite),
                                                   child: ListView(
                                                       padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal:
-                                                              10),
+                                                              .only(left: 10, right: 11, top: 2.5, bottom: 5),
                                                       controller:
                                                           ScrollController(),
                                                       children: [
@@ -1434,8 +1432,7 @@ Future<void> bookDataAdder(context) async {
                                                             //height: 50,
                                                             child: Card(
                                                               margin: const EdgeInsets
-                                                                      .all(
-                                                                  0.5),
+                                                                      .only(top: 5),
                                                               elevation:
                                                                   3,
                                                               clipBehavior:
@@ -1444,7 +1441,7 @@ Future<void> bookDataAdder(context) async {
                                                                   borderRadius: BorderRadius.circular(5),
                                                                   side: BorderSide(
                                                                     color:
-                                                                        Theme.of(context).hintColor.withOpacity(0.3),
+                                                                        Theme.of(context).cardColor.withOpacity(0.3),
                                                                     width:
                                                                         1,
                                                                   )),
