@@ -13,7 +13,7 @@ import 'package:multi_split_view/multi_split_view.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../Data/customer_data_helper.dart';
+import '../Data/customer_data_handler.dart';
 import '../Data/employee_data_handler.dart';
 import '../state_provider.dart';
 
@@ -33,7 +33,7 @@ List<TextEditingController> priceControllers = [];
 List<TextEditingController> existingCustomerInfoControllers = [];
 List<String> checkoutPrices = [];
 Customer curOrderingCustomer =
-    Customer('', '', '', '', '', '', '', '', '', '', '');
+    Customer('', '', '', '', '', '', '', '', '', '', '', '', '');
 Employee curSalesperson = Employee(
   '',
   '',
@@ -176,7 +176,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     customer.zipCode,
                     customer.phoneNumber,
                     customer.email,
-                    customer.totalPurchases);
+                    customer.totalPurchases,
+                    customer.bookPurchased,
+                    customer.purchasedDates);
                 _searchCustomerList.add(tempCustomer);
               }
               setState(() {
@@ -695,45 +697,58 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             if (_searchCustomerController
                                                 .text.isNotEmpty)
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 2),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 2),
                                                 child: Container(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 20, right: 15),
-                                                  constraints: const BoxConstraints(maxHeight: double.maxFinite),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20, right: 15),
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                          maxHeight:
+                                                              double.maxFinite),
                                                   //color: Colors.amber,
-                                                  height: (75 * double.parse(_searchCustomerList.length.toString())),
+                                                  height: (75 *
+                                                      double.parse(
+                                                          _searchCustomerList
+                                                              .length
+                                                              .toString())),
                                                   child: Container(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            left: 15, right: 15),
+                                                            left: 15,
+                                                            right: 15),
                                                     decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .dialogBackgroundColor,
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .only(
-                                                              topLeft: Radius
-                                                                  .circular(0),
-                                                              topRight: Radius
-                                                                  .circular(0),
-                                                              bottomLeft: Radius
-                                                                  .circular(3),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          3)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .hintColor
-                                                              .withOpacity(0.3),
-                                                          spreadRadius: 1,
-                                                          blurRadius: 1,
-                                                          offset: const Offset(
-                                                              0, 1), // changes position of shadow
-                                                        ),
-                                                      ]),
+                                                        color: Theme.of(context)
+                                                            .dialogBackgroundColor,
+                                                        borderRadius: const BorderRadius
+                                                                .only(
+                                                            topLeft: Radius
+                                                                .circular(0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    3),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    3)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .hintColor
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 1,
+                                                            offset: const Offset(
+                                                                0,
+                                                                1), // changes position of shadow
+                                                          ),
+                                                        ]),
                                                     child: ListView(
                                                       controller:
                                                           ScrollController(),
@@ -744,23 +759,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             height: 75,
                                                             child: Card(
                                                               elevation: 3,
-                                                              clipBehavior:
-                                                                  Clip.antiAlias,
+                                                              clipBehavior: Clip
+                                                                  .antiAlias,
                                                               shape:
                                                                   RoundedRectangleBorder(
                                                                       borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  5),
+                                                                          BorderRadius.circular(
+                                                                              5),
                                                                       side:
                                                                           BorderSide(
-                                                                        color: Theme.of(
-                                                                                context)
+                                                                        color: Theme.of(context)
                                                                             .hintColor
-                                                                            .withOpacity(
-                                                                                0.3),
+                                                                            .withOpacity(0.3),
                                                                         //color: Colors.grey.withOpacity(0.2),
-                                                                        width: 1,
+                                                                        width:
+                                                                            1,
                                                                       )),
                                                               child: ListTile(
                                                                 dense: true,
@@ -779,7 +792,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                   existingCustomerInfoControllers[
                                                                               2]
                                                                           .text =
-                                                                      customer.id;
+                                                                      customer
+                                                                          .id;
                                                                   existingCustomerInfoControllers[
                                                                               3]
                                                                           .text =
@@ -821,29 +835,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                   _searchCustomerController
                                                                       .clear();
 
-                                                                  setState(() {});
+                                                                  setState(
+                                                                      () {});
                                                                 },
                                                                 leading: const Icon(
-                                                                    Icons.person),
+                                                                    Icons
+                                                                        .person),
                                                                 title: Text(
                                                                   '${customer.firstName} ${customer.lastName}',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                          fontSize:
-                                                                              15),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          15),
                                                                 ),
                                                                 subtitle: Text(
                                                                   '${_getFullAddress(customer)}\n${customer.phoneNumber}',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                          fontSize:
-                                                                              14),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          14),
                                                                 ),
                                                                 trailing:
                                                                     const Icon(
                                                                         Icons
                                                                             .add),
-                                                                isThreeLine: true,
+                                                                isThreeLine:
+                                                                    true,
                                                               ),
                                                             ),
                                                           ),
@@ -1770,6 +1785,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               for (var book in checkoutCartList) {
                                 //book.sold = 'Available';
                                 _numOfBook++;
+                                if (curOrderingCustomer
+                                    .bookPurchased.isEmpty) {
+                                  curOrderingCustomer.bookPurchased =
+                                      book.title;
+                                  curOrderingCustomer.purchasedDates =
+                                      _orderDate;                        
+                                } else {
+                                  curOrderingCustomer.bookPurchased =
+                                      curOrderingCustomer.bookPurchased +
+                                          ' ' +
+                                          book.title;
+                                  curOrderingCustomer.purchasedDates =
+                                      curOrderingCustomer.purchasedDates +
+                                          ' ' +
+                                          _orderDate;
+                                }
+
                                 if (_allBookIDs.isNotEmpty) {
                                   _allBookIDs = _allBookIDs + ' ' + book.id;
                                 } else {
@@ -1867,7 +1899,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     .toList();
                                 customerDataJson.writeAsStringSync(
                                     json.encode(mainCustomerListCopy));
-                             
+
                                 mainEmployeeListCopy
                                     .map(
                                       (employee) => employee.toJson(),
@@ -1875,7 +1907,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     .toList();
                                 employeeDataJson.writeAsStringSync(
                                     json.encode(mainEmployeeListCopy));
-                                
+
                                 mainBookListCopy
                                     .map(
                                       (book) => book.toJson(),
@@ -1883,7 +1915,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     .toList();
                                 bookDataJson.writeAsStringSync(
                                     json.encode(mainBookListCopy));
-                                
+
                                 mainOrderListCopy
                                     .map(
                                       (order) => order.toJson(),
@@ -1891,7 +1923,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     .toList();
                                 orderDataJson.writeAsStringSync(
                                     json.encode(mainOrderListCopy));
-                                
+
                                 mainSalesRecordListCopy
                                     .map(
                                       (salesRecord) => salesRecord.toJson(),
@@ -1900,8 +1932,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 salesRecordDataJson.writeAsStringSync(
                                     json.encode(mainSalesRecordListCopy));
                               }
-
-
                             });
                           },
                         ),

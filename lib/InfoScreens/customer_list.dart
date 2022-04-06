@@ -6,7 +6,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-import '../Data/customer_data_helper.dart';
+import '../Data/customer_data_handler.dart';
 import '../main_appbar.dart';
 
 final searchCustomerController = TextEditingController();
@@ -144,7 +144,9 @@ class _CustomerListState extends State<CustomerList> {
                     customer.zipCode,
                     customer.phoneNumber,
                     customer.email,
-                    customer.totalPurchases);
+                    customer.totalPurchases,
+                    customer.bookPurchased,
+                    customer.purchasedDates);
                 searchCustomerList.add(tempCustomer);
               }
               setState(() {
