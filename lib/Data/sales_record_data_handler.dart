@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -14,13 +14,6 @@ final File salesRecordDataJson =
     File('assets/jsondatabase/sales_record_data.json');
 List<SalesRecord> mainSalesRecordList = [];
 List<SalesRecord> mainSalesRecordListCopy = [];
-final List<String> _salesRecordStatusDropDownVal = [
-  'Picked Up',
-  'Customer Will Pickup',
-  'To Be shipped',
-  'Shipped'
-];
-late String _curSalesRecordStatusChoice = _salesRecordStatusDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -237,7 +230,7 @@ class SalesRecordDatabase extends DataTableSource {
       this.hasRowHeightOverrides = false]) {
       salesRecords = mainSalesRecordList;
     if (sortedByName) {
-      sort((d) => d.customerName, true);
+      sort((d) => d.orderDate, false);
     }
   }
 
@@ -248,24 +241,6 @@ class SalesRecordDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(SalesRecord d) getField, bool ascending) {
     salesRecords.sort((a, b) {
-      // if (a.cost == '') {
-      //   a.cost = 0.toString();
-      // } else if (a.edition == '') {
-      //   a.edition = 0.toString();
-      // } else if (a.retailPrice == '') {
-      //   a.retailPrice = 0.toString();
-      // } else if (a.publishDate == '') {
-      //   a.publishDate = 0.toString();
-      // }
-      // if (b.cost == '') {
-      //   b.cost = 0.toString();
-      // } else if (b.edition == '') {
-      //   b.edition = 0.toString();
-      // } else if (b.retailPrice == '') {
-      //   b.retailPrice = 0.toString();
-      // } else if (b.publishDate == '') {
-      //   b.publishDate = 0.toString();
-      // }
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -379,35 +354,32 @@ class SalesRecordDatabase extends DataTableSource {
             return AlertDialog(
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                                'Sale Info',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700)),
-                            for (var item in curSalesRecord.allInfoHeaders)
-                              TextField(
-                                  controller: TextEditingController()
-                                    ..text = curSalesRecord.headerToInfo(item),
-                                  onChanged: (text) =>
-                                      {curSalesRecord.infoEdited(item, text)},
-                                  autofocus: false,
-                                  decoration: InputDecoration(
-                                      labelText: item + ':', hintText: item)
-                              ),
-                          ],
-                        ))
-                      ],
-                    ),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                              'Sale Info',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700)),
+                          for (var item in curSalesRecord.allInfoHeaders)
+                            TextField(
+                                controller: TextEditingController()
+                                  ..text = curSalesRecord.headerToInfo(item),
+                                onChanged: (text) =>
+                                    {curSalesRecord.infoEdited(item, text)},
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    labelText: item + ':', hintText: item)
+                            ),
+                        ],
+                      ))
+                    ],
                   ),
                 ),
               ),
@@ -577,20 +549,4 @@ Future<void> salesRecordSearchHelper(
   }
   //debugPrint('main ${mainBookList.toString()}');
   //debugPrint('copy ${mainBookListCopy.toString()}');
-}
-
-// Dialog Helper
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
-  }
 }

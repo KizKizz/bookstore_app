@@ -22,7 +22,7 @@ String? _curEmployeeChoice;
 int _customerInfoIndex = 0;
 int _shippingAddressIndex = 0;
 int orderNumber = 0;
-String curPaymentMethod = '';
+String curPaymentMethod = 'Cash';
 
 double subTotal = 0.0;
 double shippingCost = 0.0;
@@ -117,7 +117,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   void dispose() {
+    // ignore: avoid_function_literals_in_foreach_calls
     priceControllers.forEach((c) => c.dispose());
+    // ignore: avoid_function_literals_in_foreach_calls
     existingCustomerInfoControllers.forEach((e) => e.dispose());
     super.dispose();
   }
@@ -135,7 +137,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   //Search bar Handler
-  @override
   Widget _searchField() {
     return TextField(
         focusNode: searchFieldFocusNode,
@@ -271,9 +272,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       //print('OrderNum: $orderNumber');
                       //Build table
                       return Text(
-                        'Order #${orderNumber}',
+                        'Order #$orderNumber',
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 30),
+                        style: const TextStyle(fontSize: 30),
                       );
                     })),
             Row(
@@ -383,7 +384,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           //subtitle: Text('Trailing expansion arrow icon'),
                           initiallyExpanded: true,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: _customerInfoHeight,
                               width: double.infinity,
                               child: Column(
@@ -402,38 +403,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 color: Theme.of(context)
                                                     .hintColor)),
                                       ),
-                                      // Padding(
-                                      //   padding:
-                                      //       const EdgeInsets.only(right: 15.0),
-                                      //   child: ToggleSwitch(
-                                      //     minWidth: 78.0,
-                                      //     minHeight: 25,
-                                      //     borderColor: [
-                                      //       Theme.of(context).primaryColorLight
-                                      //     ],
-                                      //     borderWidth: 1.0,
-                                      //     initialLabelIndex: _customerInfoIndex,
-                                      //     cornerRadius: 50.0,
-                                      //     activeFgColor: Colors.white,
-                                      //     inactiveBgColor: Colors.grey,
-                                      //     inactiveFgColor: Colors.white,
-                                      //     totalSwitches: 2,
-                                      //     labels: const ['Returned', 'New'],
-                                      //     // activeBgColors: const [
-                                      //     //   [Colors.blue],
-                                      //     //   [Colors.pink]
-                                      //     // ],
-                                      //     onToggle: (index) {
-                                      //       if (index == 0) {
-                                      //         _customerInfoIndex = 0;
-                                      //         setState(() {});
-                                      //       } else if (index == 1) {
-                                      //         _customerInfoIndex = 1;
-                                      //         setState(() {});
-                                      //       }
-                                      //     },
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                   //Returned customer
@@ -755,7 +724,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       children: [
                                                         for (var customer
                                                             in _searchCustomerList)
-                                                          Container(
+                                                          SizedBox(
                                                             height: 75,
                                                             child: Card(
                                                               elevation: 3,
@@ -871,173 +840,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         ))
                                       ]),
                                     ),
-                                  //New customer
-                                  // if (_customerInfoIndex == 1)
-                                  //   Expanded(
-                                  //       child: Column(
-                                  //     children: [
-                                  //       Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.start,
-                                  //         children: [
-                                  //           //Name
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 20, right: 10),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'First Name*',
-                                  //             )),
-                                  //           )),
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 10, right: 15),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'Last Name*',
-                                  //             )),
-                                  //           )),
-                                  //         ],
-                                  //       ),
-                                  //       //Address
-                                  //       Row(children: [
-                                  //         Expanded(
-                                  //             child: Container(
-                                  //           padding: const EdgeInsets.only(
-                                  //               left: 20, right: 15),
-                                  //           width: (MediaQuery.of(context)
-                                  //                   .size
-                                  //                   .width /
-                                  //               2),
-                                  //           child: TextFormField(
-                                  //               decoration:
-                                  //                   const InputDecoration(
-                                  //             hintText: '',
-                                  //             labelText: 'Street Address*',
-                                  //           )),
-                                  //         )),
-                                  //       ]),
-                                  //       //Address 2
-                                  //       Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.start,
-                                  //         children: [
-                                  //           //Name
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 20, right: 10),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'Suite / Apt #',
-                                  //             )),
-                                  //           )),
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 10, right: 15),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'City*',
-                                  //             )),
-                                  //           )),
-                                  //         ],
-                                  //       ),
-                                  //       Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.start,
-                                  //         children: [
-                                  //           //Name
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 20, right: 10),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'State*',
-                                  //             )),
-                                  //           )),
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 10, right: 15),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'Postal Code*',
-                                  //             )),
-                                  //           )),
-                                  //         ],
-                                  //       ),
-                                  //       Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.start,
-                                  //         children: [
-                                  //           //Name
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 20, right: 10),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'Phone Number*',
-                                  //             )),
-                                  //           )),
-                                  //           Expanded(
-                                  //               child: Container(
-                                  //             padding: const EdgeInsets.only(
-                                  //                 left: 10, right: 15),
-                                  //             child: TextFormField(
-                                  //                 decoration:
-                                  //                     const InputDecoration(
-                                  //               //icon: Icon(Icons.person),
-                                  //               hintText: '',
-                                  //               labelText: 'ID*',
-                                  //             )),
-                                  //           )),
-                                  //         ],
-                                  //       ),
-                                  //       Row(children: [
-                                  //         Expanded(
-                                  //             child: Container(
-                                  //           padding: const EdgeInsets.only(
-                                  //               left: 20, right: 15),
-                                  //           width: (MediaQuery.of(context)
-                                  //                   .size
-                                  //                   .width /
-                                  //               2),
-                                  //           child: TextFormField(
-                                  //               decoration:
-                                  //                   const InputDecoration(
-                                  //             hintText: '',
-                                  //             labelText: 'Email',
-                                  //           )),
-                                  //         )),
-                                  //       ]),
-                                  //     ],
-                                  //   ))
                                 ],
                               ),
                             ),
@@ -1058,7 +860,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 height: _shippingInfoHeight,
                                 child: Column(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                         width: double.infinity,
                                         child: RadioListTile(
                                             title: const Text(
@@ -1077,7 +879,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     _orderStatusList[0];
                                               });
                                             })),
-                                    Container(
+                                    SizedBox(
                                         width: double.infinity,
                                         child: RadioListTile(
                                             title:
@@ -1096,7 +898,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     _orderStatusList[1];
                                               });
                                             })),
-                                    Container(
+                                    SizedBox(
                                         width: double.infinity,
                                         child: RadioListTile(
                                             title:
@@ -1125,7 +927,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     _orderStatusList[2];
                                               });
                                             })),
-                                    Container(
+                                    SizedBox(
                                         width: double.infinity,
                                         child: RadioListTile(
                                             title:
@@ -1154,7 +956,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     _orderStatusList[2];
                                               });
                                             })),
-                                    Container(
+                                    SizedBox(
                                         width: double.infinity,
                                         child: RadioListTile(
                                             title:
@@ -1365,7 +1167,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           //subtitle: Text('Trailing expansion arrow icon'),
                           initiallyExpanded: true,
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: 500,
                               child: Column(
                                 children: [
@@ -1686,28 +1488,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             child: Text(
                               '\$${subTotal.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 19),
+                              style: const TextStyle(fontSize: 19),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               '\$${shippingCost.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 17),
+                              style: const TextStyle(fontSize: 17),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               '\$${subTotalTax.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 17),
+                              style: const TextStyle(fontSize: 17),
                             )),
                         Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               '\$${totalCost.toStringAsFixed(2)}',
                               textAlign: TextAlign.right,
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                             )),
                       ],
                     )
@@ -1780,32 +1582,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   _orderStatus,
                                   '',
                                   '');
-                              String _allBookIDs = '';
+                              String _allBookIDs = '',
+                                  _bookNames = '',
+                                  _purchasedDates = '';
                               int _numOfBook = 0;
                               for (var book in checkoutCartList) {
                                 //book.sold = 'Available';
                                 _numOfBook++;
-                                if (curOrderingCustomer
-                                    .bookPurchased.isEmpty) {
-                                  curOrderingCustomer.bookPurchased =
-                                      book.title;
-                                  curOrderingCustomer.purchasedDates =
-                                      _orderDate;                        
-                                } else {
-                                  curOrderingCustomer.bookPurchased =
-                                      curOrderingCustomer.bookPurchased +
-                                          ' ' +
-                                          book.title;
-                                  curOrderingCustomer.purchasedDates =
-                                      curOrderingCustomer.purchasedDates +
-                                          ' ' +
-                                          _orderDate;
-                                }
 
                                 if (_allBookIDs.isNotEmpty) {
                                   _allBookIDs = _allBookIDs + ' ' + book.id;
                                 } else {
                                   _allBookIDs = book.id;
+                                }
+
+                                if (_bookNames.isEmpty) {
+                                  _bookNames = book.title;
+                                  _purchasedDates = _orderDate;
+                                } else {
+                                  _bookNames = _bookNames + '||' + book.title;
+                                  _purchasedDates =
+                                      _purchasedDates + '||' + _orderDate;
                                 }
                               }
 
@@ -1875,11 +1672,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           curOrderingCustomer.totalPurchases) +
                                       _numOfBook)
                                   .toString();
+                              curOrderingCustomer.bookPurchased = _bookNames;
+                              curOrderingCustomer.purchasedDates =
+                                  _purchasedDates;
                               final _curCustomerFromData =
                                   mainCustomerListCopy.firstWhere((element) =>
                                       element.id == curOrderingCustomer.id);
                               _curCustomerFromData.totalPurchases =
                                   curOrderingCustomer.totalPurchases;
+                              _curCustomerFromData.bookPurchased =
+                                  curOrderingCustomer.bookPurchased;
+                              _curCustomerFromData.purchasedDates =
+                                  curOrderingCustomer.purchasedDates;
 
                               _curShippingOption = ShippingOptions.inStore;
                               checkoutCartList.clear();

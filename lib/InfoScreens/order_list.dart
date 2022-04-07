@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
@@ -76,7 +74,6 @@ class _OrderListState extends State<OrderList> {
     super.dispose();
   }
 
-  @override
   Widget _searchField() {
     return TextField(
       controller: searchOrderController,
@@ -290,39 +287,6 @@ class _OrderListState extends State<OrderList> {
                   },
                 )),
             const SizedBox(width: 128),
-
-            //Add Data Button
-            // isManager
-            //     ? MaterialButton(
-            //         onPressed: () => [
-            //           setState(() {
-            //             setState(() {
-            //               customerDataAdder(context).then((_) {
-            //                 setState(() {});
-            //               });
-            //             });
-            //           })
-            //         ],
-            //         child: Column(
-            //             mainAxisSize: MainAxisSize.min,
-            //             children: const <Widget>[
-            //               Padding(
-            //                 padding: EdgeInsets.all(2.0),
-            //                 child: Icon(
-            //                   Icons.add_circle_outline_outlined,
-            //                   color: Colors.white,
-            //                 ),
-            //               ),
-            //               Padding(
-            //                 padding: EdgeInsets.all(2.0),
-            //                 child: Text(
-            //                   "Add",
-            //                   style: TextStyle(color: Colors.white),
-            //                 ),
-            //               )
-            //             ]),
-            //       )
-            //     : const SizedBox(width: 80)
           ],
         ),
         body: FutureBuilder(

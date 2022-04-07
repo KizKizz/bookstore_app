@@ -7,7 +7,6 @@ import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import 'main.dart';
 
@@ -49,15 +48,10 @@ class _MainPageState extends State<MainPage> {
       const CustomerList(),
       const EmployeeList()
     ];
-    // if (context.watch<checkoutNotif>().isCheckout) {
-    //   _selectedIndex = 0;
-    // }
 
-    int darkModeOn = 0;
+
     if (MyApp.themeNotifier.value == ThemeMode.light) {
-      darkModeOn = 0;
     } else {
-      darkModeOn = 1;
     }
     return Scaffold(
       // appBar: MainAppbar(
@@ -117,15 +111,6 @@ class _MainPageState extends State<MainPage> {
                                               )
                                       ],
                                     )),
-                                //Spacer
-                                // SizedBox(
-                                //   height: 2,
-                                //   width: 60,
-                                //   child: Container(
-                                //     padding: const EdgeInsets.only(bottom: 5),
-                                //     color: Theme.of(context).hintColor)
-                                // ),
-
 //Logout Button
                                 MaterialButton(
                                   onPressed: (() {
@@ -149,51 +134,6 @@ class _MainPageState extends State<MainPage> {
                                         )
                                       ]),
                                 ),
-//DarkMode Switch
-                                // Container(
-                                //   padding: const EdgeInsets.only(top: 20),
-                                //   child: ToggleSwitch(
-                                //       minWidth: 35.0,
-                                //       minHeight: 28.0,
-                                //       initialLabelIndex: darkModeOn,
-                                //       cornerRadius: 90.0,
-                                //       borderColor: [
-                                //         Theme.of(context).hintColor,
-                                //       ],
-                                //       borderWidth: 1.5,
-                                //       activeFgColor: Colors.white,
-                                //       inactiveBgColor:
-                                //           const Color.fromARGB(255, 122, 122, 122),
-                                //       inactiveFgColor: Colors.white,
-                                //       totalSwitches: 2,
-                                //       icons: const [
-                                //         Icons.light_mode,
-                                //         Icons.dark_mode
-                                //       ],
-                                //       iconSize: 26.0,
-                                //       animate: true,
-                                //       curve: Curves.bounceInOut,
-                                //       onToggle: (darkModeOn) async {
-                                //         // obtain shared preferences
-                                //         final prefs =
-                                //             await SharedPreferences.getInstance();
-                                //         setState(() {
-                                //           if (MyApp.themeNotifier.value ==
-                                //               ThemeMode.light) {
-                                //             darkModeOn = 0;
-                                //             prefs.setBool('isDarkMode', true);
-                                //             MyApp.themeNotifier.value =
-                                //                 ThemeMode.dark;
-                                //           } else {
-                                //             darkModeOn = 1;
-                                //             MyApp.themeNotifier.value =
-                                //                 ThemeMode.light;
-                                //             prefs.setBool('isDarkMode', false);
-                                //           }
-                                //         });
-                                //       }),
-                                //   //const Text('Dark Theme'),
-                                // ),
                                 const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                                 if (MyApp.themeNotifier.value ==
                                     ThemeMode.dark)
@@ -201,7 +141,6 @@ class _MainPageState extends State<MainPage> {
                                     onPressed: (() async {
                                       final prefs =
                                           await SharedPreferences.getInstance();
-                                      darkModeOn = 1;
                                       MyApp.themeNotifier.value =
                                           ThemeMode.light;
                                       prefs.setBool('isDarkMode', false);
@@ -230,7 +169,6 @@ class _MainPageState extends State<MainPage> {
                                     ThemeMode.light)
                                   MaterialButton(
                                     onPressed: (() async {
-                                      darkModeOn = 0;
                                       final prefs =
                                           await SharedPreferences.getInstance();
                                       prefs.setBool('isDarkMode', true);
@@ -315,33 +253,6 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-
-//Widgets on right of bar
-  // Widget _editTableButton() {
-  //   return MaterialButton(
-  //     onPressed: () => [
-  //       if (context.read<tableAdderSwitch>().isAddingMode == false)
-  //         {context.read<tableAdderSwitch>().addingModeOn()}
-  //       else
-  //         {context.read<tableAdderSwitch>().addingModeOff()}
-  //     ],
-  //     child: Column(mainAxisSize: MainAxisSize.min, children: const <Widget>[
-  //       Padding(
-  //         padding: EdgeInsets.all(2.0),
-  //         child: Icon(
-  //           Icons.add_circle_outline_outlined,
-  //         ),
-  //       ),
-  //       Padding(
-  //         padding: EdgeInsets.all(2.0),
-  //         child: Text(
-  //           "Add",
-  //           style: TextStyle(),
-  //         ),
-  //       )
-  //     ]),
-  //   );
-  // }
 
   //Logout alert helpers
   _logoutDialog() async {

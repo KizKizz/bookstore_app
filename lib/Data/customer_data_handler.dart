@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -65,20 +65,20 @@ class RestorableCustomerSelections extends RestorableProperty<Set<int>> {
 /// Domain model entity
 class Customer {
   Customer(
-      this.firstName,
-      this.lastName,
-      this.id,
-      this.streetAddress,
-      this.suiteNum,
-      this.city,
-      this.state,
-      this.zipCode,
-      this.phoneNumber,
-      this.email,
-      this.totalPurchases,
-      this.bookPurchased,
-      this.purchasedDates,
-      );
+    this.firstName,
+    this.lastName,
+    this.id,
+    this.streetAddress,
+    this.suiteNum,
+    this.city,
+    this.state,
+    this.zipCode,
+    this.phoneNumber,
+    this.email,
+    this.totalPurchases,
+    this.bookPurchased,
+    this.purchasedDates,
+  );
 
   String firstName;
   String lastName;
@@ -218,9 +218,9 @@ class Customer {
     else if (info == 'Total Purchases')
       editResults[10] = editedVal;
     else if (info == 'Book Purchased')
-      editResults[10] = editedVal;
+      editResults[11] = editedVal;
     else if (info == 'Purchased Dates')
-      editResults[10] = editedVal;
+      editResults[12] = editedVal;
     else
       editResults[0] = editedVal;
   }
@@ -255,7 +255,7 @@ class Customer {
     data['email'] = email;
     data['totalPurchases'] = totalPurchases;
     data['bookPurchased'] = bookPurchased;
-    data['purchasedDate'] = purchasedDates;
+    data['purchasedDates'] = purchasedDates;
 
     return data;
   }
@@ -276,7 +276,7 @@ class CustomerDatabase extends DataTableSource {
       this.hasRowHeightOverrides = false]) {
     customers = mainCustomerList;
     if (sortedByName) {
-      sort((d) => d.lastName, true);
+      sort((d) => d.firstName + d.lastName, true);
     }
   }
 
@@ -287,24 +287,6 @@ class CustomerDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Customer d) getField, bool ascending) {
     customers.sort((a, b) {
-      // if (a.cost == '') {
-      //   a.cost = 0.toString();
-      // } else if (a.edition == '') {
-      //   a.edition = 0.toString();
-      // } else if (a.retailPrice == '') {
-      //   a.retailPrice = 0.toString();
-      // } else if (a.publishDate == '') {
-      //   a.publishDate = 0.toString();
-      // }
-      // if (b.cost == '') {
-      //   b.cost = 0.toString();
-      // } else if (b.edition == '') {
-      //   b.edition = 0.toString();
-      // } else if (b.retailPrice == '') {
-      //   b.retailPrice = 0.toString();
-      // } else if (b.publishDate == '') {
-      //   b.publishDate = 0.toString();
-      // }
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -378,8 +360,7 @@ class CustomerDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(Text(customer.firstName)),
-        DataCell(Text(customer.lastName)),
+        DataCell(Text('${customer.firstName} ${customer.lastName}')),
         DataCell(Text(customer.id)),
         if (customer.suiteNum.isNotEmpty)
           DataCell(Text(
@@ -418,6 +399,9 @@ class CustomerDatabase extends DataTableSource {
 
   //Edit Popup
   _showDialog(context, Customer curCustomer) async {
+    final _purchasedBookList = curCustomer.bookPurchased.split('||');
+    final _purchasedDateList = curCustomer.purchasedDates.split('||');
+    //print(_purchasedBookList.first);
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -425,313 +409,304 @@ class CustomerDatabase extends DataTableSource {
             return AlertDialog(
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                  //padding: const EdgeInsets.only(right: 20),
-                  child: SingleChildScrollView(
-                      child: Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: Column(
-                                mainAxisSize: MainAxisSize.min,
+              content: SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                  '${curCustomer.firstName} ${curCustomer.lastName}\'s Info',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w700)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(
-                                      '${curCustomer.firstName} ${curCustomer.lastName}\'s Info'),
-                                  // for (var item in curCustomer.allInfoHeaders)
-                                  //   TextField(
-                                  //       controller: TextEditingController()
-                                  //         ..text =
-                                  //             curCustomer.headerToInfo(item),
-                                  //       onChanged: (text) => {
-                                  //             curCustomer.infoEdited(item, text)
-                                  //           },
-                                  //       autofocus: true,
-                                  //       decoration: InputDecoration(
-                                  //           labelText: item + ':',
-                                  //           hintText: item)),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('First Name'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'First Name', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'First Name',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('Last Name'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Last Name', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Last Name',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('Street Address'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Street Address', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Street Address',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('Suite Number'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Suite Number', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Suite / Apt#',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text =
+                                              curCustomer.headerToInfo('City'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'City', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'City',
+                                        )),
+                                  )),
+                                ],
+                              ),
 
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('First Name'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'First Name', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'First Name',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text =
-                                                  curCustomer.headerToInfo('Last Name'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited('Last Name', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Last Name',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('Street Address'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'Street Address', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Street Address',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('Suite Number'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'Suite Number', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Suite / Apt#',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text =
-                                                  curCustomer.headerToInfo('City'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited('City', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'City',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('State'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'State', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'State',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text =
-                                                  curCustomer.headerToInfo('Postal Code'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited('Postal Code', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Postal Code',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('Phone Number'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'Phone Number', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Phone Number',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text =
-                                                  curCustomer.headerToInfo('ID'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited('ID', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'ID',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curCustomer
-                                                  .headerToInfo('Email'),
-                                            onChanged: (text) => {
-                                                  curCustomer.infoEdited(
-                                                      'Email', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Email',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  //List of Books
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text('Last Purchased Books',
-                                        style: TextStyle(
-                                            color: Theme.of(context).hintColor,
-                                            fontSize: 14)),
-                                  ),
-                                  Container(
-                                    height: 75 * double.parse(curCustomer.bookPurchased.length.toString()),
-                                    width: 400,
-                                    constraints: const BoxConstraints(maxHeight: 330),
-                                    child: Column(
-                                      children: [
-                                        if (curCustomer.bookPurchased.isEmpty)
-                                          const Text('No Data Found', style: TextStyle(fontSize: 20),),
-                                        ListView(
-                                          padding:
-                                              const EdgeInsets.only(left: 7, right: 7),
-                                          clipBehavior: Clip.antiAlias,
-                                          shrinkWrap: true,
-                                          //controller: ScrollController(),
-                                          children: [
-                                            for (int i = curCustomer.bookPurchased.length; i > 0; i--)
-                                              Container(
-                                                height: 75,
-                                                child: Card(
-                                                  elevation: 2,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(5),
-                                                      side: BorderSide(
-                                                        color: Theme.of(context)
-                                                            .hintColor
-                                                            .withOpacity(0.3),
-                                                        //color: Colors.grey.withOpacity(0.2),
-                                                        width: 1,
-                                                      )),
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    //contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                                    onTap: () {
-                                                      setState(() {});
-                                                    },
-                                                    leading: const Icon(
-                                                        Icons.menu_book_outlined),
-                                                    title: Text(
-                                                      curCustomer.bookPurchased[i],
-                                                      style:
-                                                          const TextStyle(fontSize: 15),
-                                                    ),
-                                                    subtitle: Text(
-                                                      'Date: ${curCustomer.purchasedDates[i]}',
-                                                      style:
-                                                          const TextStyle(fontSize: 14),
-                                                    ),
-                                                    trailing: const Icon(Icons.clear),
-                                                    isThreeLine: true,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text =
+                                              curCustomer.headerToInfo('State'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'State', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'State',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('Postal Code'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Postal Code', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Postal Code',
+                                        )),
+                                  )),
+                                ],
+                              ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text = curCustomer
+                                              .headerToInfo('Phone Number'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Phone Number', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Phone Number',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text =
+                                              curCustomer.headerToInfo('ID'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited('ID', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'ID',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        controller: TextEditingController()
+                                          ..text =
+                                              curCustomer.headerToInfo('Email'),
+                                        onChanged: (text) => {
+                                              curCustomer.infoEdited(
+                                                  'Email', text)
+                                            },
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Email',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              //List of Books
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text('Last Purchased Books',
+                                    style: TextStyle(
+                                        color: Theme.of(context).hintColor,
+                                        fontSize: 14)),
+                              ),
+                              Container(
+                                height: 75 *
+                                    double.parse(
+                                        _purchasedBookList.length.toString()),
+                                width: 400,
+                                constraints:
+                                    const BoxConstraints(maxHeight: 250),
+                                child: Column(
+                                  children: [
+                                    if (curCustomer.bookPurchased.isNotEmpty)
+                                      ListView(
+                                        padding: const EdgeInsets.only(
+                                            left: 7, right: 7),
+                                        clipBehavior: Clip.antiAlias,
+                                        shrinkWrap: true,
+                                        controller: ScrollController(),
+                                        children: [
+                                          for (int i =
+                                                  _purchasedBookList.length - 1;
+                                              i >= 0;
+                                              i--)
+                                            SizedBox(
+                                              height: 75,
+                                              child: Card(
+                                                elevation: 3,
+                                                clipBehavior: Clip.antiAlias,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    side: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .hintColor
+                                                          .withOpacity(0.3),
+                                                      //color: Colors.grey.withOpacity(0.2),
+                                                      width: 1,
+                                                    )),
+                                                child: ListTile(
+                                                  dense: true,
+                                                  //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                                  onTap: () {
+                                                    setState(() {});
+                                                  },
+                                                  leading: const Icon(
+                                                      Icons.menu_book_outlined),
+                                                  title: Text(
+                                                    _purchasedBookList[i],
+                                                    style: const TextStyle(
+                                                        fontSize: 15),
                                                   ),
+                                                  subtitle: Text(
+                                                    'Date: ${_purchasedDateList[i]}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  trailing:
+                                                      const Icon(Icons.clear),
+                                                  isThreeLine: true,
                                                 ),
                                               ),
-                                              ],
+                                            ),
+                                        ],
+                                      ),
+                                    if (curCustomer.bookPurchased.isEmpty)
+                                      const Text(
+                                        'No Data Found',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                  ],
+                                ),
                               ),
-                                      ],
-                                    ),
-                            ),
-
-                                ],
-                              ))
                             ],
-                          )))),
+                          ))
+                        ],
+                      ))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
@@ -772,7 +747,8 @@ class CustomerDatabase extends DataTableSource {
 
 //Add
 Future<void> customerDataAdder(context) async {
-  Customer newCustomer = Customer('', '', '', '', '', '', '', '', '', '', '','', '');
+  Customer newCustomer =
+      Customer('', '', '', '', '', '', '', '', '', '', '', '', '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -780,34 +756,30 @@ Future<void> customerDataAdder(context) async {
           return AlertDialog(
             contentPadding:
                 const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-            content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                    child: Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text('Add New Customer',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700)),
-                                for (var item in newCustomer.allInfoHeaders)
-                                  TextField(
-                                      // controller: TextEditingController()
-                                      //   ..text = item.toString(),
-                                      onChanged: (text) =>
-                                          {newCustomer.infoEdited(item, text)},
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                          labelText: item + ':',
-                                          hintText: item)),
-                              ],
-                            ))
+            content: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('Add New Customer',
+                                style: TextStyle(fontWeight: FontWeight.w700)),
+                            for (var item in newCustomer.allInfoHeaders)
+                              TextField(
+                                  // controller: TextEditingController()
+                                  //   ..text = item.toString(),
+                                  onChanged: (text) =>
+                                      {newCustomer.infoEdited(item, text)},
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                      labelText: item + ':', hintText: item)),
                           ],
-                        )))),
+                        ))
+                      ],
+                    ))),
             actions: <Widget>[
               TextButton(
                   child: const Text('CANCEL'),
@@ -845,20 +817,19 @@ Future<void> customerDataAdder(context) async {
 void convertCustomerData(var jsonResponse) {
   for (var b in jsonResponse) {
     Customer customer = Customer(
-      b['firstName'],
-      b['lastName'],
-      b['id'],
-      b['streetAddress'],
-      b['suiteNum'],
-      b['city'],
-      b['state'],
-      b['zipCode'],
-      b['phoneNumber'],
-      b['email'],
-      b['totalPurchases'],
-      b['bookPurchased'],
-      b['purchasedDates']
-    );
+        b['firstName'],
+        b['lastName'],
+        b['id'],
+        b['streetAddress'],
+        b['suiteNum'],
+        b['city'],
+        b['state'],
+        b['zipCode'],
+        b['phoneNumber'],
+        b['email'],
+        b['totalPurchases'],
+        b['bookPurchased'],
+        b['purchasedDates']);
     mainCustomerList.add(customer);
     mainCustomerListCopy.add(customer);
   }
@@ -886,20 +857,4 @@ Future<void> customerSearchHelper(context, List<Customer> foundList) async {
   }
   //debugPrint('main ${mainBookList.toString()}');
   //debugPrint('copy ${mainBookListCopy.toString()}');
-}
-
-// Dialog Helper
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
-  }
 }

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -309,33 +309,31 @@ class AuthorDatabase extends DataTableSource {
             child: AlertDialog(
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Edit ${curAuthor.fullName}\'s Info',
-                        style: TextStyle(fontWeight: FontWeight.w700)),
-                      for (var item in curAuthor.allInfoHeaders)
-                        TextField(
-                            controller: TextEditingController()
-                              ..text = curAuthor.headerToInfo(item),
-                            onChanged: (text) =>
-                                {curAuthor.infoEdited(item, text)},
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                labelText: item + ':',
-                                hintText: item + ' of the author')),
-                    ],
-                  ))
-                ],
-              )))),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Edit ${curAuthor.fullName}\'s Info',
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                    for (var item in curAuthor.allInfoHeaders)
+                      TextField(
+                          controller: TextEditingController()
+                            ..text = curAuthor.headerToInfo(item),
+                          onChanged: (text) =>
+                              {curAuthor.infoEdited(item, text)},
+                          autofocus: true,
+                          decoration: InputDecoration(
+                              labelText: item + ':',
+                              hintText: item + ' of the author')),
+                  ],
+                ))
+              ],
+              ))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
@@ -413,7 +411,6 @@ class AuthorDatabase extends DataTableSource {
 //                       newauthor.setInfo(item);
 //                     }
 //                     mainAuthorList.add(newauthor);
-
 //                     if (!kIsWeb) {
 //                       mainAuthorList
 //                           .map(

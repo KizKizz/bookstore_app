@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/author_data_handler.dart';
@@ -63,7 +62,6 @@ class _AuthorListState extends State<AuthorList> {
     });
   }
 
-  @override
   Widget _searchField() {
     return TextField(
       controller: searchAuthorController,
@@ -278,81 +276,80 @@ class _AuthorListState extends State<AuthorList> {
                   padding: const EdgeInsets.all(5),
                   child: Stack(children: [
                     //Data table
-                    Container(
-                        child: DataTable2(
-                            scrollController: _controller,
-                            showCheckboxColumn: false,
-                            columnSpacing: 0,
-                            horizontalMargin: 5,
-                            bottomMargin: 5,
-                            minWidth: 600,
-                            smRatio: 0.5,
-                            lmRatio: 2.0,
-                            sortColumnIndex: _sortColumnIndex,
-                            sortAscending: _sortAscending,
-                            onSelectAll: (val) => setState(
-                                () => _authorsDataSource.selectAll(val)),
-                            columns: [
-                              DataColumn2(
-                                label: const Text(
-                                  'Full Name',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                size: ColumnSize.L,
-                                onSort: (columnIndex, ascending) =>
-                                    _sort<String>((d) => d.fullName,
-                                        columnIndex, ascending),
-                              ),
-                              DataColumn2(
-                                label: const Text(
-                                  'ID',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                size: ColumnSize.S,
-                                numeric: false,
-                                onSort: (columnIndex, ascending) =>
-                                    _sort<String>(
-                                        (d) => d.id, columnIndex, ascending),
-                              ),
-                              DataColumn2(
-                                label: const Text(
-                                  'Year of \nBirth',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                size: ColumnSize.M,
-                                numeric: false,
-                                onSort: (columnIndex, ascending) => _sort<num>(
-                                    (d) => int.parse(d.yearBirth),
-                                    columnIndex,
-                                    ascending),
-                              ),
-                              DataColumn2(
-                                label: const Text(
-                                  'Year of \nDead',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                size: ColumnSize.M,
-                                numeric: false,
-                                onSort: (columnIndex, ascending) => _sort<num>(
-                                    (d) => int.parse(d.yearDead),
-                                    columnIndex,
-                                    ascending),
-                              ),
-                              DataColumn2(
-                                label: const Text(
-                                  'Description',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                size: ColumnSize.L,
-                                numeric: false,
-                                onSort: (columnIndex, ascending) =>
-                                    _sort<String>((d) => d.description,
-                                        columnIndex, ascending),
-                              ),
-                            ],
-                            rows: List<DataRow>.generate(
-                                _authorsDataSource.rowCount,
-                                (index) => _authorsDataSource.getRow(index)))),
+                    DataTable2(
+                        scrollController: _controller,
+                        showCheckboxColumn: false,
+                        columnSpacing: 0,
+                        horizontalMargin: 5,
+                        bottomMargin: 5,
+                        minWidth: 600,
+                        smRatio: 0.5,
+                        lmRatio: 2.0,
+                        sortColumnIndex: _sortColumnIndex,
+                        sortAscending: _sortAscending,
+                        onSelectAll: (val) => setState(
+                            () => _authorsDataSource.selectAll(val)),
+                        columns: [
+                          DataColumn2(
+                            label: const Text(
+                              'Full Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            onSort: (columnIndex, ascending) =>
+                                _sort<String>((d) => d.fullName,
+                                    columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'ID',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) =>
+                                _sort<String>(
+                                    (d) => d.id, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Year of \nBirth',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.yearBirth),
+                                columnIndex,
+                                ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Year of \nDead',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => int.parse(d.yearDead),
+                                columnIndex,
+                                ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Description',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) =>
+                                _sort<String>((d) => d.description,
+                                    columnIndex, ascending),
+                          ),
+                        ],
+                        rows: List<DataRow>.generate(
+                            _authorsDataSource.rowCount,
+                            (index) => _authorsDataSource.getRow(index))),
                     _ScrollUpButton(_controller),
                   ]));
             }));

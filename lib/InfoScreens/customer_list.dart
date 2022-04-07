@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
@@ -71,128 +70,125 @@ class _CustomerListState extends State<CustomerList> {
     super.dispose();
   }
 
-  @override
   Widget _searchField() {
     return TextField(
-        controller: searchCustomerController,
-        onChanged: (String text) {
-          setState(() {
-            searchCustomerList = [];
-            Iterable<Customer> foundCustomer = [];
-            if (_curSearchChoice == 'First Name') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.firstName.toLowerCase().contains(text.toLowerCase()) ||
-                  element.lastName.toLowerCase().contains(text.toLowerCase()) ||
-                  element.id.toLowerCase().contains(text.toLowerCase()) ||
-                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
-                  element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
-                  element.city.toLowerCase().contains(text.toLowerCase()) ||
-                  element.state.toLowerCase().contains(text.toLowerCase()) ||
-                  element.zipCode.toLowerCase().contains(text.toLowerCase()) ||
-                  element.phoneNumber.toLowerCase().contains(text.toLowerCase()) ||
-                  element.totalPurchases.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'First Name') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.firstName.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Last Name') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.lastName.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'ID') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.id.toLowerCase().contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Address') {
-              foundCustomer = mainCustomerListCopy.where((element) =>
-                  element.streetAddress.toLowerCase().contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .suiteNum
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .city
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .state
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .zipCode
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));  
-            } else if (_curSearchChoice == 'Phone Number') {
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .phoneNumber
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (_curSearchChoice == 'Date of Birth') {
-              foundCustomer = mainCustomerListCopy.where((element) => element
-                  .totalPurchases
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } 
+      controller: searchCustomerController,
+      onChanged: (String text) {
+        setState(() {
+          searchCustomerList = [];
+          Iterable<Customer> foundCustomer = [];
+          if (_curSearchChoice == 'First Name') {
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                element.lastName.toLowerCase().contains(text.toLowerCase()) ||
+                element.id.toLowerCase().contains(text.toLowerCase()) ||
+                element.streetAddress
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                element.city.toLowerCase().contains(text.toLowerCase()) ||
+                element.state.toLowerCase().contains(text.toLowerCase()) ||
+                element.zipCode.toLowerCase().contains(text.toLowerCase()) ||
+                element.phoneNumber
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.totalPurchases
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'First Name') {
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.firstName.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Last Name') {
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.lastName.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'ID') {
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.id.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Address') {
+            foundCustomer = mainCustomerListCopy.where((element) => element
+                .streetAddress
+                .toLowerCase()
+                .contains(text.toLowerCase()));
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.suiteNum.toLowerCase().contains(text.toLowerCase()));
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.city.toLowerCase().contains(text.toLowerCase()));
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.state.toLowerCase().contains(text.toLowerCase()));
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.zipCode.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Phone Number') {
+            foundCustomer = mainCustomerListCopy.where((element) =>
+                element.phoneNumber.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Date of Birth') {
+            foundCustomer = mainCustomerListCopy.where((element) => element
+                .totalPurchases
+                .toLowerCase()
+                .contains(text.toLowerCase()));
+          }
 
-            if (foundCustomer.isNotEmpty) {
-              for (var customer in foundCustomer) {
-                Customer tempCustomer = Customer(
-                    customer.firstName,
-                    customer.lastName,
-                    customer.id,
-                    customer.streetAddress,
-                    customer.suiteNum,
-                    customer.city,
-                    customer.state,
-                    customer.zipCode,
-                    customer.phoneNumber,
-                    customer.email,
-                    customer.totalPurchases,
-                    customer.bookPurchased,
-                    customer.purchasedDates);
-                searchCustomerList.add(tempCustomer);
-              }
-              setState(() {
-                customerSearchHelper(context, searchCustomerList).then((_) {
-                  setState(() {});
-                  //debugPrint('test ${mainBookList.toString()}');
-                });
-              });
-            } else {
-              setState(() {
-                customerSearchHelper(context, searchCustomerList).then((_) {
-                  setState(() {});
-                });
-              });
+          if (foundCustomer.isNotEmpty) {
+            for (var customer in foundCustomer) {
+              Customer tempCustomer = Customer(
+                  customer.firstName,
+                  customer.lastName,
+                  customer.id,
+                  customer.streetAddress,
+                  customer.suiteNum,
+                  customer.city,
+                  customer.state,
+                  customer.zipCode,
+                  customer.phoneNumber,
+                  customer.email,
+                  customer.totalPurchases,
+                  customer.bookPurchased,
+                  customer.purchasedDates);
+              searchCustomerList.add(tempCustomer);
             }
-          });
-        },
-        onSubmitted: (String text) {
-          setState(() {});
-        },
-        autofocus: false,
-        maxLines: 1,
-        cursorColor: Theme.of(context).hintColor,
-        style: const TextStyle(fontSize: 21),
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-            prefixIcon:
-                Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
-            filled: true,
-            fillColor: Theme.of(context).canvasColor,
-            enabledBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(3)),
-                borderSide: BorderSide(
-                  color: Theme.of(context).hintColor,
-                )),
-            isDense: true,
-            contentPadding: const EdgeInsets.all(8),
-            hintText: 'Search',
-            hintStyle: const TextStyle(
-              fontSize: 21,
-            )),
+            setState(() {
+              customerSearchHelper(context, searchCustomerList).then((_) {
+                setState(() {});
+                //debugPrint('test ${mainBookList.toString()}');
+              });
+            });
+          } else {
+            setState(() {
+              customerSearchHelper(context, searchCustomerList).then((_) {
+                setState(() {});
+              });
+            });
+          }
+        });
+      },
+      onSubmitted: (String text) {
+        setState(() {});
+      },
+      autofocus: false,
+      maxLines: 1,
+      cursorColor: Theme.of(context).hintColor,
+      style: const TextStyle(fontSize: 21),
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+          prefixIcon:
+              Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
+          filled: true,
+          fillColor: Theme.of(context).canvasColor,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
+          isDense: true,
+          contentPadding: const EdgeInsets.all(8),
+          hintText: 'Search',
+          hintStyle: const TextStyle(
+            fontSize: 21,
+          )),
     );
   }
 
@@ -209,9 +205,9 @@ class _CustomerListState extends State<CustomerList> {
               right: 368,
             ),
             child: Container(
-              padding: const EdgeInsets.only(left: 2, right: 0),
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: _searchField()),
+                padding: const EdgeInsets.only(left: 2, right: 0),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -345,22 +341,13 @@ class _CustomerListState extends State<CustomerList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'First\nName',
+                              'Full Name',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.S,
+                            size: ColumnSize.M,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Last\nName',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.lastName, columnIndex, ascending),
-                          ),
+                                (d) => d.firstName + d.lastName, columnIndex, ascending),
+                          ),        
                           DataColumn2(
                             label: const Text(
                               'ID',
@@ -381,56 +368,6 @@ class _CustomerListState extends State<CustomerList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.streetAddress, columnIndex, ascending),
                           ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'Street Address',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.L,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.streetAddress, columnIndex, ascending),
-                        //   ),
-                        //  DataColumn2(
-                        //     label: const Text(
-                        //       'Suite\nApt #',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.suiteNum, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'City',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.M,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.city, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'State',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.state, columnIndex, ascending),
-                        //   ),
-                        //   DataColumn2(
-                        //     label: const Text(
-                        //       'Postal\nCode',
-                        //       style: TextStyle(fontWeight: FontWeight.bold),
-                        //     ),
-                        //     size: ColumnSize.S,
-                        //     numeric: false,
-                        //     onSort: (columnIndex, ascending) => _sort<String>(
-                        //         (d) => d.streetAddress, columnIndex, ascending),
-                        //   ),
                           DataColumn2(
                             label: const Text(
                               'Phone Number',
@@ -459,7 +396,9 @@ class _CustomerListState extends State<CustomerList> {
                             size: ColumnSize.S,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.totalPurchases), columnIndex, ascending),
+                                (d) => int.parse(d.totalPurchases),
+                                columnIndex,
+                                ascending),
                           ),
                         ],
                         rows: List<DataRow>.generate(

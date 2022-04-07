@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -248,7 +248,7 @@ class EmployeeDatabase extends DataTableSource {
       this.hasRowHeightOverrides = false]) {
     employees = mainEmployeeList;
     if (sortedByName) {
-      sort((d) => d.lastName, true);
+      sort((d) => d.firstName + d.lastName, true);
     }
   }
 
@@ -259,24 +259,6 @@ class EmployeeDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Employee d) getField, bool ascending) {
     employees.sort((a, b) {
-      // if (a.cost == '') {
-      //   a.cost = 0.toString();
-      // } else if (a.edition == '') {
-      //   a.edition = 0.toString();
-      // } else if (a.retailPrice == '') {
-      //   a.retailPrice = 0.toString();
-      // } else if (a.publishDate == '') {
-      //   a.publishDate = 0.toString();
-      // }
-      // if (b.cost == '') {
-      //   b.cost = 0.toString();
-      // } else if (b.edition == '') {
-      //   b.edition = 0.toString();
-      // } else if (b.retailPrice == '') {
-      //   b.retailPrice = 0.toString();
-      // } else if (b.publishDate == '') {
-      //   b.publishDate = 0.toString();
-      // }
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -350,8 +332,7 @@ class EmployeeDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(Text(employee.firstName)),
-        DataCell(Text(employee.lastName)),
+        DataCell(Text('${employee.firstName} ${employee.lastName}')),
         DataCell(Text(employee.id)),
         DataCell(Text(employee.address)),
         DataCell(Text(employee.phoneNumber)),
@@ -395,86 +376,84 @@ class EmployeeDatabase extends DataTableSource {
             return AlertDialog(
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Edit ${curEmployee.firstName} ${curEmployee.lastName}\'s Info',
-                          style: const TextStyle(fontWeight: FontWeight.w700)),
-                      for (var item in curEmployee.allInfoHeaders)
-                        if (item == 'Position')
-                          Container(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Column(children: [
-                                Container(
-                                  alignment: const Alignment(-1, 0),
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    'Job Position:',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Theme.of(context).hintColor),
-                                  ),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Edit ${curEmployee.firstName} ${curEmployee.lastName}\'s Info',
+                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                    for (var item in curEmployee.allInfoHeaders)
+                      if (item == 'Position')
+                        Container(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Column(children: [
+                              Container(
+                                alignment: const Alignment(-1, 0),
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  'Job Position:',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).hintColor),
                                 ),
-                                DropdownButton2(
-                                  buttonHeight: 40,
-                                  buttonWidth: double.infinity,
-                                  offset: const Offset(0, 2),
-                                  // buttonDecoration: BoxDecoration(
-                                  //   borderRadius: BorderRadius.circular(5),
-                                  //   border: Border.all(
-                                  //     color: Colors.white54,
-                                  //   ),),
-                                  value: _curJobPosChoice,
-                                  itemHeight: 35,
-                                  dropdownDecoration: const BoxDecoration(
-                                      //color: Color.fromARGB(255, 54, 54, 54)
-                                      ),
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 2.0),
-                                  items: _jobPosDropDownVal
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: const TextStyle(
-                                            fontSize: 14.5,
-                                            //color: Colors.white
-                                          ),
-                                        ));
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(
-                                      () {
-                                        _curJobPosChoice = newValue!;
-                                        curEmployee.infoEdited(item, newValue);
-                                      },
-                                    );
-                                  },
-                                ),
-                              ]))
-                        else
-                          TextField(
-                              controller: TextEditingController()
-                                ..text = curEmployee.headerToInfo(item),
-                              onChanged: (text) =>
-                                  {curEmployee.infoEdited(item, text)},
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                  labelText: item + ':', hintText: item)),
-                    ],
-                  ))
-                ],
-              )))),
+                              ),
+                              DropdownButton2(
+                                buttonHeight: 40,
+                                buttonWidth: double.infinity,
+                                offset: const Offset(0, 2),
+                                // buttonDecoration: BoxDecoration(
+                                //   borderRadius: BorderRadius.circular(5),
+                                //   border: Border.all(
+                                //     color: Colors.white54,
+                                //   ),),
+                                value: _curJobPosChoice,
+                                itemHeight: 35,
+                                dropdownDecoration: const BoxDecoration(
+                                    //color: Color.fromARGB(255, 54, 54, 54)
+                                    ),
+                                itemPadding: const EdgeInsets.symmetric(
+                                    horizontal: 2.0),
+                                items: _jobPosDropDownVal
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                          fontSize: 14.5,
+                                          //color: Colors.white
+                                        ),
+                                      ));
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(
+                                    () {
+                                      _curJobPosChoice = newValue!;
+                                      curEmployee.infoEdited(item, newValue);
+                                    },
+                                  );
+                                },
+                              ),
+                            ]))
+                      else
+                        TextField(
+                            controller: TextEditingController()
+                              ..text = curEmployee.headerToInfo(item),
+                            onChanged: (text) =>
+                                {curEmployee.infoEdited(item, text)},
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                labelText: item + ':', hintText: item)),
+                  ],
+                ))
+              ],
+              ))),
               actions: <Widget>[
                 TextButton(
                     child: const Text('CANCEL'),
@@ -524,86 +503,84 @@ Future<void> employeeDataAdder(context) async {
           return AlertDialog(
             contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Add New Employee',
-                        style: TextStyle(fontWeight: FontWeight.w700)),
-                    for (var item in newEmployee.allInfoHeaders)
-                      if (item == 'Position')
-                        Container(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Column(children: [
-                              Container(
-                                alignment: const Alignment(-1, 0),
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(
-                                  'Job Position:',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context).hintColor),
-                                ),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Add New Employee',
+                      style: TextStyle(fontWeight: FontWeight.w700)),
+                  for (var item in newEmployee.allInfoHeaders)
+                    if (item == 'Position')
+                      Container(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Column(children: [
+                            Container(
+                              alignment: const Alignment(-1, 0),
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Text(
+                                'Job Position:',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).hintColor),
                               ),
-                              DropdownButton2(
-                                buttonHeight: 40,
-                                buttonWidth: double.infinity,
-                                offset: const Offset(0, 2),
-                                // buttonDecoration: BoxDecoration(
-                                //   borderRadius: BorderRadius.circular(5),
-                                //   border: Border.all(
-                                //     color: Colors.white54,
-                                //   ),),
-                                value: _curJobPosChoice,
-                                itemHeight: 35,
-                                dropdownDecoration: const BoxDecoration(
-                                    //color: Color.fromARGB(255, 54, 54, 54)
-                                    ),
-                                itemPadding:
-                                    const EdgeInsets.symmetric(horizontal: 2.0),
-                                items: _jobPosDropDownVal
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(
-                                          fontSize: 14.5,
-                                          //color: Colors.white
-                                        ),
-                                      ));
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(
-                                    () {
-                                      _curJobPosChoice = newValue!;
-                                      newEmployee.infoEdited(item, newValue);
-                                    },
-                                  );
-                                },
-                              ),
-                            ]))
-                      else
-                        TextField(
-                            // controller: TextEditingController()
-                            //   ..text = item.toString(),
-                            onChanged: (text) =>
-                                {newEmployee.infoEdited(item, text)},
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                labelText: item + ':', hintText: item)),
-                  ],
-                ))
+                            ),
+                            DropdownButton2(
+                              buttonHeight: 40,
+                              buttonWidth: double.infinity,
+                              offset: const Offset(0, 2),
+                              // buttonDecoration: BoxDecoration(
+                              //   borderRadius: BorderRadius.circular(5),
+                              //   border: Border.all(
+                              //     color: Colors.white54,
+                              //   ),),
+                              value: _curJobPosChoice,
+                              itemHeight: 35,
+                              dropdownDecoration: const BoxDecoration(
+                                  //color: Color.fromARGB(255, 54, 54, 54)
+                                  ),
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 2.0),
+                              items: _jobPosDropDownVal
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: const TextStyle(
+                                        fontSize: 14.5,
+                                        //color: Colors.white
+                                      ),
+                                    ));
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(
+                                  () {
+                                    _curJobPosChoice = newValue!;
+                                    newEmployee.infoEdited(item, newValue);
+                                  },
+                                );
+                              },
+                            ),
+                          ]))
+                    else
+                      TextField(
+                          // controller: TextEditingController()
+                          //   ..text = item.toString(),
+                          onChanged: (text) =>
+                              {newEmployee.infoEdited(item, text)},
+                          autofocus: true,
+                          decoration: InputDecoration(
+                              labelText: item + ':', hintText: item)),
+                ],
+              ))
               ],
-            )))),
+            ))),
             actions: <Widget>[
               TextButton(
                   child: const Text('CANCEL'),
@@ -677,20 +654,4 @@ Future<void> employeeSearchHelper(context, List<Employee> foundList) async {
   }
   //debugPrint('main ${mainBookList.toString()}');
   //debugPrint('copy ${mainBookListCopy.toString()}');
-}
-
-// Dialog Helper
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
-  }
 }

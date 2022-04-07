@@ -32,10 +32,8 @@ import 'dart:convert';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:bookstore_project/Data/book_data_handler.dart';
 
 import '../Data/employee_data_handler.dart';
 import '../main_appbar.dart';
@@ -106,7 +104,6 @@ class _EmployeeListState extends State<EmployeeList> {
     super.dispose();
   }
 
-  @override
   Widget _searchField() {
     return TextField(
         controller: searchEmployeeController,
@@ -376,21 +373,12 @@ class _EmployeeListState extends State<EmployeeList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'First\nName',
+                              'Full Name',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.S,
+                            size: ColumnSize.M,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
-                              'Last\nName',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.S,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.lastName, columnIndex, ascending),
+                                (d) => d.firstName + d.lastName, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

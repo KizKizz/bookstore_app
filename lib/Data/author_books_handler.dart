@@ -1,9 +1,7 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters
 
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -94,33 +92,37 @@ class AuthorBooks {
   }
 
   void setInfo(var info) {
-    if (info == 'Title' && editResults[0] != null)
+    if (info == 'Title' && editResults[0] != null) {
       title = editResults[0];
-    else if (info == 'ID' && editResults[1] != null)
+    } else if (info == 'ID' && editResults[1] != null) {
       id = editResults[1];
-    else if (info == 'SOLD' && editResults[2] != null) sold = editResults[2];
+    } else if (info == 'SOLD' && editResults[2] != null) {
+      sold = editResults[2];
+    }
   }
 
   String headerToInfo(var header) {
-    if (header == 'Full Name')
+    if (header == 'Full Name') {
       return title;
-    else if (header == 'ID')
+    } else if (header == 'ID') {
       return id;
-    else if (header == 'Year of Birth')
+    } else if (header == 'Year of Birth') {
       return sold;
-    else
+    } else {
       return 'error';
+    }
   }
 
   void infoEdited(var info, var editedVal) {
-    if (info == 'Title')
+    if (info == 'Title') {
       editResults[0] = editedVal;
-    else if (info == 'ID')
+    } else if (info == 'ID') {
       editResults[1] = editedVal;
-    else if (info == 'ID')
+    } else if (info == 'ID') {
       editResults[2] = editedVal;
-    else
+    } else {
       editResults[0] = editedVal;
+    }
   }
 
   fromJson(Map<String, dynamic> json) {
@@ -239,12 +241,10 @@ class AuthorBooksDatabase extends DataTableSource {
         DataCell(Text(author.id)),
         DataCell(Text(author.sold)),
         DataCell(
-            Container(
-                //padding: const EdgeInsets.only(left: 5),
-                child: const Icon(
+            const Icon(
               Icons.arrow_forward,
               color: Colors.grey,
-            )),
+            ),
             onTap: () => []),
       ],
     );
@@ -291,21 +291,5 @@ Future<void> getBooksFromAuthor(context, String author) async {
       AuthorBooks _temp = AuthorBooks('', '', '');
       _authorBooks.add(_temp);
     }
-  }
-}
-
-// Dialog Helper
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
   }
 }

@@ -1,9 +1,8 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -274,7 +273,7 @@ class OrderDatabase extends DataTableSource {
       this.hasRowHeightOverrides = false]) {
     orders = mainOrderList;
     if (sortedByName) {
-      sort((d) => d.customerName, true);
+      sort((d) => d.orderNum, false);
     }
   }
 
@@ -285,24 +284,6 @@ class OrderDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Order d) getField, bool ascending) {
     orders.sort((a, b) {
-      // if (a.cost == '') {
-      //   a.cost = 0.toString();
-      // } else if (a.edition == '') {
-      //   a.edition = 0.toString();
-      // } else if (a.retailPrice == '') {
-      //   a.retailPrice = 0.toString();
-      // } else if (a.publishDate == '') {
-      //   a.publishDate = 0.toString();
-      // }
-      // if (b.cost == '') {
-      //   b.cost = 0.toString();
-      // } else if (b.edition == '') {
-      //   b.edition = 0.toString();
-      // } else if (b.retailPrice == '') {
-      //   b.retailPrice = 0.toString();
-      // } else if (b.publishDate == '') {
-      //   b.publishDate = 0.toString();
-      // }
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -432,312 +413,309 @@ class OrderDatabase extends DataTableSource {
             return AlertDialog(
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
-              content: Container(
-                //padding: const EdgeInsets.only(right: 20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Order #${curOrder.orderNum} Info',
-                              style: const TextStyle(fontWeight: FontWeight.w700)),
-                            // for (var item in curOrder.allInfoHeaders)
-                            //   TextField(
-                            //       controller: TextEditingController()
-                            //         ..text = curOrder.headerToInfo(item),
-                            //       onChanged: (text) =>
-                            //           {curOrder.infoEdited(item, text)},
-                            //       autofocus: true,
-                            //       decoration: InputDecoration(
-                            //           labelText: item + ':', hintText: item)),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Order #${curOrder.orderNum} Info',
+                            style: const TextStyle(fontWeight: FontWeight.w700)),
+                          // for (var item in curOrder.allInfoHeaders)
+                          //   TextField(
+                          //       controller: TextEditingController()
+                          //         ..text = curOrder.headerToInfo(item),
+                          //       onChanged: (text) =>
+                          //           {curOrder.infoEdited(item, text)},
+                          //       autofocus: true,
+                          //       decoration: InputDecoration(
+                          //           labelText: item + ':', hintText: item)),
 
-                            //for (var item in curOrder.allInfoHeaders)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Customer Name'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Customer Name', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Customer Name',
-                                      )),
-                                )),
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Customer ID'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Customer ID', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Customer ID',
-                                      )),
-                                )),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Salesperson Name'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Salesperson Name', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Salesperson Name',
-                                      )),
-                                )),
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Salesperson ID'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Salesperson ID', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Salesperson ID',
-                                      )),
-                                )),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text =
-                                            curOrder.headerToInfo('Order Date'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Order Date', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Order Date',
-                                      )),
-                                )),
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Delivery Date'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Delivery Date', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Delivery Date',
-                                      )),
-                                )),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Payment Method'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Payment Method', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Payment Method',
-                                      )),
-                                )),
-                                Expanded(
-                                    child: Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: TextFormField(
-                                      controller: TextEditingController()
-                                        ..text = curOrder
-                                            .headerToInfo('Total Cost'),
-                                      onChanged: (text) => {
-                                            curOrder.infoEdited(
-                                                'Total Cost', text)
-                                          },
-                                      decoration: const InputDecoration(
-                                        //icon: Icon(Icons.person),
-                                        hintText: '',
-                                        labelText: 'Total Cost',
-                                      )),
-                                )),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [ 
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(top: 11, bottom: 7),
-                                      child: Text(
-                                        'Order Status',
-                                        style: TextStyle(
-                                            color: Theme.of(context).hintColor,
-                                            fontSize: 12),
-                                      ),
-                                    ),
-                                    Container(
-                                        width: double.infinity,
-                                        child: CustomDropdownButton2(
-                                          buttonHeight: 25,
-                                          buttonPadding:
-                                              const EdgeInsets.only(bottom: 3),
-                                          hint: 'Select Status',
-                                          dropdownDecoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color: Theme.of(context)
-                                                    .cardColor),
-                                            //color: Colors.redAccent,
-                                          ),
-                                          buttonDecoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color: Theme.of(context)
-                                                    .hintColor),
-                                            //color: Colors.redAccent,
-                                          ),
-                                          dropdownElevation: 2,
-                                          offset: const Offset(0, 0),
-                                          valueAlignment: Alignment.center,
-                                          icon:
-                                              const Icon(Icons.arrow_drop_down),
-                                          iconSize: 20,
-                                          dropdownWidth: 400,
-                                          dropdownItems:
-                                              _orderStatusDropDownVal,
-                                          value: _curOrderStatusChoice,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _curOrderStatusChoice = value!;
-                                            });
-                                          },
-                                        )),
-                                  ],
-                                )),
-                              ],
-                            ),
-
-                            //List of Books
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Text('Ordered books',
-                                  style: TextStyle(
-                                      color: Theme.of(context).hintColor,
-                                      fontSize: 14)),
-                            ),
-                            Container(
-                              height: 75 * double.parse(_orderedBooks.length.toString()),
-                              width: 400,
-                              constraints: const BoxConstraints(maxHeight: 330),
-                              child: ListView(
-                                padding:
-                                    const EdgeInsets.only(left: 7, right: 7),
-                                clipBehavior: Clip.antiAlias,
-                                shrinkWrap: true,
-                                //controller: ScrollController(),
+                          //for (var item in curOrder.allInfoHeaders)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Customer Name'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Customer Name', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Customer Name',
+                                    )),
+                              )),
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Customer ID'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Customer ID', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Customer ID',
+                                    )),
+                              )),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Salesperson Name'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Salesperson Name', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Salesperson Name',
+                                    )),
+                              )),
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Salesperson ID'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Salesperson ID', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Salesperson ID',
+                                    )),
+                              )),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text =
+                                          curOrder.headerToInfo('Order Date'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Order Date', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Order Date',
+                                    )),
+                              )),
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Delivery Date'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Delivery Date', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Delivery Date',
+                                    )),
+                              )),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Payment Method'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Payment Method', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Payment Method',
+                                    )),
+                              )),
+                              Expanded(
+                                  child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                    controller: TextEditingController()
+                                      ..text = curOrder
+                                          .headerToInfo('Total Cost'),
+                                    onChanged: (text) => {
+                                          curOrder.infoEdited(
+                                              'Total Cost', text)
+                                        },
+                                    decoration: const InputDecoration(
+                                      //icon: Icon(Icons.person),
+                                      hintText: '',
+                                      labelText: 'Total Cost',
+                                    )),
+                              )),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [ 
+                              Expanded(
+                                  child: Column(
                                 children: [
-                                  for (int i = 0; i < _orderedBooks.length; i++)
-                                    Container(
-                                      height: 75,
-                                      child: Card(
-                                        elevation: 2,
-                                        clipBehavior: Clip.antiAlias,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            side: BorderSide(
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.only(top: 11, bottom: 7),
+                                    child: Text(
+                                      'Order Status',
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                      width: double.infinity,
+                                      child: CustomDropdownButton2(
+                                        buttonHeight: 25,
+                                        buttonPadding:
+                                            const EdgeInsets.only(bottom: 3),
+                                        hint: 'Select Status',
+                                        dropdownDecoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(3),
+                                          border: Border.all(
                                               color: Theme.of(context)
-                                                  .hintColor
-                                                  .withOpacity(0.3),
-                                              //color: Colors.grey.withOpacity(0.2),
-                                              width: 1,
-                                            )),
-                                        child: ListTile(
-                                          dense: true,
-                                          //contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                          onTap: () {
-                                            setState(() {});
-                                          },
-                                          leading: const Icon(
-                                              Icons.menu_book_outlined),
-                                          title: Text(
-                                            _orderedBooks[i].title,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                          subtitle: Text(
-                                            '${_orderedBooks[i].author}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                          trailing: const Icon(Icons.clear),
-                                          isThreeLine: true,
+                                                  .cardColor),
+                                          //color: Colors.redAccent,
                                         ),
+                                        buttonDecoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(3),
+                                          border: Border.all(
+                                              color: Theme.of(context)
+                                                  .hintColor),
+                                          //color: Colors.redAccent,
+                                        ),
+                                        dropdownElevation: 2,
+                                        offset: const Offset(0, 0),
+                                        valueAlignment: Alignment.center,
+                                        icon:
+                                            const Icon(Icons.arrow_drop_down),
+                                        iconSize: 20,
+                                        dropdownWidth: 400,
+                                        dropdownItems:
+                                            _orderStatusDropDownVal,
+                                        value: _curOrderStatusChoice,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _curOrderStatusChoice = value!;
+                                          });
+                                        },
+                                      )),
+                                ],
+                              )),
+                            ],
+                          ),
+
+                          //List of Books
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text('Ordered books',
+                                style: TextStyle(
+                                    color: Theme.of(context).hintColor,
+                                    fontSize: 14)),
+                          ),
+                          Container(
+                            height: 75 * double.parse(_orderedBooks.length.toString()),
+                            width: 400,
+                            constraints: const BoxConstraints(maxHeight: 330),
+                            child: ListView(
+                              padding:
+                                  const EdgeInsets.only(left: 7, right: 7),
+                              clipBehavior: Clip.antiAlias,
+                              shrinkWrap: true,
+                              //controller: ScrollController(),
+                              children: [
+                                for (int i = 0; i < _orderedBooks.length; i++)
+                                  SizedBox(
+                                    height: 75,
+                                    child: Card(
+                                      elevation: 2,
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          side: BorderSide(
+                                            color: Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.3),
+                                            //color: Colors.grey.withOpacity(0.2),
+                                            width: 1,
+                                          )),
+                                      child: ListTile(
+                                        dense: true,
+                                        //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                        onTap: () {
+                                          setState(() {});
+                                        },
+                                        leading: const Icon(
+                                            Icons.menu_book_outlined),
+                                        title: Text(
+                                          _orderedBooks[i].title,
+                                          style:
+                                              const TextStyle(fontSize: 15),
+                                        ),
+                                        subtitle: Text(
+                                          '${_orderedBooks[i].author}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
+                                          style:
+                                              const TextStyle(fontSize: 14),
+                                        ),
+                                        trailing: const Icon(Icons.clear),
+                                        isThreeLine: true,
                                       ),
                                     ),
-                                ],
-                              ),
+                                  ),
+                              ],
                             ),
-                          ],
-                        ))
-                      ],
-                    ),
+                          ),
+                        ],
+                      ))
+                    ],
                   ),
                 ),
               ),
@@ -914,20 +892,4 @@ Future<void> orderSearchHelper(context, List<Order> foundList) async {
   }
   //debugPrint('main ${mainBookList.toString()}');
   //debugPrint('copy ${mainBookListCopy.toString()}');
-}
-
-// Dialog Helper
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
-  }
 }
