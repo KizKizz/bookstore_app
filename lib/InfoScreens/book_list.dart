@@ -83,120 +83,130 @@ class _BookListState extends State<BookList> {
 
   Widget _searchField() {
     return TextField(
-        controller: searchbookController,
-        onChanged: (String text) {
-          setState(() {
-            searchBookList = [];
-            Iterable<Book> foundBook = [];
-            if (curSearchChoice == 'All Fields') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.title.toLowerCase().contains(text.toLowerCase()) ||
-                  element.id.toLowerCase().contains(text.toLowerCase()) ||
-                  element.author.toLowerCase().contains(text.toLowerCase()) ||
-                  element.publisher.toLowerCase().contains(text.toLowerCase()) ||
-                  element.publishDate.toLowerCase().contains(text.toLowerCase()) ||
-                  element.edition.toLowerCase().contains(text.toLowerCase()) ||
-                  element.cost.toLowerCase().contains(text.toLowerCase()) ||
-                  element.retailPrice.toLowerCase().contains(text.toLowerCase()) ||
-                  element.condition.toLowerCase().contains(text.toLowerCase()) ||
-                  element.sold.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Title') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.title.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'ID') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.id.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Author') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.author.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Publisher') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.publisher.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Publish Date') {
-              foundBook = mainBookListCopy.where((element) => element
-                  .publishDate
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Edition') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.edition.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Cost') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.cost.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Retail Price') {
-              foundBook = mainBookListCopy.where((element) => element
-                  .retailPrice
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Condition') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.condition.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Sold Status') {
-              foundBook = mainBookListCopy.where((element) =>
-                  element.sold.toLowerCase().contains(text.toLowerCase()));
-            }
+      controller: searchbookController,
+      onChanged: (String text) {
+        setState(() {
+          searchBookList = [];
+          Iterable<Book> foundBook = [];
+          if (curSearchChoice == 'All Fields') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.title.toLowerCase().contains(text.toLowerCase()) ||
+                element.id.toLowerCase().contains(text.toLowerCase()) ||
+                element.authorFirstName
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.authorLastName
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.publisher.toLowerCase().contains(text.toLowerCase()) ||
+                element.publishDate
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.edition.toLowerCase().contains(text.toLowerCase()) ||
+                element.cost.toLowerCase().contains(text.toLowerCase()) ||
+                element.retailPrice
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                element.condition.toLowerCase().contains(text.toLowerCase()) ||
+                element.sold.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Title') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.title.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'ID') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.id.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Author') {
+            foundBook = mainBookListCopy.where((element) => element
+                .authorFirstName
+                .toLowerCase()
+                .contains(text.toLowerCase()) ||
+                element.authorLastName
+                    .toLowerCase()
+                    .contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Publisher') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.publisher.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Publish Date') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.publishDate.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Edition') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.edition.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Cost') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.cost.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Retail Price') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.retailPrice.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Condition') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.condition.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Sold Status') {
+            foundBook = mainBookListCopy.where((element) =>
+                element.sold.toLowerCase().contains(text.toLowerCase()));
+          }
 
-            if (foundBook.isNotEmpty) {
-              for (var book in foundBook) {
-                Book tempBook = Book(
-                    book.title,
-                    book.id,
-                    book.author,
-                    book.publisher,
-                    book.publishDate,
-                    book.edition,
-                    book.cost,
-                    book.retailPrice,
-                    book.condition,
-                    book.sold);
-                searchBookList.add(tempBook);
-              }
-              setState(() {
-                searchHelper(context, searchBookList).then((_) {
-                  setState(() {});
-                  //debugPrint('test ${mainBookList.toString()}');
-                });
-              });
-            } else {
-              setState(() {
-                searchHelper(context, searchBookList).then((_) {
-                  setState(() {});
-                });
-              });
+          if (foundBook.isNotEmpty) {
+            for (var book in foundBook) {
+              Book tempBook = Book(
+                  book.title,
+                  book.id,
+                  book.authorFirstName,
+                  book.authorLastName,
+                  book.authorID,
+                  book.publisher,
+                  book.publishDate,
+                  book.edition,
+                  book.cost,
+                  book.retailPrice,
+                  book.condition,
+                  book.sold);
+              searchBookList.add(tempBook);
             }
-          });
-        },
-        onSubmitted: (String text) {
-          setState(() {});
-        },
-        autofocus: false,
-        maxLines: 1,
-        cursorColor: Theme.of(context).hintColor,
-        style: const TextStyle(fontSize: 21),
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
+            setState(() {
+              searchHelper(context, searchBookList).then((_) {
+                setState(() {});
+                //debugPrint('test ${mainBookList.toString()}');
+              });
+            });
+          } else {
+            setState(() {
+              searchHelper(context, searchBookList).then((_) {
+                setState(() {});
+              });
+            });
+          }
+        });
+      },
+      onSubmitted: (String text) {
+        setState(() {});
+      },
+      autofocus: false,
+      maxLines: 1,
+      cursorColor: Theme.of(context).hintColor,
+      style: const TextStyle(fontSize: 21),
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
           prefixIcon:
               Icon(Icons.search, size: 25, color: Theme.of(context).hintColor),
           filled: true,
           fillColor: Theme.of(context).canvasColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(3)),
-            borderSide: BorderSide(
-              color: Theme.of(context).hintColor,
-            )
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
           focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(3)),
-            borderSide: BorderSide(
-              color: Theme.of(context).hintColor,
-            )
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+              borderSide: BorderSide(
+                color: Theme.of(context).hintColor,
+              )),
           isDense: true,
           contentPadding: const EdgeInsets.all(8),
           hintText: 'Search',
-            hintStyle: const TextStyle(
-                fontSize: 21,)
-          ),
+          hintStyle: const TextStyle(
+            fontSize: 21,
+          )),
     );
   }
 
@@ -208,11 +218,14 @@ class _BookListState extends State<BookList> {
           title: const Text('Book Data'),
           appBar: AppBar(),
           flexSpace: Container(
-            margin: const EdgeInsets.only(left: 200, right: 368,),
+            margin: const EdgeInsets.only(
+              left: 200,
+              right: 368,
+            ),
             child: Container(
-              padding: const EdgeInsets.only(left: 2, right: 0),
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: _searchField()),
+                padding: const EdgeInsets.only(left: 2, right: 0),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -244,8 +257,7 @@ class _BookListState extends State<BookList> {
 
             //Dropdown search
             Container(
-                padding: const EdgeInsets.only(
-                    left: 2, right: 2),
+                padding: const EdgeInsets.only(left: 2, right: 2),
                 margin: const EdgeInsets.only(right: 80, top: 10, bottom: 10),
                 child: CustomDropdownButton2(
                   hint: 'Select one',
@@ -269,7 +281,7 @@ class _BookListState extends State<BookList> {
                   ),
                   dropdownElevation: 2,
                   value: curSearchChoice,
-                  dropdownItems: _searchDropDownVal,     
+                  dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
                       curSearchChoice = newValue!;
@@ -433,7 +445,7 @@ class _BookListState extends State<BookList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
                         minWidth: 1000,
@@ -446,15 +458,6 @@ class _BookListState extends State<BookList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'Title',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.title, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
                               'ID',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -464,13 +467,22 @@ class _BookListState extends State<BookList> {
                           ),
                           DataColumn2(
                             label: const Text(
+                              'Title',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.title, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
                               'Author',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.M,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.author, columnIndex, ascending),
+                                (d) => d.authorFirstName + d.authorLastName, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -542,7 +554,7 @@ class _BookListState extends State<BookList> {
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Status',
+                              'Sold\nStatus',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,

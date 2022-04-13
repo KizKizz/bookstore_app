@@ -1,5 +1,5 @@
 name: bookstore_project
-description: A new Flutter project.
+description: A Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -80,6 +80,8 @@ flutter:
     - assets/jsondatabase/customer_data.json
     - assets/jsondatabase/order_data.json
     - assets/jsondatabase/sales_record_data.json
+    - assets/Logo/logo_light.png
+    - assets/Logo/logo_dark.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

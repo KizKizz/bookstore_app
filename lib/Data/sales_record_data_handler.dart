@@ -315,8 +315,8 @@ class SalesRecordDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(Text(salesRecord.bookTitle)),
         DataCell(Text(salesRecord.bookId)),
+        DataCell(Text(salesRecord.bookTitle)),
         DataCell(Text(salesRecord.customerName)),
         //DataCell(Text(salesRecord.customerId)),
         DataCell(Text(salesRecord.salesPersonName)),
@@ -384,12 +384,12 @@ class SalesRecordDatabase extends DataTableSource {
                 ),
               ),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                TextButton(
+                ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
                       int _salesRecordMatchIndex =
@@ -466,12 +466,12 @@ Future<void> salesRecordDataAdder(context) async {
               ],
             ),
             actions: <Widget>[
-              TextButton(
+              ElevatedButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              TextButton(
+              ElevatedButton(
                   child: const Text('ADD'),
                   onPressed: () {
                     for (var item in newSalesRecord.allInfoHeaders) {

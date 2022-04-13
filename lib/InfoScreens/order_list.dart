@@ -309,10 +309,10 @@ class _OrderListState extends State<OrderList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
-                        minWidth: 1000,
+                        minWidth: 1100,
                         smRatio: 0.6,
                         lmRatio: 1.5,
                         sortColumnIndex: _sortColumnIndex,

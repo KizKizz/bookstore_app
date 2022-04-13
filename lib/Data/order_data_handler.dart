@@ -701,7 +701,7 @@ class OrderDatabase extends DataTableSource {
                                               const TextStyle(fontSize: 15),
                                         ),
                                         subtitle: Text(
-                                          '${_orderedBooks[i].author}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
+                                          '${_orderedBooks[i].authorFirstName} ${_orderedBooks[i].authorLastName}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
                                           style:
                                               const TextStyle(fontSize: 14),
                                         ),
@@ -720,12 +720,12 @@ class OrderDatabase extends DataTableSource {
                 ),
               ),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                TextButton(
+                ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
                       int _orderMatchIndex = mainOrderListCopy.indexWhere(

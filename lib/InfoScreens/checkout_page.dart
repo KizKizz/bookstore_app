@@ -35,17 +35,7 @@ List<String> checkoutPrices = [];
 Customer curOrderingCustomer =
     Customer('', '', '', '', '', '', '', '', '', '', '', '', '');
 Employee curSalesperson = Employee(
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-);
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 final List<String> _orderStatusList = [
   'Picked Up',
@@ -74,6 +64,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final _searchCustomerController = TextEditingController();
   List<Customer> _searchCustomerList = [];
   FocusNode searchFieldFocusNode = FocusNode();
+
+  int _paymentIndex = 0;
+  bool _isCardPayment = false;
 
   late DateTime now;
   late String _orderDate = '';
@@ -1168,14 +1161,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           initiallyExpanded: true,
                           children: <Widget>[
                             SizedBox(
-                              height: 500,
+                              height: 250,
                               child: Column(
                                 children: [
                                   const Padding(
                                       padding: EdgeInsets.only(top: 5)),
                                   ToggleSwitch(
-                                    minWidth: 60.0,
-                                    minHeight: 36.0,
+                                    minWidth: 70.0,
+                                    minHeight: 55.0,
                                     cornerRadius: 0.0,
                                     //borderWidth: 1,
                                     //borderColor: [Theme.of(context).hintColor],
@@ -1187,52 +1180,161 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     //inactiveFgColor: Colors.blue,
                                     inactiveBgColor:
                                         Theme.of(context).canvasColor,
-                                    initialLabelIndex: 0,
+                                    initialLabelIndex: _paymentIndex,
                                     totalSwitches: 5,
                                     customIcons: const [
                                       Icon(
                                         FontAwesomeIcons.moneyBill1,
                                         //color: Color.fromARGB(255, 214, 226, 103),
-                                        size: 30,
+                                        size: 45,
                                       ),
                                       Icon(
                                         FontAwesomeIcons.ccVisa,
                                         //color: Colors.yellow,
-                                        size: 30,
+                                        size: 45,
                                       ),
                                       Icon(
                                         FontAwesomeIcons.ccMastercard,
                                         //color: Color(0xffF79E1B),
-                                        size: 30,
+                                        size: 45,
                                       ),
                                       Icon(
                                         FontAwesomeIcons.ccAmex,
                                         //color: Color(0xff27AEE3),
-                                        size: 30,
+                                        size: 45,
                                       ),
                                       Icon(
                                         FontAwesomeIcons.moneyCheckDollar,
                                         //color: Color(0xffF79E1B),
-                                        size: 30,
+                                        size: 45,
                                       ),
                                     ],
                                     //labels: ['Cash', 'Visa', 'Master Card', 'American\nExpress'],
                                     onToggle: (index) {
-                                      if (index == 0) {
-                                        curPaymentMethod = 'Cash';
-                                      } else if (index == 1) {
-                                        curPaymentMethod = 'Visa';
-                                      } else if (index == 2) {
-                                        curPaymentMethod = 'Master Card';
-                                      } else if (index == 3) {
-                                        curPaymentMethod = 'American Express';
-                                      } else if (index == 4) {
-                                        curPaymentMethod = 'Money Check';
-                                      }
-
+                                      setState(() {
+                                        if (index == 0) {
+                                          curPaymentMethod = 'Cash';
+                                          _isCardPayment = false;
+                                          _paymentIndex = 0;
+                                        } else if (index == 1) {
+                                          curPaymentMethod = 'Visa';
+                                          _isCardPayment = true;
+                                          _paymentIndex = 1;
+                                        } else if (index == 2) {
+                                          curPaymentMethod = 'Master Card';
+                                          _isCardPayment = true;
+                                          _paymentIndex = 2;
+                                        } else if (index == 3) {
+                                          curPaymentMethod = 'American Express';
+                                          _isCardPayment = true;
+                                          _paymentIndex = 3;
+                                        } else if (index == 4) {
+                                          curPaymentMethod = 'Money Check';
+                                          _isCardPayment = false;
+                                          _paymentIndex = 4;
+                                        }
+                                      });
                                       //print('switched to: $index');
                                     },
                                   ),
+                                  if (_isCardPayment)
+                                    Column(children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          //Name
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 15),
+                                            child: TextFormField(
+                                                // controller:
+                                                //     existingCustomerInfoControllers[
+                                                //         8],
+                                                decoration:
+                                                    const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Cardholder\'s Name',
+                                            )),
+                                          )),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          //Card Number
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 15),
+                                            child: TextFormField(
+                                                // controller:
+                                                //     existingCustomerInfoControllers[
+                                                //         8],
+                                                decoration:
+                                                    const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: 'XXXX XXXX XXXX XXXX',
+                                              labelText: 'Card Number',
+                                            )),
+                                          )),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 10),
+                                            child: TextFormField(
+                                                // controller:
+                                                //     existingCustomerInfoControllers[
+                                                //         8],
+                                                decoration:
+                                                    const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: 'MM/YY',
+                                              labelText: 'Expire Date',
+                                            )),
+                                          )),
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: TextFormField(
+                                                // controller:
+                                                //     existingCustomerInfoControllers[
+                                                //         2],
+                                                decoration:
+                                                    const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: 'XXX',
+                                              labelText: 'Security Code',
+                                            )),
+                                          )),
+                                          Expanded(
+                                              child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 15),
+                                            child: TextFormField(
+                                                // controller:
+                                                //     existingCustomerInfoControllers[
+                                                //         2],
+                                                decoration:
+                                                    const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Postal Code',
+                                            )),
+                                          )),
+                                        ],
+                                      ),
+                                    ])
                                 ],
                               ),
                             )
@@ -1296,7 +1398,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     subtitle: Text(
-                                      checkoutCartList[i].author,
+                                      checkoutCartList[i].authorFirstName +
+                                          ' ' +
+                                          checkoutCartList[i].authorLastName,
                                       // style: TextStyle(
                                       //     color: Colors.black.withOpacity(0.6)),
                                     ),

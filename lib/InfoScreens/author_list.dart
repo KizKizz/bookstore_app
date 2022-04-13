@@ -28,7 +28,8 @@ class _AuthorListState extends State<AuthorList> {
 
   final List<String> _searchDropDownVal = [
     'All Fields',
-    'Full Name',
+    'First Name',
+    'Last Name',
     'ID',
     'Year of Birth',
     'Year of Dead',
@@ -71,14 +72,18 @@ class _AuthorListState extends State<AuthorList> {
           Iterable<Author> foundAuthor = [];
           if (_curSearchChoice == 'All Fields') {
             foundAuthor = mainAuthorListCopy.where((element) =>
-                element.fullName.toLowerCase().contains(text.toLowerCase()) ||
+                element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                element.lastName.toLowerCase().contains(text.toLowerCase()) ||
                 element.id.toLowerCase().contains(text.toLowerCase()) ||
                 element.yearBirth.toLowerCase().contains(text.toLowerCase()) ||
                 element.yearDead.toLowerCase().contains(text.toLowerCase()) ||
                 element.description.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Full Name') {
+          } else if (_curSearchChoice == 'First Name') {
             foundAuthor = mainAuthorListCopy.where((element) =>
-                element.fullName.toLowerCase().contains(text.toLowerCase()));
+                element.firstName.toLowerCase().contains(text.toLowerCase()));
+          } else if (_curSearchChoice == 'Last Name') {
+            foundAuthor = mainAuthorListCopy.where((element) =>
+                element.lastName.toLowerCase().contains(text.toLowerCase()));
           } else if (_curSearchChoice == 'ID') {
             foundAuthor = mainAuthorListCopy.where((element) =>
                 element.id.toLowerCase().contains(text.toLowerCase()));
@@ -95,8 +100,13 @@ class _AuthorListState extends State<AuthorList> {
 
           if (foundAuthor.isNotEmpty) {
             for (var author in foundAuthor) {
-              Author tempAuthor = Author(author.fullName, author.id,
-                  author.yearBirth, author.yearDead, author.description);
+              Author tempAuthor = Author(
+                  author.firstName,
+                  author.lastName,
+                  author.id,
+                  author.yearBirth,
+                  author.yearDead,
+                  author.description);
               searchAuthorList.add(tempAuthor);
             }
             setState(() {
@@ -279,27 +289,17 @@ class _AuthorListState extends State<AuthorList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
-                        minWidth: 600,
+                        minWidth: 1100,
                         smRatio: 0.5,
                         lmRatio: 2.0,
                         sortColumnIndex: _sortColumnIndex,
                         sortAscending: _sortAscending,
-                        onSelectAll: (val) => setState(
-                            () => _authorsDataSource.selectAll(val)),
+                        onSelectAll: (val) =>
+                            setState(() => _authorsDataSource.selectAll(val)),
                         columns: [
-                          DataColumn2(
-                            label: const Text(
-                              'Full Name',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            onSort: (columnIndex, ascending) =>
-                                _sort<String>((d) => d.fullName,
-                                    columnIndex, ascending),
-                          ),
                           DataColumn2(
                             label: const Text(
                               'ID',
@@ -307,16 +307,26 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) =>
-                                _sort<String>(
-                                    (d) => d.id, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.id, columnIndex, ascending),
                           ),
+                          DataColumn2(
+                            label: const Text(
+                              'Full Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.firstName + d.lastName,
+                                columnIndex,
+                                ascending),
+                          ),        
                           DataColumn2(
                             label: const Text(
                               'Year of \nBirth',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.M,
+                            size: ColumnSize.S,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<num>(
                                 (d) => int.parse(d.yearBirth),
@@ -328,7 +338,7 @@ class _AuthorListState extends State<AuthorList> {
                               'Year of \nDead',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            size: ColumnSize.M,
+                            size: ColumnSize.S,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<num>(
                                 (d) => int.parse(d.yearDead),
@@ -342,9 +352,8 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.L,
                             numeric: false,
-                            onSort: (columnIndex, ascending) =>
-                                _sort<String>((d) => d.description,
-                                    columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.description, columnIndex, ascending),
                           ),
                         ],
                         rows: List<DataRow>.generate(

@@ -1,33 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// import '../main_appbar.dart';
-
-// class EmployeeList extends StatefulWidget {
-//   const EmployeeList({ Key? key }) : super(key: key);
-
-//   @override
-//   _EmployeeListState createState() => _EmployeeListState();
-// }
-
-// class _EmployeeListState extends State<EmployeeList> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         //drawer: const MainDrawer(),
-//         appBar: MainAppbar(
-//             title: const Text('Employee Data'),
-//             appBar: AppBar(),
-//             flexSpace: Text('PlaceHolder'),
-//             widgets: <Widget>[]),
-//         body: Center(
-//             child: Column(children: const [
-//           Text('UNDER CONSTRUCTION',
-//               textAlign: TextAlign.center, style: TextStyle(fontSize: 100))
-//         ])));
-//   }
-// }
-
 import 'dart:convert';
 
 import 'package:bookstore_project/login_page.dart';
@@ -116,12 +86,33 @@ class _EmployeeListState extends State<EmployeeList> {
                   element.firstName.toLowerCase().contains(text.toLowerCase()) ||
                   element.lastName.toLowerCase().contains(text.toLowerCase()) ||
                   element.id.toLowerCase().contains(text.toLowerCase()) ||
-                  element.address.toLowerCase().contains(text.toLowerCase()) ||
+                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
+                  element.suiteNum
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                  element.city
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                  element.state
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
+                  element.zipCode
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
                   element.phoneNumber.toLowerCase().contains(text.toLowerCase()) ||
+                  element.email
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
                   element.dateOfBirth.toLowerCase().contains(text.toLowerCase()) ||
                   element.hireDate.toLowerCase().contains(text.toLowerCase()) ||
+                  element.terminationDate
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
                   element.position.toLowerCase().contains(text.toLowerCase()) ||
                   element.numBookSold.toLowerCase().contains(text.toLowerCase()) ||
+                  element.lastSoldBooks
+                    .toLowerCase()
+                    .contains(text.toLowerCase()) ||
                   element.description.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'First Name') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
@@ -134,12 +125,20 @@ class _EmployeeListState extends State<EmployeeList> {
                   element.id.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Address') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.address.toLowerCase().contains(text.toLowerCase()));
+                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
+                  element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                  element.city.toLowerCase().contains(text.toLowerCase()) ||
+                  element.state.toLowerCase().contains(text.toLowerCase()) ||
+                  element.zipCode.toLowerCase().contains(text.toLowerCase())
+                  );
             } else if (curSearchChoice == 'Phone Number') {
               foundEmployee = mainEmployeeListCopy.where((element) => element
                   .phoneNumber
                   .toLowerCase()
                   .contains(text.toLowerCase()));
+            } else if (curSearchChoice == 'Email') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.email.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Date of Birth') {
               foundEmployee = mainEmployeeListCopy.where((element) => element
                   .dateOfBirth
@@ -148,6 +147,9 @@ class _EmployeeListState extends State<EmployeeList> {
             } else if (curSearchChoice == 'Hire Date') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
                   element.hireDate.toLowerCase().contains(text.toLowerCase()));
+            } else if (curSearchChoice == 'Termination Date') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.terminationDate.toLowerCase().contains(text.toLowerCase()));
             } else if (curSearchChoice == 'Position') {
               foundEmployee = mainEmployeeListCopy.where((element) =>
                   element.position.toLowerCase().contains(text.toLowerCase()));
@@ -156,7 +158,12 @@ class _EmployeeListState extends State<EmployeeList> {
                   .numBookSold
                   .toLowerCase()
                   .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Description') {
+            } else if (curSearchChoice == 'Last Sold Books') {
+            foundEmployee = mainEmployeeListCopy.where((element) => element
+                .lastSoldBooks
+                .toLowerCase()
+                .contains(text.toLowerCase()));
+            }  else if (curSearchChoice == 'Description') {
               foundEmployee = mainEmployeeListCopy.where((element) => element
                   .description
                   .toLowerCase()
@@ -169,12 +176,19 @@ class _EmployeeListState extends State<EmployeeList> {
                     employee.firstName,
                     employee.lastName,
                     employee.id,
-                    employee.address,
+                    employee.streetAddress,
+                    employee.suiteNum,
+                    employee.city,
+                    employee.state,
+                    employee.zipCode,
                     employee.phoneNumber,
+                    employee.email,
                     employee.dateOfBirth,
                     employee.hireDate,
+                    employee.terminationDate,
                     employee.position,
                     employee.numBookSold,
+                    employee.terminationDate,
                     employee.description);
                 searchEmployeeList.add(tempEmployee);
               }
@@ -360,10 +374,10 @@ class _EmployeeListState extends State<EmployeeList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
-                        minWidth: 1000,
+                        minWidth: 1100,
                         smRatio: 0.6,
                         lmRatio: 1.5,
                         sortColumnIndex: _sortColumnIndex,
@@ -371,15 +385,6 @@ class _EmployeeListState extends State<EmployeeList> {
                         onSelectAll: (val) =>
                             setState(() => _employeesDataSource.selectAll(val)),
                         columns: [
-                          DataColumn2(
-                            label: const Text(
-                              'Full Name',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.M,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName + d.lastName, columnIndex, ascending),
-                          ),
                           DataColumn2(
                             label: const Text(
                               'ID',
@@ -392,13 +397,22 @@ class _EmployeeListState extends State<EmployeeList> {
                           ),
                           DataColumn2(
                             label: const Text(
+                              'Full Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.firstName + d.lastName, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
                               'Address',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.L,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.address, columnIndex, ascending),
+                                (d) => d.streetAddress, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

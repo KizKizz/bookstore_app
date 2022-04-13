@@ -291,10 +291,10 @@ class _SalesRecordListState extends State<SalesRecordList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
-                        minWidth: 1000,
+                        minWidth: 1100,
                         smRatio: 0.6,
                         lmRatio: 1.5,
                         sortColumnIndex: _sortColumnIndex,
@@ -304,21 +304,21 @@ class _SalesRecordListState extends State<SalesRecordList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'Book Title',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.bookTitle, columnIndex, ascending),
-                          ),
-                          DataColumn2(
-                            label: const Text(
                               'Book ID',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.bookId, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
+                              'Book Title',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.L,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.bookTitle, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

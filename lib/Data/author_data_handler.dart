@@ -67,14 +67,16 @@ class RestorableauthorSelections extends RestorableProperty<Set<int>> {
 /// Domain model entity
 class Author {
   Author(
-    this.fullName,
+    this.firstName,
+    this.lastName,
     this.id,
     this.yearBirth,
     this.yearDead,
     this.description,
   );
 
-  String fullName;
+  String firstName;
+  String lastName;
   String id;
   String yearBirth;
   String yearDead;
@@ -85,7 +87,8 @@ class Author {
 
   List get allInfo {
     return [
-      fullName,
+      firstName,
+      lastName,
       id,
       yearBirth,
       yearDead,
@@ -93,61 +96,9 @@ class Author {
     ];
   }
 
-  List get allInfoHeaders {
-    return [
-      'Full Name',
-      'ID',
-      'Year of Birth',
-      'Year of Dead',
-      'Description',
-    ];
-  }
-
-  void setInfo(var info) {
-    if (info == 'Full Name' && editResults[0] != null)
-      fullName = editResults[0];
-    else if (info == 'ID' && editResults[1] != null)
-      id = editResults[1];
-    else if (info == 'Year of Birth' && editResults[2] != null)
-      yearBirth = editResults[2];
-    else if (info == 'Year of Dead' && editResults[3] != null)
-      yearDead = editResults[3];
-    else if (info == 'Description' && editResults[4] != null)
-      description = editResults[4];
-  }
-
-  String headerToInfo(var header) {
-    if (header == 'Full Name')
-      return fullName;
-    else if (header == 'ID')
-      return id;
-    else if (header == 'Year of Birth')
-      return yearBirth.toString();
-    else if (header == 'Year of Dead')
-      return yearDead.toString();
-    else if (header == 'Description')
-      return description;
-    else
-      return 'error';
-  }
-
-  void infoEdited(var info, var editedVal) {
-    if (info == 'Full Name')
-      editResults[0] = editedVal;
-    else if (info == 'ID')
-      editResults[1] = editedVal;
-    else if (info == 'Year of Birth')
-      editResults[2] = editedVal;
-    else if (info == 'Year of Dead')
-      editResults[3] = editedVal;
-    else if (info == 'Description')
-      editResults[4] = editedVal;
-    else
-      editResults[0] = editedVal;
-  }
-
   fromJson(Map<String, dynamic> json) {
-    fullName = json['fullName'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
     id = json['id'];
     yearBirth = json['yearBirth'];
     yearDead = json['yearDead'];
@@ -156,7 +107,8 @@ class Author {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['fullName'] = fullName;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     data['id'] = id;
     data['yearBirth'] = yearBirth;
     data['yearDead'] = yearDead;
@@ -181,7 +133,7 @@ class AuthorDatabase extends DataTableSource {
       this.hasRowHeightOverrides = false]) {
     authors = mainAuthorList;
     if (sortedByName) {
-      sort((d) => d.fullName, true);
+      sort((d) => d.firstName, true);
     }
   }
 
@@ -258,7 +210,7 @@ class AuthorDatabase extends DataTableSource {
           ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 //backgroundColor: Theme.of(context).focusColor,
-                content: Text('Double Tapped on ${author.fullName}'),
+                content: Text('Double Tapped on ${author.firstName}'),
               ))
           : null,
       onSecondaryTap: hasRowTaps
@@ -266,15 +218,15 @@ class AuthorDatabase extends DataTableSource {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 duration: const Duration(seconds: 1),
                 backgroundColor: Theme.of(context).errorColor,
-                content: Text('Right clicked on ${author.fullName}'),
+                content: Text('Right clicked on ${author.firstName}'),
               ))
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(
-          Text(author.fullName),
-        ),
         DataCell(Text(author.id)),
+        DataCell(
+          Text(author.firstName + ' ' + author.lastName),
+        ),
         DataCell(Text(author.yearBirth.toString())),
         DataCell(Text(author.yearDead.toString())),
         DataCell(Text(author.description)),
@@ -310,42 +262,137 @@ class AuthorDatabase extends DataTableSource {
               contentPadding:
                   const EdgeInsets.only(top: 16, left: 16, bottom: 16),
               content: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Edit ${curAuthor.fullName}\'s Info',
-                      style: const TextStyle(fontWeight: FontWeight.w700)),
-                    for (var item in curAuthor.allInfoHeaders)
-                      TextField(
-                          controller: TextEditingController()
-                            ..text = curAuthor.headerToInfo(item),
-                          onChanged: (text) =>
-                              {curAuthor.infoEdited(item, text)},
-                          autofocus: true,
-                          decoration: InputDecoration(
-                              labelText: item + ':',
-                              hintText: item + ' of the author')),
-                  ],
-                ))
-              ],
-              ))),
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Container(
+                        width: 400,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('${curAuthor.firstName} ${curAuthor.lastName}\'s Info',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.firstName,
+                                          onChanged: (text) => {
+                                               curAuthor.firstName = text
+                                              },
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: '',
+                                            labelText: 'First Name',
+                                          )),
+                                    )),
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.lastName,
+                                          onChanged: (text) => {
+                                                curAuthor.lastName = text
+                                              },
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: '',
+                                            labelText: 'Last Name',
+                                          )),
+                                    )),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.id,
+                                          onChanged: (text) =>
+                                              {curAuthor.id = text},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: 'ABCD1234',
+                                            labelText: 'ID',
+                                          )),
+                                    )),
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.yearBirth,
+                                          onChanged: (text) =>
+                                              {curAuthor.yearBirth = text},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: 'YYYY',
+                                            labelText: 'Year of Birth',
+                                          )),
+                                    )),
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.yearDead,
+                                          onChanged: (text) =>
+                                              {curAuthor.yearDead = text},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: 'YYYY',
+                                            labelText: 'Year of Dead',
+                                          )),
+                                    )),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(right: 0),
+                                      child: TextFormField(
+                                          controller: TextEditingController()
+                                            ..text = curAuthor.description,
+                                          onChanged: (text) =>
+                                              {curAuthor.description = text},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: '',
+                                            labelText: 'Description',
+                                          )),
+                                    )),
+                                  ],
+                                ),
+                              ],
+                            ))
+                          ],
+                        ),
+                      ))),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                TextButton(
+                ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      for (var item in curAuthor.allInfoHeaders) {
-                        curAuthor.setInfo(item);
-                      }
+                      // for (var item in curAuthor.allInfoHeaders) {
+                      //   curAuthor.setInfo(item);
+                      // }
 
                       //write to json
                       if (!kIsWeb) {
@@ -432,7 +479,7 @@ class AuthorDatabase extends DataTableSource {
 //JSON Helper
 void convertauthorData(var jsonResponse) {
   for (var b in jsonResponse) {
-    Author author = Author(b['fullName'], b['id'], b['yearBirth'],
+    Author author = Author(b['firstName'], b['lastName'], b['id'], b['yearBirth'],
         b['yearDead'], b['description']);
     mainAuthorList.add(author);
     mainAuthorListCopy.add(author);
@@ -444,32 +491,32 @@ void convertauthorData(var jsonResponse) {
 //Get Authors from Book data
 Future<void> getAuthorsFromBook() async {
   if (mainBookListCopy.isNotEmpty && mainAuthorList.isEmpty) {
-    List<String> _authorNames = [];
+    List<String> _authorIDs = [];
     for (var book in mainBookListCopy) {
-      _authorNames.add(book.author);
+      _authorIDs.add(book.authorID);
     }
-    _authorNames = _authorNames.toSet().toList();
+    _authorIDs = _authorIDs.toSet().toList();
     //print(_authorNames);
-    for (var name in _authorNames) {
-      mainAuthorList.add(Author(name, '', '', '', ''));
+    for (var id in _authorIDs) {
+      mainAuthorList.add(Author('', '', id, '', '', ''));
     }
   } else if (mainBookListCopy.isNotEmpty && mainAuthorList.isNotEmpty) {
-    List<String> _authorNames = [];
+    List<String> _authorIDs = [];
     for (var book in mainBookListCopy) {
-      _authorNames.add(book.author);
+      _authorIDs.add(book.authorID);
     }
-    _authorNames = _authorNames.toSet().toList();
+    _authorIDs = _authorIDs.toSet().toList();
     for (var author in mainAuthorList) {
       final index =
-          _authorNames.indexWhere((element) => element == author.fullName);
+          _authorIDs.indexWhere((element) => element == author.id);
       if (index >= 0) {
-        _authorNames.removeAt(index);
+        _authorIDs.removeAt(index);
       }
     }
-    if (_authorNames.isNotEmpty) {
-      for (var name in _authorNames) {
-        mainAuthorList.add(Author(name, '', '', '', ''));
-        mainAuthorListCopy.add(Author(name, '', '', '', ''));
+    if (_authorIDs.isNotEmpty) {
+      for (var id in _authorIDs) {
+        mainAuthorList.add(Author('', '', id, '', '', ''));
+        mainAuthorListCopy.add(Author('', '', id, '', '', ''));
       }
     }
   }
@@ -489,7 +536,7 @@ Future<void> getAuthorsFromBook() async {
 Future<void> authorSearchHelper(context, List<Author> foundList) async {
   if (foundList.isEmpty) {
     mainAuthorList.removeRange(1, mainAuthorList.length);
-    mainAuthorList.first = Author('', '', '', '', '');
+    mainAuthorList.first = Author('', '', '', '', '', '');
   } else {
     if (mainAuthorList.length > 1) {
       mainAuthorList.removeRange(1, mainAuthorList.length);

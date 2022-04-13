@@ -235,10 +235,10 @@ class AuthorBooksDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
+        DataCell(Text(author.id)),
         DataCell(
           Text(author.title),
         ),
-        DataCell(Text(author.id)),
         DataCell(Text(author.sold)),
         DataCell(
             const Icon(
@@ -277,7 +277,7 @@ Future<void> getBooksFromAuthor(context, String author) async {
   if (mainBookListCopy.isNotEmpty) {
     _authorBooks = [];
     final foundBooks = mainBookListCopy.where(
-        (element) => element.author.toLowerCase() == author.toLowerCase());
+        (element) => element.authorID.toLowerCase() == author.toLowerCase());
     if (foundBooks.isNotEmpty) {
       AuthorBooks _temp = AuthorBooks('', '', '');
       for (var book in foundBooks) {

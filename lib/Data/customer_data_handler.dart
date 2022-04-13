@@ -359,9 +359,9 @@ class CustomerDatabase extends DataTableSource {
               ))
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
-      cells: [
-        DataCell(Text('${customer.firstName} ${customer.lastName}')),
+      cells: [       
         DataCell(Text(customer.id)),
+        DataCell(Text('${customer.firstName} ${customer.lastName}')),
         if (customer.suiteNum.isNotEmpty)
           DataCell(Text(
               '${customer.streetAddress} ${customer.suiteNum} ${customer.city} ${customer.state}, ${customer.zipCode}')),
@@ -708,12 +708,12 @@ class CustomerDatabase extends DataTableSource {
                         ],
                       ))),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                TextButton(
+                ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
                       int _customerMatchIndex = mainCustomerListCopy.indexWhere(
@@ -759,39 +759,183 @@ Future<void> customerDataAdder(context) async {
             content: SingleChildScrollView(
                 child: Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Add New Customer',
-                                style: TextStyle(fontWeight: FontWeight.w700)),
-                            for (var item in newCustomer.allInfoHeaders)
-                              TextField(
-                                  // controller: TextEditingController()
-                                  //   ..text = item.toString(),
-                                  onChanged: (text) =>
-                                      {newCustomer.infoEdited(item, text)},
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                      labelText: item + ':', hintText: item)),
-                          ],
-                        ))
-                      ],
+                    child: Container(
+                      width: 400,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('Add Customer',
+                                  style: TextStyle(fontWeight: FontWeight.w700)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.firstName = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'First Name',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.lastName = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Last Name',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 0),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.streetAddress = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Street Address',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.suiteNum = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Suite / Apt#',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.city = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'City',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.state = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'State',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.zipCode = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Postal Code',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.phoneNumber = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Phone Number',
+                                        )),
+                                  )),
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.id = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'ID',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 0),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newCustomer.email = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Email',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                            ],
+                          ))
+                        ],
+                      ),
                     ))),
             actions: <Widget>[
-              TextButton(
+              ElevatedButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              TextButton(
+              ElevatedButton(
                   child: const Text('ADD'),
                   onPressed: () {
-                    for (var item in newCustomer.allInfoHeaders) {
-                      newCustomer.setInfo(item);
-                    }
+                    // for (var item in newCustomer.allInfoHeaders) {
+                    //   newCustomer.setInfo(item);
+                    // }
                     mainCustomerList.add(newCustomer);
                     mainCustomerListCopy.add(newCustomer);
                     Navigator.pop(context);

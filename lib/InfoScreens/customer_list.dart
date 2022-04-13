@@ -328,10 +328,10 @@ class _CustomerListState extends State<CustomerList> {
                     DataTable2(
                         scrollController: _controller,
                         showCheckboxColumn: false,
-                        columnSpacing: 0,
+                        columnSpacing: 3,
                         horizontalMargin: 5,
                         bottomMargin: 5,
-                        minWidth: 1000,
+                        minWidth: 1100,
                         smRatio: 0.6,
                         lmRatio: 1.5,
                         sortColumnIndex: _sortColumnIndex,
@@ -339,15 +339,6 @@ class _CustomerListState extends State<CustomerList> {
                         onSelectAll: (val) =>
                             setState(() => _customersDataSource.selectAll(val)),
                         columns: [
-                          DataColumn2(
-                            label: const Text(
-                              'Full Name',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.M,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName + d.lastName, columnIndex, ascending),
-                          ),        
                           DataColumn2(
                             label: const Text(
                               'ID',
@@ -358,6 +349,15 @@ class _CustomerListState extends State<CustomerList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.id, columnIndex, ascending),
                           ),
+                          DataColumn2(
+                            label: const Text(
+                              'Full Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.M,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.firstName + d.lastName, columnIndex, ascending),
+                          ),  
                           DataColumn2(
                             label: const Text(
                               'Address',
