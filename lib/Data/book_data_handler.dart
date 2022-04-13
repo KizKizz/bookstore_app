@@ -561,12 +561,12 @@ class BookDatabase extends DataTableSource {
                                       ToggleSwitch(
                                         minWidth: 110,
                                         minHeight: 30,
-                                        borderColor: [
-                                          Theme.of(context).hintColor
-                                        ],
-                                        borderWidth: 1,
+                                        // borderColor: [
+                                        //   Theme.of(context).hintColor
+                                        // ],
+                                        // borderWidth: 1,
                                         initialLabelIndex: _statusRating,
-                                        cornerRadius: 50.0,
+                                        cornerRadius: 5,
                                         activeFgColor: Colors.white,
                                         inactiveBgColor: Colors.grey,
                                         inactiveFgColor: Colors.white,
@@ -1180,13 +1180,13 @@ Future<void> bookDataAdder(context) async {
                                           ToggleSwitch(
                                             minWidth: 110.0,
                                             minHeight: 30,
-                                            borderColor: [
-                                              Theme.of(context)
-                                                  .primaryColorLight
-                                            ],
-                                            borderWidth: 1.5,
+                                            // borderColor: [
+                                            //   Theme.of(context)
+                                            //       .hintColor
+                                            // ],
+                                            // borderWidth: 1.5,
                                             initialLabelIndex: _statusIndex,
-                                            cornerRadius: 50.0,
+                                            cornerRadius: 5,
                                             activeFgColor: Colors.white,
                                             inactiveBgColor: Colors.grey,
                                             inactiveFgColor: Colors.white,
