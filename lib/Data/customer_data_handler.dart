@@ -407,8 +407,14 @@ class CustomerDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: Center(
+                child: Text(
+                    '${curCustomer.firstName} ${curCustomer.lastName}\'s Info',
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: SingleChildScrollView(
                   child: Padding(
                       padding: const EdgeInsets.only(right: 16),
@@ -418,10 +424,6 @@ class CustomerDatabase extends DataTableSource {
                               child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                  '${curCustomer.firstName} ${curCustomer.lastName}\'s Info',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w700)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -748,18 +750,23 @@ class CustomerDatabase extends DataTableSource {
 //Add
 Future<void> customerDataAdder(context) async {
   Customer newCustomer =
-      Customer('', '', '', '', '', '', '', '', '', '', '', '', '');
+      Customer('', '', '', '', '', '', '', '', '', '', '0', '', '');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
+            titlePadding: const EdgeInsets.only(top: 10),
+            title: const Center(
+              child: Text('Add Customer',
+                  style: TextStyle(fontWeight: FontWeight.w700)),
+            ),
             contentPadding:
-                const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                const EdgeInsets.only(top: 10, left: 16, bottom: 10),
             content: SingleChildScrollView(
                 child: Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child: Container(
+                    child: SizedBox(
                       width: 400,
                       child: Row(
                         children: <Widget>[
@@ -767,8 +774,6 @@ Future<void> customerDataAdder(context) async {
                               child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Add Customer',
-                                  style: TextStyle(fontWeight: FontWeight.w700)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

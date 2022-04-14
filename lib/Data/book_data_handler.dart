@@ -280,18 +280,50 @@ class BookDatabase extends DataTableSource {
         DataCell(Text(book.sold)),
         if (book.sold.toLowerCase() == 'Available'.toLowerCase())
           DataCell(
-            Container(
-                padding: const EdgeInsets.only(right: 15),
-                child: const Icon(Icons.add_shopping_cart)),
+            Tooltip(
+              message: 'Add to Cart',
+              textStyle: const TextStyle(fontSize: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Theme.of(context).primaryColorLight),
+                color: Theme.of(context).cardColor),
+              waitDuration: const Duration(seconds: 1),
+              child: Container(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: const Icon(Icons.add_shopping_cart)),
+            ),
             onTap: () {
-              book.sold = 'Sold';
+              book.sold = '*In Cart';
               checkoutCartList.add(book);
               MenuItems.getItems(checkoutCartList);
               notifyListeners();
             },
           )
-        else
-          const DataCell(SizedBox())
+        else if (book.sold.toLowerCase() == '*In Cart'.toLowerCase())
+          DataCell(
+             Tooltip(
+                message: 'Remove from Cart',
+                textStyle: const TextStyle(fontSize: 15),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border:
+                        Border.all(color: Theme.of(context).primaryColorLight),
+                    color: Theme.of(context).cardColor),
+                waitDuration: const Duration(seconds: 1),
+                child: Container(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: Icon(Icons.remove_shopping_cart, color: Theme.of(context).hintColor)),
+             ),
+            onTap: () {
+              book.sold = 'Available';
+              checkoutCartList.remove(book);
+              MenuItems.getItems(checkoutCartList);
+              notifyListeners();
+            },
+          )
+          else 
+            const DataCell(SizedBox())
+          
       ],
     );
   }
@@ -340,8 +372,16 @@ class BookDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return _SystemPadding(
             child: AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: const Center(
+                child: Center(
+                  child: Text('Book Info',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700)),
+                ),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: Container(
                 width: 400,
                 constraints: const BoxConstraints(maxWidth: 400),
@@ -354,9 +394,6 @@ class BookDatabase extends DataTableSource {
                                 child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text('Book Info',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700)),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -677,22 +714,26 @@ Future<void> bookDataAdder(context) async {
                 }
                 //Build table
                 return AlertDialog(
+                  titlePadding: const EdgeInsets.only(top: 10),
+                  title: const Center(
+                    child: Text('Add Book',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700)),
+                  ),
                   contentPadding:
-                      const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                      const EdgeInsets.only(top: 10, left: 16, bottom: 10),
                   content: Container(
                       constraints: const BoxConstraints(minWidth: 400),
                       //padding: const EdgeInsets.only(right: 20),
                       child: SingleChildScrollView(
                           child: Padding(
                               padding: const EdgeInsets.only(right: 16),
-                              child: Row(children: <Widget>[
+                              child: Row(
+                                children: <Widget>[
                                 Expanded(
                                     child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    const Text('Add Book',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700)),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,

@@ -411,8 +411,13 @@ class OrderDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: Center(
+                child: Text('Order #${curOrder.orderNum} Info',
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16),
@@ -422,19 +427,6 @@ class OrderDatabase extends DataTableSource {
                           child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Order #${curOrder.orderNum} Info',
-                            style: const TextStyle(fontWeight: FontWeight.w700)),
-                          // for (var item in curOrder.allInfoHeaders)
-                          //   TextField(
-                          //       controller: TextEditingController()
-                          //         ..text = curOrder.headerToInfo(item),
-                          //       onChanged: (text) =>
-                          //           {curOrder.infoEdited(item, text)},
-                          //       autofocus: true,
-                          //       decoration: InputDecoration(
-                          //           labelText: item + ':', hintText: item)),
-
-                          //for (var item in curOrder.allInfoHeaders)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [

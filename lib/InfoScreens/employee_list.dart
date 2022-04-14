@@ -446,6 +446,16 @@ class _EmployeeListState extends State<EmployeeList> {
                           ),
                           DataColumn2(
                             label: const Text(
+                              'End Date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.terminationDate, columnIndex, ascending),
+                          ),
+                          DataColumn2(
+                            label: const Text(
                               'Job Position',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -454,9 +464,19 @@ class _EmployeeListState extends State<EmployeeList> {
                             onSort: (columnIndex, ascending) => _sort<String>(
                                 (d) => d.position, columnIndex, ascending),
                           ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Email',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.M,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.email, columnIndex, ascending),
+                          // ),
                           DataColumn2(
                             label: const Text(
-                              'Books\nSold',
+                              'Total Book\nSales',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
@@ -466,16 +486,16 @@ class _EmployeeListState extends State<EmployeeList> {
                                 columnIndex,
                                 ascending),
                           ),
-                          DataColumn2(
-                            label: const Text(
-                              'Description',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            size: ColumnSize.L,
-                            numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.description, columnIndex, ascending),
-                          ),
+                          // DataColumn2(
+                          //   label: const Text(
+                          //     'Description',
+                          //     style: TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          //   size: ColumnSize.L,
+                          //   numeric: false,
+                          //   onSort: (columnIndex, ascending) => _sort<String>(
+                          //       (d) => d.description, columnIndex, ascending),
+                          // ),
                         ],
                         rows: List<DataRow>.generate(
                             _employeesDataSource.rowCount,

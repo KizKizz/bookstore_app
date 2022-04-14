@@ -267,9 +267,11 @@ class EmployeeDatabase extends DataTableSource {
         DataCell(Text(employee.phoneNumber)),
         DataCell(Text(employee.dateOfBirth)),
         DataCell(Text(employee.hireDate)),
+        DataCell(Text(employee.terminationDate)),
         DataCell(Text(employee.position)),
+        //DataCell(Text(employee.email)),
         DataCell(Text(employee.numBookSold)),
-        DataCell(Text(employee.description)),
+        //DataCell(Text(employee.description)),
       ],
     );
   }
@@ -303,12 +305,18 @@ class EmployeeDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: Center(
+                child: Text(
+                    '${curEmployee.firstName} ${curEmployee.lastName}\'s Info',
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: SingleChildScrollView(
                   child: Padding(
                       padding: const EdgeInsets.only(right: 16),
-                      child: Container(
+                      child: SizedBox(
                         width: 400,
                         child: Row(
                           children: <Widget>[
@@ -316,10 +324,6 @@ class EmployeeDatabase extends DataTableSource {
                                 child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                    '${curEmployee.firstName} ${curEmployee.lastName}\'s Info',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700)),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -651,12 +655,17 @@ Future<void> employeeDataAdder(context) async {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
+            titlePadding: const EdgeInsets.only(top: 10),
+            title: const Center(
+              child: Text('Add Employee',
+                  style: TextStyle(fontWeight: FontWeight.w700)),
+            ),
             contentPadding:
-                const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                const EdgeInsets.only(top: 10, left: 16, bottom: 10),
             content: SingleChildScrollView(
                 child: Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child: Container(
+                    child: SizedBox(
                       width: 400,
                       child: Row(
                         children: <Widget>[
@@ -664,9 +673,6 @@ Future<void> employeeDataAdder(context) async {
                               child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Add Employee',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w700)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

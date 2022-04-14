@@ -23,6 +23,8 @@ int _customerInfoIndex = 0;
 int _shippingAddressIndex = 0;
 int orderNumber = 0;
 String curPaymentMethod = 'Cash';
+bool _isCurCustomer = false;
+int _isCurCustomerInfoEdited = 0;
 
 double subTotal = 0.0;
 double shippingCost = 0.0;
@@ -30,10 +32,10 @@ double subTotalTax = 0.0;
 double totalCost = 0.0;
 
 List<TextEditingController> priceControllers = [];
-List<TextEditingController> existingCustomerInfoControllers = [];
+List<TextEditingController> customerInfoControllers = [];
 List<String> checkoutPrices = [];
 Customer curOrderingCustomer =
-    Customer('', '', '', '', '', '', '', '', '', '', '', '', '');
+    Customer('', '', '', '', '', '', '', '', '', '', '0', '', '');
 Employee curSalesperson = Employee(
     '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
@@ -59,7 +61,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       MultiSplitViewController(weights: [0.65]);
 
   double _shippingInfoHeight = 330;
-  double _customerInfoHeight = 360;
   ShippingOptions? _curShippingOption = ShippingOptions.inPerson;
   final _searchCustomerController = TextEditingController();
   List<Customer> _searchCustomerList = [];
@@ -104,8 +105,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     //Text controllers
     priceControllers = List.generate(checkoutCartList.length,
         (i) => TextEditingController()..text = checkoutPrices[i]);
-    existingCustomerInfoControllers =
-        List.generate(11, (i) => TextEditingController());
+    customerInfoControllers = List.generate(11, (i) => TextEditingController());
+    int i = 0;
+    for (var value in curOrderingCustomer.allInfo) {
+      if (i < 11) {
+        customerInfoControllers[i].text = value;
+      }
+      i++;
+    }
   }
 
   @override
@@ -113,7 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // ignore: avoid_function_literals_in_foreach_calls
     priceControllers.forEach((c) => c.dispose());
     // ignore: avoid_function_literals_in_foreach_calls
-    existingCustomerInfoControllers.forEach((e) => e.dispose());
+    customerInfoControllers.forEach((e) => e.dispose());
     super.dispose();
   }
 
@@ -220,12 +227,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     subTotalTax = (9 / 100) * subTotal;
     totalCost = subTotal + subTotalTax + shippingCost;
 
-    //Info page height
-    if (_customerInfoIndex == 0) {
-      _customerInfoHeight = 400;
-    } else {
-      _customerInfoHeight = 360;
-    }
     //Shipping page height
     if (_curShippingOption == ShippingOptions.inStore ||
         _curShippingOption == ShippingOptions.inPerson) {
@@ -371,33 +372,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       children: [
                         ExpansionTile(
                           title: const Text(
-                            'Customer',
+                            'Customer Info',
                             style: TextStyle(fontSize: 20),
                           ),
                           //subtitle: Text('Trailing expansion arrow icon'),
                           initiallyExpanded: true,
                           children: <Widget>[
                             SizedBox(
-                              height: _customerInfoHeight,
+                              height: 420,
                               width: double.infinity,
                               child: Column(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        //color: Colors.amber,
-                                        child: Text('Billing Info:',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Theme.of(context)
-                                                    .hintColor)),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Container(
+                                  //       padding:
+                                  //           const EdgeInsets.only(left: 20),
+                                  //       //color: Colors.amber,
+                                  //       child: Text('Billing:',
+                                  //           style: TextStyle(
+                                  //               fontSize: 20,
+                                  //               color: Theme.of(context)
+                                  //                   .hintColor)),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   //Returned customer
                                   if (_customerInfoIndex == 0)
                                     Expanded(
@@ -447,16 +448,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 20,
                                                               right: 10),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  0],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText:
-                                                                'First Name*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                0],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'John',
+                                                          labelText:
+                                                              'First Name*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                    .firstName =
+                                                                text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                     Expanded(
                                                         child: Container(
@@ -465,16 +476,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 10,
                                                               right: 15),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  1],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText:
-                                                                'Last Name*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                1],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'Smith',
+                                                          labelText:
+                                                              'Last Name*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                    .lastName =
+                                                                text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                   ],
                                                 ),
@@ -492,15 +513,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 .width /
                                                             2),
                                                     child: TextFormField(
-                                                        controller:
-                                                            existingCustomerInfoControllers[
-                                                                3],
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          hintText: '',
-                                                          labelText:
-                                                              'Street Address*',
-                                                        )),
+                                                      controller:
+                                                          customerInfoControllers[
+                                                              3],
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        hintText:
+                                                            '1234 Main Street',
+                                                        labelText:
+                                                            'Street Address*',
+                                                      ),
+                                                      onChanged: (text) {
+                                                        setState(() {
+                                                          curOrderingCustomer
+                                                                  .streetAddress =
+                                                              text;
+                                                          _isCurCustomerInfoEdited +=
+                                                              1;
+                                                        });
+                                                      },
+                                                    ),
                                                   )),
                                                 ]),
                                                 //Address 2
@@ -516,16 +548,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 20,
                                                               right: 10),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  4],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText:
-                                                                'Suite / Apt #',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                4],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'Apt 123',
+                                                          labelText:
+                                                              'Suite / Apt #',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                    .suiteNum =
+                                                                text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                     Expanded(
                                                         child: Container(
@@ -534,15 +576,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 10,
                                                               right: 15),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  5],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText: 'City*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                5],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'West Side',
+                                                          labelText: 'City*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                .city = text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                   ],
                                                 ),
@@ -558,15 +609,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 20,
                                                               right: 10),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  6],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText: 'State*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                6],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'CA',
+                                                          labelText: 'State*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                .state = text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                     Expanded(
                                                         child: Container(
@@ -575,16 +635,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 10,
                                                               right: 15),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  7],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText:
-                                                                'Postal Code*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                7],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: '1234',
+                                                          labelText:
+                                                              'Postal Code*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          curOrderingCustomer
+                                                              .zipCode = text;
+                                                          setState(() {
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                   ],
                                                 ),
@@ -600,16 +669,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 20,
                                                               right: 10),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  8],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText:
-                                                                'Phone Number*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                8],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText:
+                                                              '(123) 456-789',
+                                                          labelText:
+                                                              'Phone Number*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                    .phoneNumber =
+                                                                text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                     Expanded(
                                                         child: Container(
@@ -618,15 +698,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               left: 10,
                                                               right: 15),
                                                       child: TextFormField(
-                                                          controller:
-                                                              existingCustomerInfoControllers[
-                                                                  2],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            //icon: Icon(Icons.person),
-                                                            hintText: '',
-                                                            labelText: 'ID*',
-                                                          )),
+                                                        controller:
+                                                            customerInfoControllers[
+                                                                2],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          //icon: Icon(Icons.person),
+                                                          hintText: 'SMIT1234',
+                                                          labelText: 'ID*',
+                                                        ),
+                                                        onChanged: (text) {
+                                                          setState(() {
+                                                            curOrderingCustomer
+                                                                .id = text;
+                                                            _isCurCustomerInfoEdited +=
+                                                                1;
+                                                          });
+                                                        },
+                                                      ),
                                                     )),
                                                   ],
                                                 ),
@@ -643,16 +732,207 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 .width /
                                                             2),
                                                     child: TextFormField(
-                                                        controller:
-                                                            existingCustomerInfoControllers[
-                                                                9],
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          hintText: '',
-                                                          labelText: 'Email',
-                                                        )),
+                                                      controller:
+                                                          customerInfoControllers[
+                                                              9],
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        hintText:
+                                                            'example@domain.com',
+                                                        labelText: 'Email',
+                                                      ),
+                                                      onChanged: (text) {
+                                                        setState(() {
+                                                          curOrderingCustomer
+                                                              .email = text;
+                                                          _isCurCustomerInfoEdited +=
+                                                              1;
+                                                        });
+                                                      },
+                                                    ),
                                                   )),
                                                 ]),
+
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 20,
+                                                                left: 20,
+                                                                right: 10),
+                                                        height: 45,
+                                                        width: 50,
+                                                        child: ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              primary: Theme.of(
+                                                                      context)
+                                                                  .hintColor,
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      bottom:
+                                                                          9)),
+                                                          child: const Text(
+                                                            'Clear Fields',
+                                                            textAlign: TextAlign
+                                                                .justify,
+                                                            style: TextStyle(
+                                                                fontSize: 15),
+                                                          ),
+                                                          onPressed: customerInfoControllers
+                                                                  .every((element) =>
+                                                                      element
+                                                                          .text
+                                                                          .isEmpty ||
+                                                                      element.text ==
+                                                                          '0')
+                                                              ? null
+                                                              : () {
+                                                                  setState(() {
+                                                                    for (int i =
+                                                                            0;
+                                                                        i < customerInfoControllers.length;
+                                                                        i++) {
+                                                                      customerInfoControllers[
+                                                                              i]
+                                                                          .text = '';
+                                                                    }
+                                                                    _isCurCustomerInfoEdited =
+                                                                        0;
+                                                                    _isCurCustomer =
+                                                                        false;
+                                                                  });
+                                                                },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    if (_isCurCustomer)
+                                                      Expanded(
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 20,
+                                                                  left: 10,
+                                                                  right: 15),
+                                                          height: 45,
+                                                          child: ElevatedButton(
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                                    // primary: Theme.of(
+                                                                    //         context)
+                                                                    //     .hintColor,
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            9)),
+                                                            child: const Text(
+                                                              'Save Customer Info',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
+                                                            onPressed:
+                                                                _isCurCustomerInfoEdited >
+                                                                            0 &&
+                                                                        _isCurCustomer
+                                                                    ? () {
+                                                                        Customer
+                                                                            _curCustomerFromData =
+                                                                            mainCustomerListCopy.firstWhere((element) =>
+                                                                                element.id ==
+                                                                                curOrderingCustomer.id);
+                                                                        _curCustomerFromData.firstName =
+                                                                            curOrderingCustomer.firstName;
+                                                                        _curCustomerFromData.lastName =
+                                                                            curOrderingCustomer.lastName;
+                                                                        _curCustomerFromData.id =
+                                                                            curOrderingCustomer.id;
+                                                                        _curCustomerFromData.streetAddress =
+                                                                            curOrderingCustomer.streetAddress;
+                                                                        _curCustomerFromData.suiteNum =
+                                                                            curOrderingCustomer.suiteNum;
+                                                                        _curCustomerFromData.city =
+                                                                            curOrderingCustomer.city;
+                                                                        _curCustomerFromData.state =
+                                                                            curOrderingCustomer.state;
+                                                                        _curCustomerFromData.zipCode =
+                                                                            curOrderingCustomer.zipCode;
+                                                                        _curCustomerFromData.phoneNumber =
+                                                                            curOrderingCustomer.phoneNumber;
+                                                                        _curCustomerFromData.email =
+                                                                            curOrderingCustomer.email;
+                                                                        setState(
+                                                                            () {
+                                                                          _isCurCustomerInfoEdited =
+                                                                              0;
+                                                                        });
+                                                                      }
+                                                                    : null,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (!_isCurCustomer)
+                                                      Expanded(
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 20,
+                                                                  left: 10,
+                                                                  right: 15),
+                                                          height: 45,
+                                                          child: ElevatedButton(
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                                    // primary: Theme.of(
+                                                                    //         context)
+                                                                    //     .hintColor,
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            9)),
+                                                            child: const Text(
+                                                              'Save New Customer Info',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
+                                                            onPressed: _isCurCustomerInfoEdited >
+                                                                        0 &&
+                                                                    !_isCurCustomer &&
+                                                                    curOrderingCustomer
+                                                                            .id
+                                                                            .length ==
+                                                                        8
+                                                                ? () {
+                                                                    setState(
+                                                                        () {
+                                                                      mainCustomerList
+                                                                          .add(
+                                                                              curOrderingCustomer);
+                                                                      mainCustomerListCopy
+                                                                          .add(
+                                                                              curOrderingCustomer);
+                                                                      _isCurCustomerInfoEdited =
+                                                                          0;
+                                                                      _isCurCustomer =
+                                                                          true;
+                                                                    });
+                                                                  }
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                )
                                               ],
                                             ),
                                             //Search results
@@ -741,52 +1021,52 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 dense: true,
                                                                 //contentPadding: EdgeInsets.symmetric(vertical: 0),
                                                                 onTap: () {
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               0]
                                                                           .text =
                                                                       customer
                                                                           .firstName;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               1]
                                                                           .text =
                                                                       customer
                                                                           .lastName;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               2]
                                                                           .text =
                                                                       customer
                                                                           .id;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               3]
                                                                           .text =
                                                                       customer
                                                                           .streetAddress;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               4]
                                                                           .text =
                                                                       customer
                                                                           .suiteNum;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               5]
                                                                           .text =
                                                                       customer
                                                                           .city;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               6]
                                                                           .text =
                                                                       customer
                                                                           .state;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               7]
                                                                           .text =
                                                                       customer
                                                                           .zipCode;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               8]
                                                                           .text =
                                                                       customer
                                                                           .phoneNumber;
-                                                                  existingCustomerInfoControllers[
+                                                                  customerInfoControllers[
                                                                               9]
                                                                           .text =
                                                                       customer
@@ -794,6 +1074,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                                                   curOrderingCustomer =
                                                                       customer;
+                                                                  _isCurCustomer =
+                                                                      true;
+                                                                  _isCurCustomerInfoEdited =
+                                                                      0;
                                                                   _searchCustomerController
                                                                       .clear();
 
@@ -1003,7 +1287,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         borderWidth: 1.0,
                                         initialLabelIndex:
                                             _shippingAddressIndex,
-                                        cornerRadius: 50.0,
+                                        cornerRadius: 5,
                                         activeFgColor: Colors.white,
                                         inactiveBgColor: Colors.grey,
                                         inactiveFgColor: Colors.white,
@@ -1250,7 +1534,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 left: 20, right: 15),
                                             child: TextFormField(
                                                 // controller:
-                                                //     existingCustomerInfoControllers[
+                                                //     customerInfoControllers[
                                                 //         8],
                                                 decoration:
                                                     const InputDecoration(
@@ -1272,7 +1556,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 left: 20, right: 15),
                                             child: TextFormField(
                                                 // controller:
-                                                //     existingCustomerInfoControllers[
+                                                //     customerInfoControllers[
                                                 //         8],
                                                 decoration:
                                                     const InputDecoration(
@@ -1293,7 +1577,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 left: 20, right: 10),
                                             child: TextFormField(
                                                 // controller:
-                                                //     existingCustomerInfoControllers[
+                                                //     customerInfoControllers[
                                                 //         8],
                                                 decoration:
                                                     const InputDecoration(
@@ -1308,7 +1592,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 left: 10, right: 10),
                                             child: TextFormField(
                                                 // controller:
-                                                //     existingCustomerInfoControllers[
+                                                //     customerInfoControllers[
                                                 //         2],
                                                 decoration:
                                                     const InputDecoration(
@@ -1323,7 +1607,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 left: 10, right: 15),
                                             child: TextFormField(
                                                 // controller:
-                                                //     existingCustomerInfoControllers[
+                                                //     customerInfoControllers[
                                                 //         2],
                                                 decoration:
                                                     const InputDecoration(
@@ -1637,6 +1921,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           onPressed: () {
                             setState(() {
+                              _isCurCustomer = false;
                               subTotal = 0.00;
                               for (var book in checkoutCartList) {
                                 book.sold = 'Available';
@@ -1646,6 +1931,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               checkoutPrices.clear();
                               priceControllers.clear();
                               MenuItems.booksMenu.clear();
+                              customerInfoControllers.clear();
+                              curOrderingCustomer = Customer('', '', '', '', '',
+                                  '', '', '', '', '', '0', '', '');
 
                               context.read<checkoutNotif>().checkoutOff();
                             });
@@ -1670,6 +1958,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             setState(() {
                               //Add database here
                               subTotal = 0.00;
+
                               //print('checkout $orderNumber');
 
                               //Update Order page
@@ -1691,7 +1980,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   _purchasedDates = '';
                               int _numOfBook = 0;
                               for (var book in checkoutCartList) {
-                                //book.sold = 'Available';
+                                book.sold = 'Sold';
                                 _numOfBook++;
 
                                 if (_allBookIDs.isNotEmpty) {
@@ -1768,10 +2057,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               //General updates
                               mainOrderList.add(newOrder);
                               mainOrderListCopy.add(newOrder);
+
                               curSalesperson.numBookSold =
                                   (int.parse(curSalesperson.numBookSold) +
                                           _numOfBook)
                                       .toString();
+
                               curOrderingCustomer.totalPurchases = (int.parse(
                                           curOrderingCustomer.totalPurchases) +
                                       _numOfBook)
@@ -1779,21 +2070,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               curOrderingCustomer.bookPurchased = _bookNames;
                               curOrderingCustomer.purchasedDates =
                                   _purchasedDates;
-                              final _curCustomerFromData =
-                                  mainCustomerListCopy.firstWhere((element) =>
-                                      element.id == curOrderingCustomer.id);
-                              _curCustomerFromData.totalPurchases =
-                                  curOrderingCustomer.totalPurchases;
-                              _curCustomerFromData.bookPurchased =
-                                  curOrderingCustomer.bookPurchased;
-                              _curCustomerFromData.purchasedDates =
-                                  curOrderingCustomer.purchasedDates;
+
+                              if (_isCurCustomer) {
+                                final _curCustomerFromData =
+                                    mainCustomerListCopy.firstWhere((element) =>
+                                        element.id == curOrderingCustomer.id);
+                                _curCustomerFromData.totalPurchases =
+                                    curOrderingCustomer.totalPurchases;
+                                _curCustomerFromData.bookPurchased =
+                                    curOrderingCustomer.bookPurchased;
+                                _curCustomerFromData.purchasedDates =
+                                    curOrderingCustomer.purchasedDates;
+                              } else {}
 
                               _curShippingOption = ShippingOptions.inStore;
                               checkoutCartList.clear();
                               checkoutPrices.clear();
                               priceControllers.clear();
                               MenuItems.booksMenu.clear();
+                              curOrderingCustomer = Customer('', '', '', '', '',
+                                  '', '', '', '', '', '0', '', '');
                               //orderNumber++;
 
                               context.read<checkoutNotif>().checkoutOff();

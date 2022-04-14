@@ -554,7 +554,7 @@ class _BookListState extends State<BookList> {
                           ),
                           DataColumn2(
                             label: const Text(
-                              'Sold\nStatus',
+                              'Status',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
@@ -563,9 +563,12 @@ class _BookListState extends State<BookList> {
                                 (d) => d.sold, columnIndex, ascending),
                           ),
                           const DataColumn2(
-                            label: Text(
-                              'Add\nTo Cart',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            label: Padding(
+                              padding: EdgeInsets.only(right: 15),
+                              child: Text(
+                                'Cart', 
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
                             size: ColumnSize.S,
                             numeric: true,

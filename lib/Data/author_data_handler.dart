@@ -259,12 +259,18 @@ class AuthorDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return _SystemPadding(
             child: AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: Center(
+                child: Text(
+                    '${curAuthor.firstName} ${curAuthor.lastName}\'s Info',
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: SingleChildScrollView(
                   child: Padding(
                       padding: const EdgeInsets.only(right: 16),
-                      child: Container(
+                      child: SizedBox(
                         width: 400,
                         child: Row(
                           children: <Widget>[
@@ -272,9 +278,6 @@ class AuthorDatabase extends DataTableSource {
                               child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('${curAuthor.firstName} ${curAuthor.lastName}\'s Info',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700)),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [

@@ -352,8 +352,13 @@ class SalesRecordDatabase extends DataTableSource {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: const Center(
+                child: Text('Sale Info',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
               contentPadding:
-                  const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16),
@@ -363,10 +368,6 @@ class SalesRecordDatabase extends DataTableSource {
                           child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                              'Sale Info',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700)),
                           for (var item in curSalesRecord.allInfoHeaders)
                             TextField(
                                 controller: TextEditingController()
