@@ -66,3 +66,63 @@ Future<void> readSalesData(File file) async {
     convertSalesRecordData(jsonResponse);
   }
 }
+
+//Web data load
+void webDataPreload(){
+  readBookDataWeb(bookDataJson);
+  readAuthorDataWeb(authorDataJson);
+  readCustomerDataWeb(customerDataJson);
+  readEmployeeDataWeb(employeeDataJson);
+  readOrderDataWeb(orderDataJson);
+  readSalesDataWeb(salesRecordDataJson);
+}
+
+void readBookDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertBookData(jsonResponse);
+  }
+}
+
+void readAuthorDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertauthorData(jsonResponse);
+  } else {
+    getAuthorsFromBook();
+  }
+}
+
+void readCustomerDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertCustomerData(jsonResponse);
+  }
+}
+
+void readEmployeeDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertEmployeeData(jsonResponse);
+  }
+}
+
+void readOrderDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertOrderData(jsonResponse);
+  }
+}
+
+void readSalesDataWeb(File file) async {
+  String contents = await file.readAsString();
+  if (contents.isNotEmpty) {
+    var jsonResponse = jsonDecode(contents);
+    convertSalesRecordData(jsonResponse);
+  }
+}
