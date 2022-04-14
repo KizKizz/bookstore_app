@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Data/data_preloader.dart';
 import 'login_page.dart';
 import 'main_page.dart';
 
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     loginCheck();
+    dataPreload();
   }
 
   //Loading counter value on start

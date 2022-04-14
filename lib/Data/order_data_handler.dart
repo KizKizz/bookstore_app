@@ -697,7 +697,7 @@ class OrderDatabase extends DataTableSource {
                                           style:
                                               const TextStyle(fontSize: 14),
                                         ),
-                                        trailing: const Icon(Icons.clear),
+                                        // trailing: const Icon(Icons.clear),
                                         isThreeLine: true,
                                       ),
                                     ),

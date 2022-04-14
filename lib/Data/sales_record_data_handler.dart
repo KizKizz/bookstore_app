@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-
 final File salesRecordDataJson =
     File('assets/jsondatabase/sales_record_data.json');
 List<SalesRecord> mainSalesRecordList = [];
@@ -228,7 +227,7 @@ class SalesRecordDatabase extends DataTableSource {
       [sortedByName = true,
       this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
-      salesRecords = mainSalesRecordList;
+    salesRecords = mainSalesRecordList;
     if (sortedByName) {
       sort((d) => d.orderDate, false);
     }
@@ -376,8 +375,7 @@ class SalesRecordDatabase extends DataTableSource {
                                     {curSalesRecord.infoEdited(item, text)},
                                 autofocus: false,
                                 decoration: InputDecoration(
-                                    labelText: item + ':', hintText: item)
-                            ),
+                                    labelText: item + ':', hintText: item)),
                         ],
                       ))
                     ],
@@ -395,13 +393,11 @@ class SalesRecordDatabase extends DataTableSource {
                     onPressed: () {
                       int _salesRecordMatchIndex =
                           mainSalesRecordListCopy.indexWhere((element) =>
-                              element.bookId ==
-                              curSalesRecord.bookId);
+                              element.bookId == curSalesRecord.bookId);
                       //debugPrint('curafter: ${_customerMatchIndex}');
                       for (var item in curSalesRecord.allInfoHeaders) {
                         curSalesRecord.setInfo(item);
                       }
-
 
                       if (_salesRecordMatchIndex >= 0) {
                         mainSalesRecordListCopy[_salesRecordMatchIndex] =

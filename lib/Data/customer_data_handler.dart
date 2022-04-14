@@ -689,9 +689,9 @@ class CustomerDatabase extends DataTableSource {
                                                     style: const TextStyle(
                                                         fontSize: 14),
                                                   ),
-                                                  trailing:
-                                                      const Icon(Icons.clear),
-                                                  isThreeLine: true,
+                                                  // trailing:
+                                                  //     const Icon(Icons.clear),
+                                                  isThreeLine: false,
                                                 ),
                                               ),
                                             ),
