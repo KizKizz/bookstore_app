@@ -10,6 +10,20 @@ import '../main_appbar.dart';
 
 final searchEmployeeController = TextEditingController();
 //String _searchDropDownVal = 'Title';
+final List<String> _searchDropDownVal = [
+    'All Fields',
+    'First Name',
+    'Last Name',
+    'ID',
+    'Address',
+    'Phone Number',
+    'Date of Birth',
+    'Hire Date',
+    'Position',
+    'Books Sold',
+    'Description',
+  ];
+  late String curSearchChoice = _searchDropDownVal[0];
 
 class EmployeeList extends StatefulWidget {
   const EmployeeList({Key? key}) : super(key: key);
@@ -27,20 +41,7 @@ class _EmployeeListState extends State<EmployeeList> {
   List<Employee> searchEmployeeList = [];
   final List<Employee> preSearchList = mainEmployeeListCopy;
 
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'First Name',
-    'Last Name',
-    'ID',
-    'Address',
-    'Phone Number',
-    'Date of Birth',
-    'Hire Date',
-    'Position',
-    'Books Sold',
-    'Description',
-  ];
-  late String curSearchChoice;
+  
 
   @override
   void didChangeDependencies() {
@@ -48,7 +49,6 @@ class _EmployeeListState extends State<EmployeeList> {
     if (!_initialized) {
       setState(() {});
       _employeesDataSource = EmployeeDatabase(context);
-      curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _employeesDataSource.addListener(() {
         setState(() {});
@@ -244,7 +244,7 @@ class _EmployeeListState extends State<EmployeeList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Employee Data'),
+          title: const Text('Employees', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(

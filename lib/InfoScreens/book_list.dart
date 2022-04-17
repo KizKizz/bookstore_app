@@ -13,8 +13,23 @@ import 'package:provider/provider.dart';
 import '../main_appbar.dart';
 import '../main_page.dart';
 
+final List<String> _searchDropDownVal = [
+  'All Fields',
+  'Title',
+  'ID',
+  'Author',
+  'Publisher',
+  'Publish Date',
+  'Edition',
+  'Cost',
+  'Retail Price',
+  'Condition',
+  'Sold Status'
+];
 final searchbookController = TextEditingController();
 int checkoutDropDownRemoveIndex = -1;
+late String curBookSearchChoice = _searchDropDownVal[0];
+List<Book> searchBookList = [];
 
 //String _searchDropDownVal = 'Title';
 
@@ -31,23 +46,7 @@ class _BookListState extends State<BookList> {
   late BookDatabase _booksDataSource;
   bool _initialized = false;
   final ScrollController _controller = ScrollController();
-  List<Book> searchBookList = [];
   final List<Book> preSearchList = mainBookListCopy;
-
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'Title',
-    'ID',
-    'Author',
-    'Publisher',
-    'Publish Date',
-    'Edition',
-    'Cost',
-    'Retail Price',
-    'Condition',
-    'Sold Status'
-  ];
-  late String curSearchChoice;
 
   @override
   void didChangeDependencies() {
@@ -55,7 +54,7 @@ class _BookListState extends State<BookList> {
     if (!_initialized) {
       setState(() {});
       _booksDataSource = BookDatabase(context);
-      curSearchChoice = _searchDropDownVal[0];
+    //  curBookSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _booksDataSource.addListener(() {
         setState(() {});
@@ -88,7 +87,7 @@ class _BookListState extends State<BookList> {
         setState(() {
           searchBookList = [];
           Iterable<Book> foundBook = [];
-          if (curSearchChoice == 'All Fields') {
+          if (curBookSearchChoice == 'All Fields') {
             foundBook = mainBookListCopy.where((element) =>
                 element.title.toLowerCase().contains(text.toLowerCase()) ||
                 element.id.toLowerCase().contains(text.toLowerCase()) ||
@@ -109,13 +108,13 @@ class _BookListState extends State<BookList> {
                     .contains(text.toLowerCase()) ||
                 element.condition.toLowerCase().contains(text.toLowerCase()) ||
                 element.sold.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Title') {
+          } else if (curBookSearchChoice == 'Title') {
             foundBook = mainBookListCopy.where((element) =>
                 element.title.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'ID') {
+          } else if (curBookSearchChoice == 'ID') {
             foundBook = mainBookListCopy.where((element) =>
                 element.id.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Author') {
+          } else if (curBookSearchChoice == 'Author') {
             foundBook = mainBookListCopy.where((element) => element
                 .authorFirstName
                 .toLowerCase()
@@ -123,25 +122,25 @@ class _BookListState extends State<BookList> {
                 element.authorLastName
                     .toLowerCase()
                     .contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Publisher') {
+          } else if (curBookSearchChoice == 'Publisher') {
             foundBook = mainBookListCopy.where((element) =>
                 element.publisher.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Publish Date') {
+          } else if (curBookSearchChoice == 'Publish Date') {
             foundBook = mainBookListCopy.where((element) =>
                 element.publishDate.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Edition') {
+          } else if (curBookSearchChoice == 'Edition') {
             foundBook = mainBookListCopy.where((element) =>
                 element.edition.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Cost') {
+          } else if (curBookSearchChoice == 'Cost') {
             foundBook = mainBookListCopy.where((element) =>
                 element.cost.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Retail Price') {
+          } else if (curBookSearchChoice == 'Retail Price') {
             foundBook = mainBookListCopy.where((element) =>
                 element.retailPrice.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Condition') {
+          } else if (curBookSearchChoice == 'Condition') {
             foundBook = mainBookListCopy.where((element) =>
                 element.condition.toLowerCase().contains(text.toLowerCase()));
-          } else if (curSearchChoice == 'Sold Status') {
+          } else if (curBookSearchChoice == 'Sold Status') {
             foundBook = mainBookListCopy.where((element) =>
                 element.sold.toLowerCase().contains(text.toLowerCase()));
           }
@@ -215,7 +214,7 @@ class _BookListState extends State<BookList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Book Data'),
+          title: const Text('Books', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(
@@ -280,11 +279,11 @@ class _BookListState extends State<BookList> {
                     color: Theme.of(context).canvasColor,
                   ),
                   dropdownElevation: 2,
-                  value: curSearchChoice,
+                  value: curBookSearchChoice,
                   dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
-                      curSearchChoice = newValue!;
+                      curBookSearchChoice = newValue!;
                     });
                   },
                 )),

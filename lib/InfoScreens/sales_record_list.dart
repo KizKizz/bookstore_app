@@ -9,6 +9,19 @@ import '../main_appbar.dart';
 
 final searchSalesRecordController = TextEditingController();
 //String _searchDropDownVal = 'Title';
+final List<String> _searchDropDownVal = [
+    'All Fields',
+    'Book Title',
+    'Book ID',
+    'Customer Name',
+    'Customer ID',
+    'Salesperson Name',
+    'Salesperson ID',
+    'Sold Price',
+    'Order Date',
+    'Delivery Date',
+  ];
+  late String _curSearchChoice = _searchDropDownVal[0];
 
 class SalesRecordList extends StatefulWidget {
   const SalesRecordList({Key? key}) : super(key: key);
@@ -26,27 +39,14 @@ class _SalesRecordListState extends State<SalesRecordList> {
   List<SalesRecord> searchSalesRecord = [];
   final List<SalesRecord> preSearchList = mainSalesRecordListCopy;
 
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'Book Title',
-    'Book ID',
-    'Customer Name',
-    'Customer ID',
-    'Salesperson Name',
-    'Salesperson ID',
-    'Sold Price',
-    'Order Date',
-    'Delivery Date',
-  ];
-  late String _curSearchChoice;
+  
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
       setState(() {});
-      _salesRecordDataSource = SalesRecordDatabase(context);
-      _curSearchChoice = _searchDropDownVal[0];
+      _salesRecordDataSource = SalesRecordDatabase(context);     
       _initialized = true;
       _salesRecordDataSource.addListener(() {
         setState(() {});
@@ -194,7 +194,7 @@ class _SalesRecordListState extends State<SalesRecordList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Sales Records'),
+          title: const Text('Sales Records', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(
@@ -367,8 +367,8 @@ class _SalesRecordListState extends State<SalesRecordList> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.soldPrice, columnIndex, ascending),
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.soldPrice), columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

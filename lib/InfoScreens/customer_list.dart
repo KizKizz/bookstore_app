@@ -10,6 +10,16 @@ import '../main_appbar.dart';
 
 final searchCustomerController = TextEditingController();
 //String _searchDropDownVal = 'Title';
+final List<String> _searchDropDownVal = [
+    'All Fields',
+    'First Name',
+    'Last Name',
+    'ID',
+    'Address',
+    'Phone Number',
+    'Total Purchases',
+  ];
+  late String _curSearchChoice = _searchDropDownVal[0];
 
 class CustomerList extends StatefulWidget {
   const CustomerList({Key? key}) : super(key: key);
@@ -27,16 +37,7 @@ class _CustomerListState extends State<CustomerList> {
   List<Customer> searchCustomerList = [];
   final List<Customer> preSearchList = mainCustomerListCopy;
 
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'First Name',
-    'Last Name',
-    'ID',
-    'Address',
-    'Phone Number',
-    'Total Purchases',
-  ];
-  late String _curSearchChoice;
+  
 
   @override
   void didChangeDependencies() {
@@ -44,7 +45,6 @@ class _CustomerListState extends State<CustomerList> {
     if (!_initialized) {
       setState(() {});
       _customersDataSource = CustomerDatabase(context);
-      _curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _customersDataSource.addListener(() {
         setState(() {});
@@ -197,7 +197,7 @@ class _CustomerListState extends State<CustomerList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Customer Data'),
+          title: const Text('Customers', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(

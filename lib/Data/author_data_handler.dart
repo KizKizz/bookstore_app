@@ -3,12 +3,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bookstore_project/InfoScreens/book_list.dart';
 import 'package:bookstore_project/login_page.dart';
+import 'package:bookstore_project/main_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/book_data_handler.dart';
+import 'package:provider/provider.dart';
+
+import '../state_provider.dart';
 
 final File authorDataJson = File('assets/jsondatabase/author_data.json');
 
@@ -203,7 +208,7 @@ class AuthorDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                if (isManager) _showDialog(context, author),
+                _showDialog(context, author),
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -257,8 +262,8 @@ class AuthorDatabase extends DataTableSource {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return _SystemPadding(
-            child: AlertDialog(
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
               title: Center(
                 child: Text(
@@ -275,7 +280,7 @@ class AuthorDatabase extends DataTableSource {
                         child: Row(
                           children: <Widget>[
                             Expanded(
-                              child: Column(
+                                child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Row(
@@ -285,11 +290,11 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.firstName,
-                                          onChanged: (text) => {
-                                               curAuthor.firstName = text
-                                              },
+                                          onChanged: (text) =>
+                                              {curAuthor.firstName = text},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: '',
@@ -300,11 +305,11 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.lastName,
-                                          onChanged: (text) => {
-                                                curAuthor.lastName = text
-                                              },
+                                          onChanged: (text) =>
+                                              {curAuthor.lastName = text},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: '',
@@ -320,6 +325,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.id,
                                           onChanged: (text) =>
@@ -334,6 +340,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearBirth,
                                           onChanged: (text) =>
@@ -348,6 +355,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 20),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearDead,
                                           onChanged: (text) =>
@@ -367,6 +375,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 0),
                                       child: TextFormField(
+                                        enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.description,
                                           onChanged: (text) =>
@@ -379,17 +388,131 @@ class AuthorDatabase extends DataTableSource {
                                     )),
                                   ],
                                 ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Container(
+                                            padding:
+                                                const EdgeInsets.only(top: 15),
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Theme.of(context)
+                                                        .buttonTheme.colorScheme!.background,
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 9)),
+                                                child: Text(
+                                                  'Books From This Author',
+                                                  textAlign: TextAlign.justify,
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .button!
+                                                          .color),
+                                                ),
+                                                onPressed: () {
+                                                  setState(
+                                                    () {
+                                                      if (Provider.of<
+                                                                  checkoutNotif>(
+                                                              context,
+                                                              listen: false)
+                                                          .isCheckout) {
+                                                        selectedIndex = 1;
+                                                      } else {
+                                                        selectedIndex = 0;
+                                                      }
+
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        PageRouteBuilder(
+                                                          pageBuilder: (context,
+                                                                  animation1,
+                                                                  animation2) =>
+                                                              const MainPage(),
+                                                          // transitionDuration: Duration.zero,
+                                                          // reverseTransitionDuration:
+                                                          //     Duration.zero,
+                                                        ),
+                                                      );
+
+                                                      //Search and list books from curAuthor
+                                                      curBookSearchChoice =
+                                                          'All Fields';
+                                                      searchbookController
+                                                          .text = curAuthor
+                                                              .firstName +
+                                                          ' ' +
+                                                          curAuthor.lastName +
+                                                          ' ' +
+                                                          curAuthor.id;
+                                                      searchBookList = [];
+                                                      Iterable<Book> foundBook =
+                                                          [];
+                                                      foundBook = mainBookListCopy.where((element) =>
+                                                        element.authorFirstName.toLowerCase().contains(curAuthor.firstName.toLowerCase()) ||
+                                                        element.authorLastName.toLowerCase().contains(curAuthor.lastName.toLowerCase()) ||
+                                                        element.authorID.toLowerCase().contains(curAuthor.id.toLowerCase())
+                                                        );
+                                                      if (foundBook
+                                                          .isNotEmpty) {
+                                                        for (var book
+                                                            in foundBook) {
+                                                          Book tempBook = Book(
+                                                              book.title,
+                                                              book.id,
+                                                              book.authorFirstName,
+                                                              book.authorLastName,
+                                                              book.authorID,
+                                                              book.publisher,
+                                                              book.publishDate,
+                                                              book.edition,
+                                                              book.cost,
+                                                              book.retailPrice,
+                                                              book.condition,
+                                                              book.sold);
+                                                          searchBookList
+                                                              .add(tempBook);
+                                                        }
+                                                          searchHelper(context,
+                                                                  searchBookList)
+                                                              .then((_) {
+                                                            setState(() {});
+                                                            //debugPrint('test ${mainBookList.toString()}');
+                                                          });
+                                                      } else {
+                                                          searchHelper(context,
+                                                                  searchBookList)
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                      }
+                                                    },
+                                                  );
+                                                }))),
+                                  ],
+                                ),
                               ],
                             ))
                           ],
                         ),
                       ))),
               actions: <Widget>[
+                if (!isManager)
+                ElevatedButton(
+                      child: const Text('CLOSE'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
@@ -411,8 +534,8 @@ class AuthorDatabase extends DataTableSource {
                       Navigator.pop(context);
                     })
               ],
-            ),
-          );
+            );
+          });
         });
   }
 }
@@ -482,8 +605,8 @@ class AuthorDatabase extends DataTableSource {
 //JSON Helper
 void convertauthorData(var jsonResponse) {
   for (var b in jsonResponse) {
-    Author author = Author(b['firstName'], b['lastName'], b['id'], b['yearBirth'],
-        b['yearDead'], b['description']);
+    Author author = Author(b['firstName'], b['lastName'], b['id'],
+        b['yearBirth'], b['yearDead'], b['description']);
     mainAuthorList.add(author);
     mainAuthorListCopy.add(author);
   }
@@ -510,8 +633,7 @@ Future<void> getAuthorsFromBook() async {
     }
     _authorIDs = _authorIDs.toSet().toList();
     for (var author in mainAuthorList) {
-      final index =
-          _authorIDs.indexWhere((element) => element == author.id);
+      final index = _authorIDs.indexWhere((element) => element == author.id);
       if (index >= 0) {
         _authorIDs.removeAt(index);
       }

@@ -9,6 +9,16 @@ import '../main_appbar.dart';
 
 bool showBooks = false;
 final searchAuthorController = TextEditingController();
+final List<String> _searchDropDownVal = [
+  'All Fields',
+  'First Name',
+  'Last Name',
+  'ID',
+  'Year of Birth',
+  'Year of Dead',
+  'Description',
+];
+late String _curSearchChoice = _searchDropDownVal[0];
 
 class AuthorList extends StatefulWidget {
   const AuthorList({Key? key}) : super(key: key);
@@ -26,16 +36,7 @@ class _AuthorListState extends State<AuthorList> {
   List<Author> searchAuthorList = [];
   final List<Author> preSearchList = mainAuthorListCopy;
 
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'First Name',
-    'Last Name',
-    'ID',
-    'Year of Birth',
-    'Year of Dead',
-    'Description',
-  ];
-  late String _curSearchChoice;
+  
 
   @override
   void didChangeDependencies() {
@@ -43,7 +44,6 @@ class _AuthorListState extends State<AuthorList> {
     if (!_initialized) {
       setState(() {});
       _authorsDataSource = AuthorDatabase(context);
-      _curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _authorsDataSource.addListener(() {
         setState(() {});
@@ -167,7 +167,7 @@ class _AuthorListState extends State<AuthorList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Author Data'),
+          title: const Text('Authors', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(
@@ -328,8 +328,8 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.yearBirth),
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.yearBirth,
                                 columnIndex,
                                 ascending),
                           ),
@@ -340,8 +340,8 @@ class _AuthorListState extends State<AuthorList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<num>(
-                                (d) => int.parse(d.yearDead),
+                            onSort: (columnIndex, ascending) => _sort<String>(
+                                (d) => d.yearDead,
                                 columnIndex,
                                 ascending),
                           ),

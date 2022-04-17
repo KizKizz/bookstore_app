@@ -15,6 +15,8 @@ import 'login_page.dart';
 import 'InfoScreens/book_list.dart';
 import 'InfoScreens/employee_list.dart';
 
+int selectedIndex = 0;
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -23,7 +25,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
   String appBarName = "Book Records";
 
   List<String> screenTitle = [
@@ -49,7 +50,6 @@ class _MainPageState extends State<MainPage> {
       const EmployeeList()
     ];
 
-
     if (MyApp.themeNotifier.value == ThemeMode.light) {
     } else {
     }
@@ -72,11 +72,11 @@ class _MainPageState extends State<MainPage> {
                         child: FocusTraversalGroup(
                           policy: OrderedTraversalPolicy(),
                           child: NavigationRail(
-                            selectedIndex: _selectedIndex,
+                            selectedIndex: selectedIndex,
                             onDestinationSelected: (int index) {
                               setState(() {
-                                _selectedIndex = index;
-                                //appBarName = screenTitle[_selectedIndex];
+                                selectedIndex = index;
+                                //appBarName = screenTitle[selectedIndex];
                               });
                             },
 //Other buttons
@@ -196,7 +196,6 @@ class _MainPageState extends State<MainPage> {
                                   ),
                               ],
                             ),
-
 //Screens buttons
                             groupAlignment: 1.0,
                             labelType: NavigationRailLabelType.all,
@@ -247,7 +246,10 @@ class _MainPageState extends State<MainPage> {
           const VerticalDivider(thickness: 1, width: 1),
           //This is the main content.
           Expanded(
-            child: screen[_selectedIndex],
+            child: PageView(children: [
+              screen[selectedIndex],
+            ],)
+            
           ),
         ],
       ),
@@ -261,24 +263,25 @@ class _MainPageState extends State<MainPage> {
         builder: (BuildContext context) {
           return _SystemPadding(
             child: AlertDialog(
-              contentPadding: const EdgeInsets.all(16.0),
-              content: SizedBox(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: const Center(
+                child: Text(
+                    'Log out',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              contentPadding: const EdgeInsets.only(left: 16, right: 16),
+              content: const SizedBox(
                   width: 300,
                   height: 70,
                   child: Center(
-                      child: Column(children: const <Widget>[
-                    Text('Log out',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Padding(padding: EdgeInsets.only(bottom: 15)),
-                    Text('You will be returned to the login screen.'),
-                  ]))),
+                      child: Text('You will be returned to the login screen.'))),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                TextButton(
+                ElevatedButton(
                     child: const Text('CONFIRM'),
                     onPressed: (() async {
                       isManager = false;

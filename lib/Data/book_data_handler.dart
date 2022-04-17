@@ -178,24 +178,7 @@ class BookDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Book d) getField, bool ascending) {
     books.sort((a, b) {
-      if (a.cost == '') {
-        a.cost = 0.toString();
-      } else if (a.edition == '') {
-        a.edition = 0.toString();
-      } else if (a.retailPrice == '') {
-        a.retailPrice = 0.toString();
-      } else if (a.publishDate == '') {
-        a.publishDate = 0.toString();
-      }
-      if (b.cost == '') {
-        b.cost = 0.toString();
-      } else if (b.edition == '') {
-        b.edition = 0.toString();
-      } else if (b.retailPrice == '') {
-        b.retailPrice = 0.toString();
-      } else if (b.publishDate == '') {
-        b.publishDate = 0.toString();
-      }
+
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -246,7 +229,7 @@ class BookDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                if (isManager) {_showDialog(context, book)}
+                _showDialog(context, book)
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -274,8 +257,8 @@ class BookDatabase extends DataTableSource {
         DataCell(Text(book.publisher)),
         DataCell(Text(book.publishDate)),
         DataCell(Text(book.edition)),
-        DataCell(Text(book.cost)),
-        DataCell(Text(book.retailPrice)),
+        DataCell(Text('\$' + book.cost)),
+        DataCell(Text('\$' + book.retailPrice)),
         DataCell(Text(book.condition)),
         DataCell(Text(book.sold)),
         if (book.sold.toLowerCase() == 'Available'.toLowerCase())
@@ -388,251 +371,262 @@ class BookDatabase extends DataTableSource {
                 child: SingleChildScrollView(
                     child: Padding(
                         padding: const EdgeInsets.only(right: 16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.title,
-                                          onChanged: (text) => {curBook.title = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Title',
-                                          )),
-                                    )),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.edition,
-                                          onChanged: (text) =>
-                                              {curBook.edition = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Edition',
-                                          )),
-                                    )),
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.id,
-                                          onChanged: (text) => {curBook.id = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'ID',
-                                          )),
-                                    )),
-                                  ],
-                                ),
-                                Row(
+                        child: AbsorbPointer(
+                          absorbing: !isManager,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
-                                              ..text = curBook.authorFirstName,
-                                            onChanged: (text) =>
-                                                {curBook.authorFirstName = text},
+                                              ..text = curBook.title,
+                                            onChanged: (text) => {curBook.title = text},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
-                                              labelText: 'Author\'s First Name',
+                                              labelText: 'Title',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text = curBook.edition,
+                                            onChanged: (text) =>
+                                                {curBook.edition = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Edition',
                                             )),
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.only(left: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
-                                              ..text = curBook.authorLastName,
-                                            onChanged: (text) =>
-                                                {curBook.authorLastName = text},
+                                              ..text = curBook.id,
+                                            onChanged: (text) => {curBook.id = text},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
-                                              labelText: 'Author\'s Last Name',
+                                              labelText: 'ID',
                                             )),
                                       )),
-                                    ]),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.publisher,
-                                          onChanged: (text) =>
-                                              {curBook.publisher = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Publisher',
-                                          )),
-                                    )),
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.publishDate,
-                                          onChanged: (text) =>
-                                              {curBook.publishDate = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Publish Date',
-                                          )),
-                                    )),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.cost,
-                                          onChanged: (text) => {curBook.cost = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Cost',
-                                          )),
-                                    )),
-                                    Expanded(
-                                        child: Container(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: TextFormField(
-                                          controller: TextEditingController()
-                                            ..text = curBook.retailPrice,
-                                          onChanged: (text) =>
-                                              {curBook.retailPrice = text},
-                                          decoration: const InputDecoration(
-                                            //icon: Icon(Icons.person),
-                                            hintText: '',
-                                            labelText: 'Retail Price',
-                                          )),
-                                    )),
-                                  ],
-                                ),
-                                Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Column(children: [
-                                      Text(
-                                        'Condition',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context).hintColor),
-                                      ),
-                                      RatingBar.builder(
-                                        itemSize: 40,
-                                        initialRating: _conditionRating,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: false,
-                                        itemCount: 5,
-                                        itemPadding: const EdgeInsets.symmetric(
-                                            horizontal: 4.0),
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          if (rating == 1.0) {
-                                            curBook.condition = 'Poor';
-                                          } else if (rating == 2.0) {
-                                            curBook.condition = 'Fair';
-                                          } else if (rating == 3.0) {
-                                            curBook.condition = 'Good';
-                                          } else if (rating == 4.0) {
-                                            curBook.condition = 'Excellent';
-                                          } else if (rating == 5.0) {
-                                            curBook.condition = 'Superb';
-                                          }
-                                        },
-                                      )
-                                    ])),
-                                Container(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Column(children: [
-                                      Container(
-                                        //alignment: const Alignment(-1, 0),
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5),
-                                        child: Text(
-                                          'Status',
+                                    ],
+                                  ),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curBook.authorFirstName,
+                                              onChanged: (text) =>
+                                                  {curBook.authorFirstName = text},
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Author\'s First Name',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curBook.authorLastName,
+                                              onChanged: (text) =>
+                                                  {curBook.authorLastName = text},
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Author\'s Last Name',
+                                              )),
+                                        )),
+                                      ]),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text = curBook.publisher,
+                                            onChanged: (text) =>
+                                                {curBook.publisher = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Publisher',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text = curBook.publishDate,
+                                            onChanged: (text) =>
+                                                {curBook.publishDate = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Publish Date',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text = curBook.cost,
+                                            onChanged: (text) => {curBook.cost = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Cost',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()
+                                              ..text = curBook.retailPrice,
+                                            onChanged: (text) =>
+                                                {curBook.retailPrice = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Retail Price',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Column(children: [
+                                        Text(
+                                          'Condition',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color:
-                                                  Theme.of(context).hintColor),
+                                              color: Theme.of(context).hintColor),
                                         ),
-                                      ),
-                                      ToggleSwitch(
-                                        minWidth: 110,
-                                        minHeight: 30,
-                                        // borderColor: [
-                                        //   Theme.of(context).hintColor
-                                        // ],
-                                        // borderWidth: 1,
-                                        initialLabelIndex: _statusRating,
-                                        cornerRadius: 5,
-                                        activeFgColor: Colors.white,
-                                        inactiveBgColor: Colors.grey,
-                                        inactiveFgColor: Colors.white,
-                                        totalSwitches: 2,
-                                        labels: const ['Available', 'Sold'],
-                                        activeBgColors: const [
-                                          [Colors.blue],
-                                          [Colors.pink]
-                                        ],
-                                        onToggle: (index) {
-                                          if (index == 0) {
-                                            curBook.sold = 'Available';
-                                          } else if (index == 1) {
-                                            curBook.sold = 'Sold';
-                                          }
-                                        },
-                                      )
-                                    ]))
-                              ],
-                            ))
-                          ],
+                                        RatingBar.builder(
+                                          itemSize: 40,
+                                          initialRating: _conditionRating,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: false,
+                                          itemCount: 5,
+                                          itemPadding: const EdgeInsets.symmetric(
+                                              horizontal: 4.0),
+                                          itemBuilder: (context, _) => const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            if (rating == 1.0) {
+                                              curBook.condition = 'Poor';
+                                            } else if (rating == 2.0) {
+                                              curBook.condition = 'Fair';
+                                            } else if (rating == 3.0) {
+                                              curBook.condition = 'Good';
+                                            } else if (rating == 4.0) {
+                                              curBook.condition = 'Excellent';
+                                            } else if (rating == 5.0) {
+                                              curBook.condition = 'Superb';
+                                            }
+                                          },
+                                        )
+                                      ])),
+                                  Container(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Column(children: [
+                                        Container(
+                                          //alignment: const Alignment(-1, 0),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 5),
+                                          child: Text(
+                                            'Status',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color:
+                                                    Theme.of(context).hintColor),
+                                          ),
+                                        ),
+                                        ToggleSwitch(
+                                          minWidth: 110,
+                                          minHeight: 30,
+                                          // borderColor: [
+                                          //   Theme.of(context).hintColor
+                                          // ],
+                                          // borderWidth: 1,
+                                          initialLabelIndex: _statusRating,
+                                          cornerRadius: 5,
+                                          activeFgColor: Colors.white,
+                                          inactiveBgColor: Colors.grey,
+                                          inactiveFgColor: Colors.white,
+                                          totalSwitches: 2,
+                                          labels: const ['Available', 'Sold'],
+                                          activeBgColors: const [
+                                            [Colors.blue],
+                                            [Colors.pink]
+                                          ],
+                                          onToggle: (index) {
+                                            if (index == 0) {
+                                              curBook.sold = 'Available';
+                                            } else if (index == 1) {
+                                              curBook.sold = 'Sold';
+                                            }
+                                          },
+                                        )
+                                      ]))
+                                ],
+                              ))
+                            ],
+                          ),
                         ))),
               ),
               actions: <Widget>[
+                if (!isManager)
+                  ElevatedButton(
+                      child: const Text('CLOSE'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () async {

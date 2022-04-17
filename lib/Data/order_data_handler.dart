@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -366,7 +367,7 @@ class OrderDatabase extends DataTableSource {
         //DataCell(Text(customer.salesPersonId)),
         DataCell(Text(customer.orderDate)),
         DataCell(Text(customer.deliveryDate)),
-        DataCell(Text(customer.totalOrderCost)),
+        DataCell(Text('\$' + customer.totalOrderCost)),
         DataCell(Text(customer.paymentMethod)),
         DataCell(Text(customer.orderStatus)),
         //DataCell(Text(customer.bookIds)),

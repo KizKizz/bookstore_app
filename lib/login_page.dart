@@ -203,9 +203,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 pageBuilder:
                                                     (context, animation1, animation2) =>
                                                         const MainPage(),
-                                                transitionDuration: Duration.zero,
-                                                reverseTransitionDuration:
-                                                    Duration.zero,
+                                                // transitionDuration: Duration.zero,
+                                                // reverseTransitionDuration:
+                                                //     Duration.zero,
                                               ),
                                             );
                                           },

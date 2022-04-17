@@ -291,7 +291,7 @@ class SalesRecordDatabase extends DataTableSource {
             },
       onTap: hasRowTaps
           ? () => [
-                if (isManager) {_showDialog(context, salesRecord)}
+                _showDialog(context, salesRecord)
               ]
           : null,
       onDoubleTap: hasRowTaps
@@ -320,7 +320,7 @@ class SalesRecordDatabase extends DataTableSource {
         //DataCell(Text(salesRecord.customerId)),
         DataCell(Text(salesRecord.salesPersonName)),
         //DataCell(Text(salesRecord.salesPersonId)),
-        DataCell(Text(salesRecord.soldPrice)),
+        DataCell(Text('\$' + salesRecord.soldPrice)),
         DataCell(Text(salesRecord.orderDate)),
         DataCell(Text(salesRecord.deliveryDate)),
       ],
@@ -361,33 +361,190 @@ class SalesRecordDatabase extends DataTableSource {
               content: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (var item in curSalesRecord.allInfoHeaders)
-                            TextField(
-                                controller: TextEditingController()
-                                  ..text = curSalesRecord.headerToInfo(item),
-                                onChanged: (text) =>
-                                    {curSalesRecord.infoEdited(item, text)},
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                    labelText: item + ':', hintText: item)),
-                        ],
-                      ))
-                    ],
+                  child: SizedBox(
+                    width: 400,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      enabled: isManager,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.bookTitle,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.bookTitle = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Book Title',
+                                      )),
+                                )),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  width: 90,
+                                  child: TextFormField(
+                                    enabled: false,
+                                  controller: TextEditingController()
+                                    ..text = curSalesRecord.bookId,
+                                  onChanged: (text) =>
+                                      {curSalesRecord.bookId = text},
+                                  decoration: const InputDecoration(
+                                    //icon: Icon(Icons.person),
+                                    hintText: '',
+                                    labelText: 'Book ID',
+                                  )),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      enabled: isManager,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.customerName,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.customerName = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Customer Name',
+                                      )),
+                                )),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  width: 90,
+                                  child: TextFormField(
+                                    enabled: false,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.customerId,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.customerId = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Customer ID',
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: TextFormField(
+                                      enabled: isManager,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.salesPersonName,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.salesPersonName = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Salesperson Name',
+                                      )),
+                                )),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  width: 90,
+                                  child: TextFormField(
+                                      enabled: false,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.salesPersonId,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.salesPersonId = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Salesperson ID',
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  width: 90,
+                                  child: TextFormField(
+                                      enabled: false,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.soldPrice,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.soldPrice = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Sold Price',
+                                      )),
+                                ),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10, right: 10),
+                                  child: TextFormField(
+                                      enabled: false,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.orderDate,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.orderDate = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Order Date',
+                                      )),
+                                )),
+                                Expanded(
+                                    child: Container(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                      enabled: false,
+                                      controller: TextEditingController()
+                                        ..text = curSalesRecord.deliveryDate,
+                                      onChanged: (text) =>
+                                          {curSalesRecord.deliveryDate = text},
+                                      decoration: const InputDecoration(
+                                        //icon: Icon(Icons.person),
+                                        hintText: '',
+                                        labelText: 'Delivery Date',
+                                      )),
+                                )),
+                              ],
+                            ),
+                          ],
+                        ))
+                      ],
+                    ),
                   ),
                 ),
               ),
               actions: <Widget>[
+                if (!isManager)
+                  ElevatedButton(
+                      child: const Text('CLOSE'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('CANCEL'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
+                if (isManager)
                 ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {

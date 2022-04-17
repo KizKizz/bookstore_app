@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,21 @@ import '../main_appbar.dart';
 
 final searchOrderController = TextEditingController();
 //String _searchDropDownVal = 'Title';
+final List<String> _searchDropDownVal = [
+    'All Fields',
+    'Order Number',
+    'Customer Name',
+    'Customer ID',
+    'Salesperson Name',
+    'Salesperson ID',
+    'Order Date',
+    'Delivery Date',
+    'Total Cost',
+    'Payment Method',
+    'Order Status',
+    'BookIDs'
+  ];
+  late String _curSearchChoice = _searchDropDownVal[0];
 
 class OrderList extends StatefulWidget {
   const OrderList({Key? key}) : super(key: key);
@@ -26,21 +42,7 @@ class _OrderListState extends State<OrderList> {
   List<Order> searchOrderList = [];
   final List<Order> preSearchList = mainOrderListCopy;
 
-  final List<String> _searchDropDownVal = [
-    'All Fields',
-    'Order Number',
-    'Customer Name',
-    'Customer ID',
-    'Salesperson Name',
-    'Salesperson ID',
-    'Order Date',
-    'Delivery Date',
-    'Total Cost',
-    'Payment Method',
-    'Order Status',
-    'BookIDs'
-  ];
-  late String _curSearchChoice;
+  
 
   @override
   void didChangeDependencies() {
@@ -48,7 +50,6 @@ class _OrderListState extends State<OrderList> {
     if (!_initialized) {
       setState(() {});
       _ordersDataSource = OrderDatabase(context);
-      _curSearchChoice = _searchDropDownVal[0];
       _initialized = true;
       _ordersDataSource.addListener(() {
         setState(() {});
@@ -211,7 +212,7 @@ class _OrderListState extends State<OrderList> {
     return Scaffold(
         //drawer: const MainDrawer(),
         appBar: MainAppbar(
-          title: const Text('Order Data'),
+          title: const Text('Orders', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
             margin: const EdgeInsets.only(
@@ -397,8 +398,8 @@ class _OrderListState extends State<OrderList> {
                             ),
                             size: ColumnSize.S,
                             numeric: false,
-                            onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.totalOrderCost,
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.totalOrderCost),
                                 columnIndex,
                                 ascending),
                           ),
