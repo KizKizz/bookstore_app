@@ -702,8 +702,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             customerInfoControllers[
                                                                 2],
                                                         decoration:
-                                                            const InputDecoration(
+                                                          InputDecoration(
                                                           //icon: Icon(Icons.person),
+                                                          enabled: !_isCurCustomer,
                                                           hintText: 'SMIT1234',
                                                           labelText: 'ID*',
                                                         ),

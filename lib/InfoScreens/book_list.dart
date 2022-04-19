@@ -691,6 +691,7 @@ class MenuItems {
         checkoutPrices.clear();
         priceControllers.clear();
         subTotal = 0.00;
+        context.read<checkoutNotif>().checkoutOff();
         break;
       case MenuItems.checkout:
         context.read<checkoutNotif>().checkoutOn();
