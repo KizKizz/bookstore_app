@@ -50,9 +50,6 @@ class _MainPageState extends State<MainPage> {
       const EmployeeList()
     ];
 
-    if (MyApp.themeNotifier.value == ThemeMode.light) {
-    } else {
-    }
     return Scaffold(
       // appBar: MainAppbar(
       //   title: Text(appBarName),
@@ -134,9 +131,10 @@ class _MainPageState extends State<MainPage> {
                                         )
                                       ]),
                                 ),
-                                const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                                if (MyApp.themeNotifier.value ==
-                                    ThemeMode.dark)
+                                const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 10)),
+                                if (MyApp.themeNotifier.value == ThemeMode.dark)
                                   MaterialButton(
                                     onPressed: (() async {
                                       final prefs =
@@ -165,7 +163,7 @@ class _MainPageState extends State<MainPage> {
                                         ]),
                                   ),
 
-                                  if (MyApp.themeNotifier.value ==
+                                if (MyApp.themeNotifier.value ==
                                     ThemeMode.light)
                                   MaterialButton(
                                     onPressed: (() async {
@@ -246,10 +244,7 @@ class _MainPageState extends State<MainPage> {
           const VerticalDivider(thickness: 1, width: 1),
           //This is the main content.
           Expanded(
-            child: PageView(children: [
-              screen[selectedIndex],
-            ],)
-            
+            child: screen[selectedIndex],
           ),
         ],
       ),
@@ -265,8 +260,7 @@ class _MainPageState extends State<MainPage> {
             child: AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
               title: const Center(
-                child: Text(
-                    'Log out',
+                child: Text('Log out',
                     style: TextStyle(fontWeight: FontWeight.w700)),
               ),
               contentPadding: const EdgeInsets.only(left: 16, right: 16),
@@ -274,7 +268,8 @@ class _MainPageState extends State<MainPage> {
                   width: 300,
                   height: 70,
                   child: Center(
-                      child: Text('You will be returned to the login screen.'))),
+                      child:
+                          Text('You will be returned to the login screen.'))),
               actions: <Widget>[
                 ElevatedButton(
                     child: const Text('CANCEL'),

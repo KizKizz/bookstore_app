@@ -36,11 +36,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     loginCheck();
-    if (!kIsWeb) {
-      dataPreload();
-    } else {
-      webDataPreload();
-    }
+    const DataPreloader();
   }
 
   //Loading counter value on start
