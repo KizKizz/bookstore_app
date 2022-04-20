@@ -305,7 +305,7 @@ class _MainPageState extends State<MainPage> {
                         width: 90,
                         height: 56,
                         child: Container(
-                            padding: const EdgeInsets.only(bottom: 0),
+                            padding: const EdgeInsets.only(top: 3.5),
                             child: Column(
                               children: [
                                 isManager
