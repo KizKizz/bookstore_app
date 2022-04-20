@@ -240,6 +240,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
       }
     }
 
+    //Employee List
+    if (mainEmployeeListCopy.isNotEmpty) {
+      _employeesDropDownVal.clear();
+      for (var employee in mainEmployeeListCopy) {
+        _employeesDropDownVal.add(
+            employee.firstName + ' ' + employee.lastName + ' - ' + employee.id);
+      }
+    }
+
     Widget checkoutInfo = Column(children: [
       FocusTraversalGroup(
         policy: OrderedTraversalPolicy(),
@@ -321,7 +330,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             //color: Colors.redAccent,
                           ),
                           dropdownElevation: 3,
-                          offset: const Offset(-20, 0),
+                          offset: const Offset(-30, 0),
                           hintAlignment: Alignment.center,
                           valueAlignment: Alignment.center,
                           icon: const Icon(Icons.arrow_drop_down),
@@ -702,9 +711,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             customerInfoControllers[
                                                                 2],
                                                         decoration:
-                                                          InputDecoration(
+                                                            InputDecoration(
                                                           //icon: Icon(Icons.person),
-                                                          enabled: !_isCurCustomer,
+                                                          enabled:
+                                                              !_isCurCustomer,
                                                           hintText: 'SMIT1234',
                                                           labelText: 'ID*',
                                                         ),
@@ -1446,7 +1456,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           initiallyExpanded: true,
                           children: <Widget>[
                             SizedBox(
-                              height: 250,
+                              height: 270,
                               child: Column(
                                 children: [
                                   const Padding(
@@ -1521,6 +1531,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       });
                                       //print('switched to: $index');
                                     },
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(curPaymentMethod,
+                                        style: const TextStyle(fontSize: 15)),
                                   ),
                                   if (_isCardPayment)
                                     Column(children: [
@@ -1807,7 +1822,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                           setState(() {});
                                         },
-                                        child: const Text('Remove'),
+                                        child: const Text(
+                                          'Remove',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1948,7 +1966,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: 45,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
+                              primary: Colors.blueAccent,
                               padding: const EdgeInsets.only(bottom: 9)),
                           child: const Text(
                             'Submit Order',

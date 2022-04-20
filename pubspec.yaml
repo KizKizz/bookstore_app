@@ -41,6 +41,7 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   font_awesome_flutter: ^10.0.0
   bitsdojo_window: ^0.1.1+1
+  url_launcher: ^6.0.20
 
 
 

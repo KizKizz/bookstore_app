@@ -16,8 +16,8 @@ void main() {
   ], child: const MyApp()));
 
   doWhenWindowReady(() {
-    const initialSize = Size(1280, 720);
-    appWindow.minSize = initialSize;
+    const initialSize = Size(1300, 850);
+    appWindow.minSize = const Size(852, 480);
     appWindow.size = initialSize;
     //appWindow.alignment = Alignment.center;
     appWindow.title = "Antique Publications Bookstore";

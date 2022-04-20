@@ -4,6 +4,7 @@ import 'package:bookstore_project/InfoScreens/checkout_page.dart';
 import 'package:bookstore_project/InfoScreens/customer_list.dart';
 import 'package:bookstore_project/InfoScreens/order_list.dart';
 import 'package:bookstore_project/InfoScreens/sales_record_list.dart';
+import 'package:bookstore_project/main_drawer.dart';
 import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String appBarName = "Book Records";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> screenTitle = [
     "Book Records",
@@ -54,12 +56,13 @@ class _MainPageState extends State<MainPage> {
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
       // appBar: MainAppbar(
       //   title: Text(appBarName),
       //   appBar: AppBar(),
       //   widgets: <Widget>[_editTableButton()],
       // ),
-      //drawer: const MainDrawer(),
+      drawer: const MainDrawer(),
       body: WindowBorder(
           color: borderColor,
           width: 1,
@@ -71,95 +74,66 @@ class _MainPageState extends State<MainPage> {
                   children: [Expanded(child: MoveWindow()), WindowButtons()]),
             )),
             if (verticalBar)
-            Expanded(
-              child: Row(
-                children: [
-                  LayoutBuilder(
-                    builder: (context, constraint) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                            constraints:
-                                BoxConstraints(minHeight: constraint.maxHeight),
-                            child: IntrinsicHeight(
-                              child: FocusTraversalGroup(
-                                policy: OrderedTraversalPolicy(),
-                                child: NavigationRail(
-                                  selectedIndex: selectedIndex,
-                                  onDestinationSelected: (int index) {
-                                    setState(() {
-                                      selectedIndex = index;
-                                      //appBarName = screenTitle[selectedIndex];
-                                    });
-                                  },
-                                  //Other buttons
-                                  leading: Column(
-                                    children: [
-                                      Container(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          child: Column(
-                                            children: [
-                                              isManager
-                                                  ? Column(
-                                                      children: const [
-                                                        Icon(Icons.account_box,
-                                                            size: 30),
-                                                        Text(
-                                                          'Manager',
-                                                          // style: TextStyle(
-                                                          //   color: (Theme.of(context).toggleableActiveColor))
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      children: const [
-                                                        Icon(Icons.account_circle,
-                                                            size: 30),
-                                                        Text(
-                                                          'Employee',
-                                                          // style: TextStyle(
-                                                          //   color: (Theme.of(context).toggleableActiveColor))
-                                                        )
-                                                      ],
-                                                    )
-                                            ],
-                                          )),
-                                      //Logout Button
-                                      MaterialButton(
-                                        onPressed: (() {
-                                          _logoutDialog();
-                                        }),
-                                        child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: const <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 4, bottom: 2),
-                                                child: Icon(
-                                                  Icons.logout,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(2.0),
-                                                child: Text(
-                                                  "Logout",
-                                                ),
-                                              )
-                                            ]),
-                                      ),
-                                      const Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 10)),
-                                      if (MyApp.themeNotifier.value ==
-                                          ThemeMode.dark)
+              Expanded(
+                child: Row(
+                  children: [
+                    LayoutBuilder(
+                      builder: (context, constraint) {
+                        return SingleChildScrollView(
+                          child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  minHeight: constraint.maxHeight),
+                              child: IntrinsicHeight(
+                                child: FocusTraversalGroup(
+                                  policy: OrderedTraversalPolicy(),
+                                  child: NavigationRail(
+                                    selectedIndex: selectedIndex,
+                                    onDestinationSelected: (int index) {
+                                      setState(() {
+                                        selectedIndex = index;
+                                        //appBarName = screenTitle[selectedIndex];
+                                      });
+                                    },
+                                    //Other buttons
+                                    leading: Column(
+                                      children: [
+                                        Container(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Column(
+                                              children: [
+                                                isManager
+                                                    ? Column(
+                                                        children: const [
+                                                          Icon(
+                                                              Icons.account_box,
+                                                              size: 30),
+                                                          Text(
+                                                            'Manager',
+                                                            // style: TextStyle(
+                                                            //   color: (Theme.of(context).toggleableActiveColor))
+                                                          )
+                                                        ],
+                                                      )
+                                                    : Column(
+                                                        children: const [
+                                                          Icon(
+                                                              Icons
+                                                                  .account_circle,
+                                                              size: 30),
+                                                          Text(
+                                                            'Employee',
+                                                            // style: TextStyle(
+                                                            //   color: (Theme.of(context).toggleableActiveColor))
+                                                          )
+                                                        ],
+                                                      )
+                                              ],
+                                            )),
+                                        //Logout Button
                                         MaterialButton(
-                                          onPressed: (() async {
-                                            final prefs = await SharedPreferences
-                                                .getInstance();
-                                            MyApp.themeNotifier.value =
-                                                ThemeMode.light;
-                                            prefs.setBool('isDarkMode', false);
-                                            setState(() {});
+                                          onPressed: (() {
+                                            _logoutDialog();
                                           }),
                                           child: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -168,110 +142,152 @@ class _MainPageState extends State<MainPage> {
                                                   padding: EdgeInsets.only(
                                                       top: 4, bottom: 2),
                                                   child: Icon(
-                                                    Icons.light_mode,
+                                                    Icons.logout,
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.all(2.0),
                                                   child: Text(
-                                                    "Light",
+                                                    "Logout",
                                                   ),
                                                 )
                                               ]),
                                         ),
+                                        const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10)),
+                                        if (MyApp.themeNotifier.value ==
+                                            ThemeMode.dark)
+                                          MaterialButton(
+                                            onPressed: (() async {
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              MyApp.themeNotifier.value =
+                                                  ThemeMode.light;
+                                              prefs.setBool(
+                                                  'isDarkMode', false);
+                                              setState(() {});
+                                            }),
+                                            child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: const <Widget>[
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 4, bottom: 2),
+                                                    child: Icon(
+                                                      Icons.light_mode,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(2.0),
+                                                    child: Text(
+                                                      "Light",
+                                                    ),
+                                                  )
+                                                ]),
+                                          ),
 
-                                      if (MyApp.themeNotifier.value ==
-                                          ThemeMode.light)
-                                        MaterialButton(
-                                          onPressed: (() async {
-                                            final prefs = await SharedPreferences
-                                                .getInstance();
-                                            prefs.setBool('isDarkMode', true);
-                                            MyApp.themeNotifier.value =
-                                                ThemeMode.dark;
-                                            setState(() {});
-                                          }),
-                                          child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: const <Widget>[
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 4, bottom: 2),
-                                                  child: Icon(
-                                                    Icons.dark_mode,
+                                        if (MyApp.themeNotifier.value ==
+                                            ThemeMode.light)
+                                          MaterialButton(
+                                            onPressed: (() async {
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.setBool('isDarkMode', true);
+                                              MyApp.themeNotifier.value =
+                                                  ThemeMode.dark;
+                                              setState(() {});
+                                            }),
+                                            child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: const <Widget>[
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 4, bottom: 2),
+                                                    child: Icon(
+                                                      Icons.dark_mode,
+                                                    ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(2.0),
-                                                  child: Text(
-                                                    "Dark",
-                                                  ),
-                                                )
-                                              ]),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(2.0),
+                                                    child: Text(
+                                                      "Dark",
+                                                    ),
+                                                  )
+                                                ]),
+                                          ),
+                                      ],
+                                    ),
+                                    //Screens buttons
+                                    groupAlignment: 1.0,
+                                    labelType: NavigationRailLabelType.all,
+                                    destinations: <NavigationRailDestination>[
+                                      if (context
+                                          .watch<checkoutNotif>()
+                                          .isCheckout)
+                                        const NavigationRailDestination(
+                                          icon: Icon(
+                                              Icons.shopping_basket_outlined),
+                                          selectedIcon:
+                                              Icon(Icons.shopping_basket),
+                                          label: Text('Checkout'),
+                                        ),
+                                      const NavigationRailDestination(
+                                        icon: Icon(Icons.menu_book_outlined),
+                                        selectedIcon: Icon(Icons.menu_book),
+                                        label: Text('Books'),
+                                      ),
+                                      const NavigationRailDestination(
+                                        icon:
+                                            Icon(Icons.library_books_outlined),
+                                        selectedIcon: Icon(Icons.library_books),
+                                        label: Text('Authors'),
+                                      ),
+                                      const NavigationRailDestination(
+                                        icon: Icon(Icons.receipt_outlined),
+                                        selectedIcon: Icon(Icons.receipt),
+                                        label: Text('Orders'),
+                                      ),
+                                      const NavigationRailDestination(
+                                        icon: Icon(Icons.receipt_long_outlined),
+                                        selectedIcon: Icon(Icons.receipt_long),
+                                        label: Text('Sales'),
+                                      ),
+                                      const NavigationRailDestination(
+                                        icon: Icon(Icons.people_alt_outlined),
+                                        selectedIcon: Icon(Icons.people_alt),
+                                        label: Text('Customers'),
+                                      ),
+                                      if (isManager)
+                                        const NavigationRailDestination(
+                                          icon:
+                                              Icon(Icons.emoji_people_outlined),
+                                          selectedIcon:
+                                              Icon(Icons.emoji_people),
+                                          label: Text('Employees'),
                                         ),
                                     ],
                                   ),
-                                  //Screens buttons
-                                  groupAlignment: 1.0,
-                                  labelType: NavigationRailLabelType.all,
-                                  destinations: <NavigationRailDestination>[
-                                    if (context.watch<checkoutNotif>().isCheckout)
-                                      const NavigationRailDestination(
-                                        icon:
-                                            Icon(Icons.shopping_basket_outlined),
-                                        selectedIcon: Icon(Icons.shopping_basket),
-                                        label: Text('Checkout'),
-                                      ),
-                                    const NavigationRailDestination(
-                                      icon: Icon(Icons.menu_book_outlined),
-                                      selectedIcon: Icon(Icons.menu_book),
-                                      label: Text('Books'),
-                                    ),
-                                    const NavigationRailDestination(
-                                      icon: Icon(Icons.library_books_outlined),
-                                      selectedIcon: Icon(Icons.library_books),
-                                      label: Text('Authors'),
-                                    ),
-                                    const NavigationRailDestination(
-                                      icon: Icon(Icons.receipt_outlined),
-                                      selectedIcon: Icon(Icons.receipt),
-                                      label: Text('Orders'),
-                                    ),
-                                    const NavigationRailDestination(
-                                      icon: Icon(Icons.receipt_long_outlined),
-                                      selectedIcon: Icon(Icons.receipt_long),
-                                      label: Text('Sales'),
-                                    ),
-                                    const NavigationRailDestination(
-                                      icon: Icon(Icons.people_alt_outlined),
-                                      selectedIcon: Icon(Icons.people_alt),
-                                      label: Text('Customers'),
-                                    ),
-                                    if (isManager)
-                                      const NavigationRailDestination(
-                                        icon: Icon(Icons.emoji_people_outlined),
-                                        selectedIcon: Icon(Icons.emoji_people),
-                                        label: Text('Employees'),
-                                      ),
-                                  ],
                                 ),
-                              ),
-                            )),
-                      );
-                    },
-                  ),
-                  const VerticalDivider(thickness: 1, width: 1),
-                  //This is the main content.
-                  Expanded(
-                    child: screen[selectedIndex],
-                  ),
-                ],
+                              )),
+                        );
+                      },
+                    ),
+                    const VerticalDivider(thickness: 1, width: 1),
+                    //This is the main content.
+                    Expanded(
+                      child: screen[selectedIndex],
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            if(!verticalBar)
-            Expanded(
-              child: Row(
+            if (!verticalBar)
+              Expanded(
+                  child: Row(
                 children: [
                   Column(
                     children: [
@@ -305,17 +321,16 @@ class _MainPageState extends State<MainPage> {
                                         ],
                                       )
                               ],
-                            )
-                            ),
+                            )),
                       ),
                       Expanded(
-                        child: Row(
-                          children: [
-                            LayoutBuilder(
+                          child: Row(
+                        children: [
+                          LayoutBuilder(
                             builder: (context, constraint) {
                               return SingleChildScrollView(
                                 child: Container(
-                                  width: 90,
+                                    width: 90,
                                     constraints: BoxConstraints(
                                         minHeight: constraint.maxHeight),
                                     child: IntrinsicHeight(
@@ -332,7 +347,6 @@ class _MainPageState extends State<MainPage> {
                                           //Other buttons
                                           leading: Column(
                                             children: [
-                                              
                                               //Logout Button
                                               MaterialButton(
                                                 onPressed: (() {
@@ -343,8 +357,11 @@ class _MainPageState extends State<MainPage> {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            top: 4, bottom: 2),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 4,
+                                                                bottom: 2),
                                                         child: Icon(
                                                           Icons.logout,
                                                           color: Theme.of(
@@ -357,10 +374,18 @@ class _MainPageState extends State<MainPage> {
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.all(2.0),
+                                                            const EdgeInsets
+                                                                .all(2.0),
                                                         child: Text(
-                                                          "Logout", 
-                                                          style: TextStyle(color: Theme.of(context).textTheme.button!.color!.withOpacity(0.7)),
+                                                          "Logout",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .button!
+                                                                  .color!
+                                                                  .withOpacity(
+                                                                      0.7)),
                                                         ),
                                                       )
                                                     ]),
@@ -368,6 +393,57 @@ class _MainPageState extends State<MainPage> {
                                               const Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 10)),
+
+                                              //Help Button
+                                              MaterialButton(
+                                                onPressed: (() {
+                                                  _scaffoldKey.currentState!
+                                                      .openDrawer();
+                                                }),
+                                                child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 4,
+                                                                bottom: 2),
+                                                        child: Icon(
+                                                          Icons
+                                                              .help_outline_outlined,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .button!
+                                                              .color!
+                                                              .withOpacity(0.7),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2.0),
+                                                        child: Text(
+                                                          "Help",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .button!
+                                                                  .color!
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                        ),
+                                                      )
+                                                    ]),
+                                              ),
+                                              const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 10)),
+
+                                              //Darkmode
                                               if (MyApp.themeNotifier.value ==
                                                   ThemeMode.dark)
                                                 MaterialButton(
@@ -387,7 +463,8 @@ class _MainPageState extends State<MainPage> {
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                      .only(
                                                                   top: 4,
                                                                   bottom: 2),
                                                           child: Icon(
@@ -403,7 +480,8 @@ class _MainPageState extends State<MainPage> {
                                                         ),
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets.all(2.0),
+                                                              const EdgeInsets
+                                                                  .all(2.0),
                                                           child: Text(
                                                             "Light",
                                                             style: TextStyle(
@@ -438,7 +516,8 @@ class _MainPageState extends State<MainPage> {
                                                       children: <Widget>[
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                      .only(
                                                                   top: 4,
                                                                   bottom: 2),
                                                           child: Icon(
@@ -454,7 +533,8 @@ class _MainPageState extends State<MainPage> {
                                                         ),
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets.all(2.0),
+                                                              const EdgeInsets
+                                                                  .all(2.0),
                                                           child: Text(
                                                             "Dark",
                                                             style: TextStyle(
@@ -473,7 +553,8 @@ class _MainPageState extends State<MainPage> {
                                           ),
                                           //Screens buttons
                                           groupAlignment: 1.0,
-                                          labelType: NavigationRailLabelType.all,
+                                          labelType:
+                                              NavigationRailLabelType.all,
                                           destinations: <
                                               NavigationRailDestination>[
                                             if (context
@@ -487,9 +568,10 @@ class _MainPageState extends State<MainPage> {
                                                 label: Text('Checkout'),
                                               ),
                                             const NavigationRailDestination(
-                                              icon:
-                                                  Icon(Icons.menu_book_outlined),
-                                              selectedIcon: Icon(Icons.menu_book),
+                                              icon: Icon(
+                                                  Icons.menu_book_outlined),
+                                              selectedIcon:
+                                                  Icon(Icons.menu_book),
                                               label: Text('Books'),
                                             ),
                                             const NavigationRailDestination(
@@ -500,7 +582,8 @@ class _MainPageState extends State<MainPage> {
                                               label: Text('Authors'),
                                             ),
                                             const NavigationRailDestination(
-                                              icon: Icon(Icons.receipt_outlined),
+                                              icon:
+                                                  Icon(Icons.receipt_outlined),
                                               selectedIcon: Icon(Icons.receipt),
                                               label: Text('Orders'),
                                             ),
@@ -512,16 +595,16 @@ class _MainPageState extends State<MainPage> {
                                               label: Text('Sales'),
                                             ),
                                             const NavigationRailDestination(
-                                              icon:
-                                                  Icon(Icons.people_alt_outlined),
+                                              icon: Icon(
+                                                  Icons.people_alt_outlined),
                                               selectedIcon:
                                                   Icon(Icons.people_alt),
                                               label: Text('Customers'),
                                             ),
                                             if (isManager)
                                               const NavigationRailDestination(
-                                                icon: Icon(
-                                                    Icons.emoji_people_outlined),
+                                                icon: Icon(Icons
+                                                    .emoji_people_outlined),
                                                 selectedIcon:
                                                     Icon(Icons.emoji_people),
                                                 label: Text('Employees'),
@@ -533,13 +616,10 @@ class _MainPageState extends State<MainPage> {
                               );
                             },
                           ),
-                          
-                          ],
-                        )
-                      ),
+                        ],
+                      )),
                     ],
                   ),
-
                   Stack(
                     children: [
                       Container(
@@ -560,8 +640,7 @@ class _MainPageState extends State<MainPage> {
                     child: screen[selectedIndex],
                   ),
                 ],
-              )
-              ),
+              )),
           ])),
     );
   }
