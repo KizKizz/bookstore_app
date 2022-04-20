@@ -70,16 +70,19 @@ class _MainPageState extends State<MainPage> {
             WindowTitleBarBox(
                 child: Container(
               color: Theme.of(context).primaryColor,
-              child: Stack(
+              child: Row(
                   children: [
-                    Positioned(right:0,child: WindowButtons()),
                     Expanded(
                       child: MoveWindow(
                         child:
-                        const Center(child: Text('Antique Publications Bookstore',
-                          //style: TextStyle(color: Colors.white)
-                          ))
+                        const Padding(
+                          padding: EdgeInsets.only(left: 133),
+                          child: Center(child: Text('Antique Publications Bookstore',
+                            //style: TextStyle(color: Colors.white)
+                            )),
+                        )
                   )), 
+                  WindowButtons(),
                   ]),
             )),
             if (verticalBar)
