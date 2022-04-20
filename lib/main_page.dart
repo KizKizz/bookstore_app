@@ -663,7 +663,7 @@ class _MainPageState extends State<MainPage> {
             child: AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
               title: const Center(
-                child: Text('Log out',
+                child: Text('Log Out',
                     style: TextStyle(fontWeight: FontWeight.w700)),
               ),
               contentPadding: const EdgeInsets.only(left: 16, right: 16),
