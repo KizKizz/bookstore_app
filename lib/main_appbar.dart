@@ -21,7 +21,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: title,
       automaticallyImplyLeading: false,
       elevation: 0,
-      //backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).primaryColor,
       actions: widgets,
       // leading: IconButton(
       //   onPressed: () => Scaffold.of(context).openDrawer(),

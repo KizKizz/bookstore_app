@@ -213,7 +213,7 @@ class _BookListState extends State<BookList> {
   Widget build(BuildContext context) {
     return Scaffold(
         //drawer: const MainDrawer(),
-        appBar: MainAppbar(
+        appBar: MainAppbar(      
           title: const Text('Books', style: TextStyle(fontSize: 25)),
           appBar: AppBar(),
           flexSpace: Container(
@@ -578,6 +578,7 @@ class _BookListState extends State<BookList> {
                     _ScrollUpButton(_controller)
                   ]));
             }));
+  
   }
 }
 

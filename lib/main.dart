@@ -1,10 +1,12 @@
 // ignore: avoid_web_libraries_in_flutter
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:bookstore_project/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Data/data_preloader.dart';
+import 'Extra/app_window.dart';
 import 'login_page.dart';
 import 'main_page.dart';
 
@@ -12,6 +14,15 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => checkoutNotif()),
   ], child: const MyApp()));
+
+  doWhenWindowReady(() {
+    const initialSize = Size(1280, 720);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    //appWindow.alignment = Alignment.center;
+    appWindow.title = "Antique Publications Bookstore";
+    appWindow.show();
+  });
   //Prevent brower right click on web
   //window.document.onContextMenu.listen((evt) => evt.preventDefault());
 }
@@ -42,8 +53,9 @@ class _MyAppState extends State<MyApp> {
   void loginCheck() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isLoggedinManager = (prefs.getBool('isLoggedinManager') ?? false);
-      isLoggedinEmployee = (prefs.getBool('isLoggedinEmployee') ?? false);
+      //Save login state
+      // isLoggedinManager = (prefs.getBool('isLoggedinManager') ?? false);
+      // isLoggedinEmployee = (prefs.getBool('isLoggedinEmployee') ?? false);
 
       //darkmode check
       isDarkMode = (prefs.getBool('isDarkMode') ?? false);
@@ -74,16 +86,30 @@ class _MyAppState extends State<MyApp> {
         valueListenable: MyApp.themeNotifier,
         builder: (_, ThemeMode currentMode, __) {
           return MaterialApp(
-            // Remove the debug banner
-            debugShowCheckedModeBanner: false,
-            title: 'BookStore',
-            theme: ThemeData(
-              primarySwatch: Colors.teal,
-            ),
-            darkTheme: ThemeData.dark(),
-            themeMode: currentMode,
-            home: loginState(),
-          );
+              // Remove the debug banner
+              debugShowCheckedModeBanner: false,
+              title: 'BookStore',
+              theme: ThemeData(
+                primarySwatch: Colors.teal,
+              ),
+              darkTheme: ThemeData.dark(),
+              themeMode: currentMode,
+              home: Scaffold(
+                  body: WindowBorder(
+                      color: borderColor,
+                      width: 1,
+                      child: Column(children: [
+                        WindowTitleBarBox(
+                            child: Row(
+                              children: [
+                                Expanded(child: MoveWindow()),
+                                WindowButtons()
+                        ])),
+
+                        Expanded(child: loginState())
+                      
+                      ]))));
         });
   }
 }
+

@@ -2,5 +2,6 @@
     "cmake.sourceDirectory": "${workspaceFolder}/windows",
     "cmake.configureOnOpen": true,
     "editor.defaultFormatter": "Dart-Code.dart-code",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "C_Cpp.errorSquiggles": "Disabled"
 }
