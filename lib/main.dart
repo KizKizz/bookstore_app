@@ -20,7 +20,7 @@ void main() {
     appWindow.minSize = const Size(852, 480);
     appWindow.size = initialSize;
     //appWindow.alignment = Alignment.center;
-    appWindow.title = "Antique Publications Bookstore";
+    appWindow.title = 'Antique Publications Bookstore';
     appWindow.show();
   });
   //Prevent brower right click on web
