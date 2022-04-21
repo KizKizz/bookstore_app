@@ -22,17 +22,17 @@ final File salesRecordDataJson =
 //Local data
 final String appDirPath = Directory.current.path;
 final File localBookDatabase =
-    File(appDirPath + '\\Database\\book_database.json');
+    File(appDirPath + '\\data\\Database\\book_database.json');
 final File localAuthorDatabase =
-    File(appDirPath + '\\Database\\author_database.json');
+    File(appDirPath + '\\data\\Database\\author_database.json');
 final File localCustomerDatabase =
-    File(appDirPath + '\\Database\\customer_database.json');
+    File(appDirPath + '\\data\\Database\\customer_database.json');
 final File localEmployeeDatabase =
-    File(appDirPath + '\\Database\\employee_database.json');
+    File(appDirPath + '\\data\\Database\\employee_database.json');
 final File localOrderDatabase =
-    File(appDirPath + '\\Database\\order_database.json');
+    File(appDirPath + '\\data\\Database\\order_database.json');
 final File localSalesRecordDatabase =
-    File(appDirPath + '\\Database\\sales_record_database.json');
+    File(appDirPath + '\\data\\Database\\sales_record_database.json');
 
 //Runtime Lists
 List<Book> mainBookList = [], mainBookListCopy = [];
