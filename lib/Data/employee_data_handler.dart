@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
@@ -10,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-final File employeeDataJson = File('assets/jsondatabase/employee_data.json');
-List<Employee> mainEmployeeList = [];
-List<Employee> mainEmployeeListCopy = [];
+import 'data_storage_helper.dart';
+
+
 final List<String> _jobPosDropDownVal = [
   'Owner',
   'Assistant Manager',
@@ -640,13 +638,7 @@ class EmployeeDatabase extends DataTableSource {
                       notifyListeners();
                       Navigator.pop(context);
                       if (!kIsWeb) {
-                        mainEmployeeListCopy
-                            .map(
-                              (employee) => employee.toJson(),
-                            )
-                            .toList();
-                        employeeDataJson.writeAsStringSync(
-                            json.encode(mainEmployeeListCopy));
+                        localDatabaseUpdate('employees');
                       }
                     })
               ],
@@ -961,13 +953,7 @@ Future<void> employeeDataAdder(context) async {
                     mainEmployeeListCopy.add(newEmployee);
                     Navigator.pop(context);
                     if (!kIsWeb) {
-                      mainEmployeeListCopy
-                          .map(
-                            (employee) => employee.toJson(),
-                          )
-                          .toList();
-                      employeeDataJson
-                          .writeAsStringSync(json.encode(mainEmployeeListCopy));
+                      localDatabaseUpdate('employees');
                     }
 
                     //debugPrint(newBook.allInfo.toString());

@@ -1,8 +1,8 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures, unused_import
 
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:bookstore_project/Data/data_storage_helper.dart';
 import 'package:bookstore_project/InfoScreens/book_list.dart';
 import 'package:bookstore_project/login_page.dart';
 import 'package:bookstore_project/main_page.dart';
@@ -14,11 +14,6 @@ import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../state_provider.dart';
-
-final File authorDataJson = File('assets/jsondatabase/author_data.json');
-
-List<Author> mainAuthorList = [];
-List<Author> mainAuthorListCopy = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -290,7 +285,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.firstName,
                                           onChanged: (text) =>
@@ -305,7 +300,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.lastName,
                                           onChanged: (text) =>
@@ -325,7 +320,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.id,
                                           onChanged: (text) =>
@@ -340,7 +335,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearBirth,
                                           onChanged: (text) =>
@@ -355,7 +350,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 20),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearDead,
                                           onChanged: (text) =>
@@ -375,7 +370,7 @@ class AuthorDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(right: 0),
                                       child: TextFormField(
-                                        enabled: isManager,
+                                          enabled: isManager,
                                           controller: TextEditingController()
                                             ..text = curAuthor.description,
                                           onChanged: (text) =>
@@ -398,7 +393,9 @@ class AuthorDatabase extends DataTableSource {
                                             child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
                                                     primary: Theme.of(context)
-                                                        .buttonTheme.colorScheme!.background,
+                                                        .buttonTheme
+                                                        .colorScheme!
+                                                        .background,
                                                     padding:
                                                         const EdgeInsets.only(
                                                             bottom: 9)),
@@ -452,10 +449,22 @@ class AuthorDatabase extends DataTableSource {
                                                       Iterable<Book> foundBook =
                                                           [];
                                                       foundBook = mainBookListCopy.where((element) =>
-                                                        element.authorFirstName.toLowerCase().contains(curAuthor.firstName.toLowerCase()) ||
-                                                        element.authorLastName.toLowerCase().contains(curAuthor.lastName.toLowerCase()) ||
-                                                        element.authorID.toLowerCase().contains(curAuthor.id.toLowerCase())
-                                                        );
+                                                          element
+                                                              .authorFirstName
+                                                              .toLowerCase()
+                                                              .contains(curAuthor
+                                                                  .firstName
+                                                                  .toLowerCase()) ||
+                                                          element.authorLastName
+                                                              .toLowerCase()
+                                                              .contains(curAuthor
+                                                                  .lastName
+                                                                  .toLowerCase()) ||
+                                                          element.authorID
+                                                              .toLowerCase()
+                                                              .contains(curAuthor
+                                                                  .id
+                                                                  .toLowerCase()));
                                                       if (foundBook
                                                           .isNotEmpty) {
                                                         for (var book
@@ -476,18 +485,18 @@ class AuthorDatabase extends DataTableSource {
                                                           searchBookList
                                                               .add(tempBook);
                                                         }
-                                                          searchHelper(context,
-                                                                  searchBookList)
-                                                              .then((_) {
-                                                            setState(() {});
-                                                            //debugPrint('test ${mainBookList.toString()}');
-                                                          });
+                                                        searchHelper(context,
+                                                                searchBookList)
+                                                            .then((_) {
+                                                          setState(() {});
+                                                          //debugPrint('test ${mainBookList.toString()}');
+                                                        });
                                                       } else {
-                                                          searchHelper(context,
-                                                                  searchBookList)
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
+                                                        searchHelper(context,
+                                                                searchBookList)
+                                                            .then((_) {
+                                                          setState(() {});
+                                                        });
                                                       }
                                                     },
                                                   );
@@ -501,38 +510,32 @@ class AuthorDatabase extends DataTableSource {
                       ))),
               actions: <Widget>[
                 if (!isManager)
-                ElevatedButton(
+                  ElevatedButton(
                       child: const Text('CLOSE'),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                  ElevatedButton(
+                      child: const Text('CANCEL'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('SAVE'),
-                    onPressed: () {
-                      // for (var item in curAuthor.allInfoHeaders) {
-                      //   curAuthor.setInfo(item);
-                      // }
+                  ElevatedButton(
+                      child: const Text('SAVE'),
+                      onPressed: () {
+                        // for (var item in curAuthor.allInfoHeaders) {
+                        //   curAuthor.setInfo(item);
+                        // }
 
-                      //write to json
-                      if (!kIsWeb) {
-                        mainAuthorList
-                            .map(
-                              (author) => author.toJson(),
-                            )
-                            .toList();
-                        authorDataJson
-                            .writeAsStringSync(json.encode(mainAuthorList));
-                      }
-                      notifyListeners();
-                      Navigator.pop(context);
-                    })
+                        //write to json
+                        if (!kIsWeb) {
+                          localDatabaseUpdate('authors');
+                        }
+                        notifyListeners();
+                        Navigator.pop(context);
+                      })
               ],
             );
           });
@@ -611,7 +614,7 @@ void convertauthorData(var jsonResponse) {
     mainAuthorListCopy.add(author);
   }
   //debugPrint('test ${_authors.length}');
-  getAuthorsFromBook();
+  //getAuthorsFromBook();
 }
 
 //Get Authors from Book data
@@ -648,12 +651,7 @@ Future<void> getAuthorsFromBook() async {
 
   //Save to database
   if (!kIsWeb) {
-    mainAuthorList
-        .map(
-          (author) => author.toJson(),
-        )
-        .toList();
-    authorDataJson.writeAsStringSync(json.encode(mainAuthorList));
+    localDatabaseUpdate('authors');
   }
 }
 
@@ -667,11 +665,11 @@ Future<void> authorSearchHelper(context, List<Author> foundList) async {
       mainAuthorList.removeRange(1, mainAuthorList.length);
     }
 
-    for (var customer in foundList) {
-      if (customer == foundList.first) {
-        mainAuthorList.first = customer;
+    for (var author in foundList) {
+      if (author == foundList.first) {
+        mainAuthorList.first = author;
       } else if (foundList.length > 1) {
-        mainAuthorList.add(customer);
+        mainAuthorList.add(author);
       }
     }
   }
@@ -680,6 +678,7 @@ Future<void> authorSearchHelper(context, List<Author> foundList) async {
 }
 
 // Dialog Helper
+// ignore: unused_element
 class _SystemPadding extends StatelessWidget {
   final Widget child;
 

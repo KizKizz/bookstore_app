@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 import '../Data/customer_data_handler.dart';
+import '../Data/data_storage_helper.dart';
 import '../main_appbar.dart';
 
 final searchCustomerController = TextEditingController();
@@ -77,7 +78,7 @@ class _CustomerListState extends State<CustomerList> {
         setState(() {
           searchCustomerList = [];
           Iterable<Customer> foundCustomer = [];
-          if (_curSearchChoice == 'First Name') {
+          if (_curSearchChoice == 'All Fields') {
             foundCustomer = mainCustomerListCopy.where((element) =>
                 element.firstName.toLowerCase().contains(text.toLowerCase()) ||
                 element.lastName.toLowerCase().contains(text.toLowerCase()) ||

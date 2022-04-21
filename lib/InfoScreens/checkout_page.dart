@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../Data/customer_data_handler.dart';
+import '../Data/data_storage_helper.dart';
 import '../Data/employee_data_handler.dart';
 import '../state_provider.dart';
 
@@ -2115,45 +2116,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                               //Save to databases
                               if (!kIsWeb) {
-                                mainCustomerListCopy
-                                    .map(
-                                      (customer) => customer.toJson(),
-                                    )
-                                    .toList();
-                                customerDataJson.writeAsStringSync(
-                                    json.encode(mainCustomerListCopy));
-
-                                mainEmployeeListCopy
-                                    .map(
-                                      (employee) => employee.toJson(),
-                                    )
-                                    .toList();
-                                employeeDataJson.writeAsStringSync(
-                                    json.encode(mainEmployeeListCopy));
-
-                                mainBookListCopy
-                                    .map(
-                                      (book) => book.toJson(),
-                                    )
-                                    .toList();
-                                bookDataJson.writeAsStringSync(
-                                    json.encode(mainBookListCopy));
-
-                                mainOrderListCopy
-                                    .map(
-                                      (order) => order.toJson(),
-                                    )
-                                    .toList();
-                                orderDataJson.writeAsStringSync(
-                                    json.encode(mainOrderListCopy));
-
-                                mainSalesRecordListCopy
-                                    .map(
-                                      (salesRecord) => salesRecord.toJson(),
-                                    )
-                                    .toList();
-                                salesRecordDataJson.writeAsStringSync(
-                                    json.encode(mainSalesRecordListCopy));
+                                localDatabaseUpdate('books');
+                                localDatabaseUpdate('authors');
+                                localDatabaseUpdate('customers');
+                                localDatabaseUpdate('employees');
+                                localDatabaseUpdate('orders');
+                                localDatabaseUpdate('salesRecords');
                               }
                             });
                           },

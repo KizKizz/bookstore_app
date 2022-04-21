@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Data/data_preloader.dart';
 import 'Extra/app_window.dart';
 import 'login_page.dart';
 import 'main_page.dart';
@@ -46,7 +45,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     loginCheck();
-    const DataPreloader();
   }
 
   //Loading counter value on start
@@ -103,7 +101,7 @@ class _MyAppState extends State<MyApp> {
                             child: Row(
                               children: [
                                 Expanded(child: MoveWindow()),
-                                WindowButtons()
+                                const WindowButtons()
                         ])),
 
                         Expanded(child: loginState())

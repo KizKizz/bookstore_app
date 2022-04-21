@@ -5,6 +5,8 @@ const borderColor = Color.fromARGB(255, 0, 0, 0);
 
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final buttonColors = WindowButtonColors(
@@ -15,8 +17,8 @@ class WindowButtons extends StatelessWidget {
       iconMouseDown: Theme.of(context).textTheme.button!.color);
 
     final closeButtonColors = WindowButtonColors(
-      mouseOver: Color(0xFFD32F2F),
-      mouseDown: Color(0xFFB71C1C),
+      mouseOver: const Color(0xFFD32F2F),
+      mouseDown: const Color(0xFFB71C1C),
       iconNormal: Theme.of(context).textTheme.button!.color,
       iconMouseOver: Colors.white);
 

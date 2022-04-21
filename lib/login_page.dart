@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:bookstore_project/Data/customer_data_handler.dart';
+import 'package:bookstore_project/Data/data_storage_helper.dart';
 import 'package:bookstore_project/Data/employee_data_handler.dart';
 import 'package:bookstore_project/Data/order_data_handler.dart';
 import 'package:bookstore_project/Data/sales_record_data_handler.dart';
 import 'package:bookstore_project/main.dart';
 import 'package:bookstore_project/main_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +24,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,172 +164,322 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             ),
 
                           //Login Selection Screen
-                          if (!isManager)
-                          FutureBuilder(
-                            future: DefaultAssetBundle.of(context)
-                                .loadString(
-                                    'assets/jsondatabase/book_data.json'),
-                            builder: (context, snapshot) {
-                              if (snapshot.data.toString().isNotEmpty &&
-                                  snapshot.hasData &&
-                                  mainBookListCopy.isEmpty) {
-                                var jsonResponse = jsonDecode(
-                                    snapshot.data.toString());
-                                convertBookData(jsonResponse);
-                              }
-                              return FutureBuilder(
+                          if (!isManager && kIsWeb)
+                            FutureBuilder(
                                 future: DefaultAssetBundle.of(context)
                                     .loadString(
-                                        'assets/jsondatabase/author_data.json'),
+                                        'assets/jsondatabase/book_data.json'),
                                 builder: (context, snapshot) {
-                                  if (snapshot.data.toString().isEmpty) {
-                                    getAuthorsFromBook();
-                                  } else if (snapshot.hasData &&
-                                      mainAuthorListCopy.isEmpty) {
-                                    var jsonResponse = jsonDecode(
-                                        snapshot.data.toString());
-                                    convertauthorData(jsonResponse);
+                                  if (snapshot.data.toString().isNotEmpty &&
+                                      snapshot.hasData &&
+                                      mainBookListCopy.isEmpty) {
+                                    var jsonResponse =
+                                        jsonDecode(snapshot.data.toString());
+                                    convertBookData(jsonResponse);
                                   }
                                   return FutureBuilder(
-                                    future: DefaultAssetBundle.of(context)
-                                        .loadString(
-                                            'assets/jsondatabase/order_data.json'),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.data.toString().isNotEmpty &&
-                                          snapshot.hasData &&
-                                          mainOrderListCopy.isEmpty) {
-                                        var jsonResponse = jsonDecode(
-                                            snapshot.data.toString());
-                                        convertOrderData(jsonResponse);
-                                      }
-                                      return FutureBuilder(
-                                        future: DefaultAssetBundle.of(context)
-                                            .loadString(
-                                                'assets/jsondatabase/sales_record_data.json'),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.data.toString().isNotEmpty &&
-                                              snapshot.hasData &&
-                                              mainSalesRecordListCopy.isEmpty) {
-                                            var jsonResponse = jsonDecode(
-                                                snapshot.data.toString());
-                                            convertSalesRecordData(jsonResponse);
-                                          }
-                                          return FutureBuilder(
-                                            future: DefaultAssetBundle.of(context)
+                                      future: DefaultAssetBundle.of(context)
+                                          .loadString(
+                                              'assets/jsondatabase/author_data.json'),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.data.toString().isEmpty) {
+                                          getAuthorsFromBook();
+                                        } else if (snapshot.hasData &&
+                                            mainAuthorListCopy.isEmpty) {
+                                          var jsonResponse = jsonDecode(
+                                              snapshot.data.toString());
+                                          convertauthorData(jsonResponse);
+                                        }
+                                        return FutureBuilder(
+                                            future: DefaultAssetBundle.of(
+                                                    context)
                                                 .loadString(
-                                                    'assets/jsondatabase/customer_data.json'),
+                                                    'assets/jsondatabase/order_data.json'),
                                             builder: (context, snapshot) {
-                                              if (snapshot.data.toString().isNotEmpty &&
+                                              if (snapshot.data
+                                                      .toString()
+                                                      .isNotEmpty &&
                                                   snapshot.hasData &&
-                                                  mainCustomerListCopy.isEmpty) {
+                                                  mainOrderListCopy.isEmpty) {
                                                 var jsonResponse = jsonDecode(
                                                     snapshot.data.toString());
-                                                convertCustomerData(jsonResponse);
+                                                convertOrderData(jsonResponse);
                                               }
                                               return FutureBuilder(
-                                                future: DefaultAssetBundle.of(context)
-                                                    .loadString(
-                                                        'assets/jsondatabase/employee_data.json'),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.data.toString().isNotEmpty &&
-                                                      snapshot.hasData &&
-                                                      mainEmployeeListCopy.isEmpty) {
-                                                    var jsonResponse = jsonDecode(
-                                                        snapshot.data.toString());
-                                                    convertEmployeeData(jsonResponse);
-                                                  }
-                                                  return Column(
-                                                    children: [
-                                                      Container(
-                                                          width: 500,
-                                                          constraints: const BoxConstraints(
-                                                              minWidth: 200, maxWidth: 400),
-                                                          padding: const EdgeInsets.only(
-                                                              top: 40, bottom: 10, left: 5, right: 5),
-                                                          child: Text(
-                                                            'Login as:',
-                                                            style: TextStyle(
-                                                                fontSize: 15,
-                                                                color: Theme.of(context).hintColor),
-                                                          )),
-                                                      Container(
-                                                          constraints: const BoxConstraints(
-                                                              minWidth: 200, maxWidth: 400),
-                                                          padding: const EdgeInsets.only(
-                                                              top: 10,
-                                                              bottom: 10,
-                                                              left: 15,
-                                                              right: 15),
-                                                          child: SizedBox(
-                                                            width: 250,
-                                                            height: 50,
-                                                            child: ElevatedButton(
-                                                                style: ElevatedButton.styleFrom(
-                                                                    padding: const EdgeInsets.only(
-                                                                        bottom: 11)),
-                                                                onPressed: () {
-                                                                  isManager = true;
-                                                                  setState(() {});
-                                                                },
-                                                                child: const Text(
-                                                                  'Manager',
-                                                                  style: TextStyle(fontSize: 30),
-                                                                )),
-                                                          )),
-                                                      Container(
-                                                          constraints: const BoxConstraints(
-                                                              minWidth: 200, maxWidth: 400),
-                                                          padding: const EdgeInsets.only(
-                                                              top: 10,
-                                                              bottom: 10,
-                                                              left: 15,
-                                                              right: 15),
-                                                          child: SizedBox(
-                                                            width: 250,
-                                                            height: 50,
-                                                            child: ElevatedButton(
-                                                                style: ElevatedButton.styleFrom(
-                                                                    primary: const Color.fromRGBO(
-                                                                        72, 125, 238, 1),
-                                                                    padding: const EdgeInsets.only(
-                                                                        bottom: 11)),
-                                                                onPressed: () async {
-                                                                  final prefs =
-                                                                      await SharedPreferences
-                                                                          .getInstance();
-                                                                  prefs.setBool(
-                                                                      'isLoggedinEmployee', true);
-                                                                  prefs.setBool(
-                                                                      'isLoggedinManager', false);
-                                                                  Navigator.pushReplacement(
-                                                                    context,
-                                                                    PageRouteBuilder(
-                                                                      pageBuilder: (context,
-                                                                              animation1,
-                                                                              animation2) =>
-                                                                          const MainPage(),
-                                                                      // transitionDuration: Duration.zero,
-                                                                      // reverseTransitionDuration:
-                                                                      //     Duration.zero,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                child: const Text(
-                                                                  'Employee',
-                                                                  style: TextStyle(fontSize: 30),
-                                                                )),
-                                                          )),
-                                                      //Spacer
-                                                      //const SizedBox(height: 125)
-                                                    ],
-                                                  );
-                                                });
+                                                  future: DefaultAssetBundle.of(
+                                                          context)
+                                                      .loadString(
+                                                          'assets/jsondatabase/sales_record_data.json'),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.data
+                                                            .toString()
+                                                            .isNotEmpty &&
+                                                        snapshot.hasData &&
+                                                        mainSalesRecordListCopy
+                                                            .isEmpty) {
+                                                      var jsonResponse =
+                                                          jsonDecode(snapshot
+                                                              .data
+                                                              .toString());
+                                                      convertSalesRecordData(
+                                                          jsonResponse);
+                                                    }
+                                                    return FutureBuilder(
+                                                        future: DefaultAssetBundle
+                                                                .of(context)
+                                                            .loadString(
+                                                                'assets/jsondatabase/customer_data.json'),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (snapshot.data
+                                                                  .toString()
+                                                                  .isNotEmpty &&
+                                                              snapshot
+                                                                  .hasData &&
+                                                              mainCustomerListCopy
+                                                                  .isEmpty) {
+                                                            var jsonResponse =
+                                                                jsonDecode(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                            convertCustomerData(
+                                                                jsonResponse);
+                                                          }
+                                                          return FutureBuilder(
+                                                              future: DefaultAssetBundle
+                                                                      .of(
+                                                                          context)
+                                                                  .loadString(
+                                                                      'assets/jsondatabase/employee_data.json'),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .data
+                                                                        .toString()
+                                                                        .isNotEmpty &&
+                                                                    snapshot
+                                                                        .hasData &&
+                                                                    mainEmployeeListCopy
+                                                                        .isEmpty) {
+                                                                  var jsonResponse =
+                                                                      jsonDecode(snapshot
+                                                                          .data
+                                                                          .toString());
+                                                                  convertEmployeeData(
+                                                                      jsonResponse);
+                                                                }
+                                                                return Column(
+                                                                  children: [
+                                                                    Container(
+                                                                        width:
+                                                                            500,
+                                                                        constraints: const BoxConstraints(
+                                                                            minWidth:
+                                                                                200,
+                                                                            maxWidth:
+                                                                                400),
+                                                                        padding: const EdgeInsets.only(
+                                                                            top:
+                                                                                40,
+                                                                            bottom:
+                                                                                10,
+                                                                            left:
+                                                                                5,
+                                                                            right:
+                                                                                5),
+                                                                        child:
+                                                                            Text(
+                                                                          'Login as:',
+                                                                          style: TextStyle(
+                                                                              fontSize: 15,
+                                                                              color: Theme.of(context).hintColor),
+                                                                        )),
+                                                                    Container(
+                                                                        constraints: const BoxConstraints(
+                                                                            minWidth:
+                                                                                200,
+                                                                            maxWidth:
+                                                                                400),
+                                                                        padding: const EdgeInsets.only(
+                                                                            top:
+                                                                                10,
+                                                                            bottom:
+                                                                                10,
+                                                                            left:
+                                                                                15,
+                                                                            right:
+                                                                                15),
+                                                                        child:
+                                                                            SizedBox(
+                                                                          width:
+                                                                              250,
+                                                                          height:
+                                                                              50,
+                                                                          child: ElevatedButton(
+                                                                              style: ElevatedButton.styleFrom(padding: const EdgeInsets.only(bottom: 11)),
+                                                                              onPressed: () {
+                                                                                isManager = true;
+                                                                                setState(() {});
+                                                                              },
+                                                                              child: const Text(
+                                                                                'Manager',
+                                                                                style: TextStyle(fontSize: 30),
+                                                                              )),
+                                                                        )),
+                                                                    Container(
+                                                                        constraints: const BoxConstraints(
+                                                                            minWidth:
+                                                                                200,
+                                                                            maxWidth:
+                                                                                400),
+                                                                        padding: const EdgeInsets.only(
+                                                                            top:
+                                                                                10,
+                                                                            bottom:
+                                                                                10,
+                                                                            left:
+                                                                                15,
+                                                                            right:
+                                                                                15),
+                                                                        child:
+                                                                            SizedBox(
+                                                                          width:
+                                                                              250,
+                                                                          height:
+                                                                              50,
+                                                                          child: ElevatedButton(
+                                                                              style: ElevatedButton.styleFrom(primary: const Color.fromRGBO(72, 125, 238, 1), padding: const EdgeInsets.only(bottom: 11)),
+                                                                              onPressed: () async {
+                                                                                final prefs = await SharedPreferences.getInstance();
+                                                                                prefs.setBool('isLoggedinEmployee', true);
+                                                                                prefs.setBool('isLoggedinManager', false);
+                                                                                Navigator.pushReplacement(
+                                                                                  context,
+                                                                                  PageRouteBuilder(
+                                                                                    pageBuilder: (context, animation1, animation2) => const MainPage(),
+                                                                                    // transitionDuration: Duration.zero,
+                                                                                    // reverseTransitionDuration:
+                                                                                    //     Duration.zero,
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                              child: const Text(
+                                                                                'Employee',
+                                                                                style: TextStyle(fontSize: 30),
+                                                                              )),
+                                                                        )),
+                                                                    //Spacer
+                                                                    //const SizedBox(height: 125)
+                                                                  ],
+                                                                );
+                                                              });
+                                                        });
+                                                  });
                                             });
-                                        });
-                                });
-                            });
-                            }),
+                                      });
+                                }),
 
+                          if (!isManager && !kIsWeb)
+                            FutureBuilder(
+                                future: localDatabaseLoad(),
+                                builder: (context, snapshot) {
+                                  return Column(
+                                    children: [
+                                      Container(
+                                          width: 500,
+                                          constraints: const BoxConstraints(
+                                              minWidth: 200, maxWidth: 400),
+                                          padding: const EdgeInsets.only(
+                                              top: 40,
+                                              bottom: 10,
+                                              left: 5,
+                                              right: 5),
+                                          child: Text(
+                                            'Login as:',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Theme.of(context)
+                                                    .hintColor),
+                                          )),
+                                      Container(
+                                          constraints: const BoxConstraints(
+                                              minWidth: 200, maxWidth: 400),
+                                          padding: const EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 10,
+                                              left: 15,
+                                              right: 15),
+                                          child: SizedBox(
+                                            width: 250,
+                                            height: 50,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 11)),
+                                                onPressed: () {
+                                                  isManager = true;
+                                                  setState(() {});
+                                                },
+                                                child: const Text(
+                                                  'Manager',
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                )),
+                                          )),
+                                      Container(
+                                          constraints: const BoxConstraints(
+                                              minWidth: 200, maxWidth: 400),
+                                          padding: const EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 10,
+                                              left: 15,
+                                              right: 15),
+                                          child: SizedBox(
+                                            width: 250,
+                                            height: 50,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary:
+                                                        const Color.fromRGBO(
+                                                            72, 125, 238, 1),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 11)),
+                                                onPressed: () async {
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  prefs.setBool(
+                                                      'isLoggedinEmployee',
+                                                      true);
+                                                  prefs.setBool(
+                                                      'isLoggedinManager',
+                                                      false);
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context,
+                                                              animation1,
+                                                              animation2) =>
+                                                          const MainPage(),
+                                                      // transitionDuration: Duration.zero,
+                                                      // reverseTransitionDuration:
+                                                      //     Duration.zero,
+                                                    ),
+                                                  );
+                                                },
+                                                child: const Text(
+                                                  'Employee',
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                )),
+                                          )),
+                                      //Spacer
+                                      //const SizedBox(height: 125)
+                                    ],
+                                  );
+                                }),
                         ],
                       )
                     ],

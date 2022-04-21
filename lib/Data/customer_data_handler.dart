@@ -1,7 +1,6 @@
-// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
+// ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures, unused_import
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
@@ -9,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-final File customerDataJson = File('assets/jsondatabase/customer_data.json');
-List<Customer> mainCustomerList = [];
-List<Customer> mainCustomerListCopy = [];
+import 'data_storage_helper.dart';
+
+
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -742,13 +741,7 @@ class CustomerDatabase extends DataTableSource {
                       notifyListeners();
                       Navigator.pop(context);
                       if (!kIsWeb) {
-                        mainCustomerListCopy
-                            .map(
-                              (customer) => customer.toJson(),
-                            )
-                            .toList();
-                        customerDataJson.writeAsStringSync(
-                            json.encode(mainCustomerListCopy));
+                        localDatabaseUpdate('customers');
                       }
                     })
               ],
@@ -956,13 +949,7 @@ Future<void> customerDataAdder(context) async {
                     mainCustomerListCopy.add(newCustomer);
                     Navigator.pop(context);
                     if (!kIsWeb) {
-                      mainCustomerListCopy
-                          .map(
-                            (customer) => customer.toJson(),
-                          )
-                          .toList();
-                      customerDataJson
-                          .writeAsStringSync(json.encode(mainCustomerListCopy));
+                      localDatabaseUpdate('customers');
                     }
 
                     //debugPrint(newBook.allInfo.toString());

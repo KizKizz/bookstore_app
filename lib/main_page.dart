@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
                             )),
                         )
                   )), 
-                  WindowButtons(),
+                  const WindowButtons(),
                   ]),
             )),
             if (verticalBar)

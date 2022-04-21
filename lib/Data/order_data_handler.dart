@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -10,10 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 import 'book_data_handler.dart';
+import 'data_storage_helper.dart';
 
-final File orderDataJson = File('assets/jsondatabase/order_data.json');
-List<Order> mainOrderList = [];
-List<Order> mainOrderListCopy = [];
 final List<String> _orderStatusDropDownVal = [
   'Picked Up',
   'Customer Will Pickup',
@@ -736,13 +732,7 @@ class OrderDatabase extends DataTableSource {
                       notifyListeners();
                       Navigator.pop(context);
                       if (!kIsWeb) {
-                        mainOrderListCopy
-                            .map(
-                              (order) => order.toJson(),
-                            )
-                            .toList();
-                        orderDataJson
-                            .writeAsStringSync(json.encode(mainOrderListCopy));
+                        localDatabaseUpdate('orders');
                       }
                     })
               ],
@@ -811,13 +801,7 @@ Future<void> orderDataAdder(context) async {
                     mainOrderListCopy.add(newOrder);
                     Navigator.pop(context);
                     if (!kIsWeb) {
-                      mainOrderListCopy
-                          .map(
-                            (order) => order.toJson(),
-                          )
-                          .toList();
-                      orderDataJson
-                          .writeAsStringSync(json.encode(mainOrderListCopy));
+                     localDatabaseUpdate('orders');
                     }
 
                     //debugPrint(newBook.allInfo.toString());
@@ -874,11 +858,11 @@ Future<void> orderSearchHelper(context, List<Order> foundList) async {
       mainOrderList.removeRange(1, mainOrderList.length);
     }
 
-    for (var customer in foundList) {
-      if (customer == foundList.first) {
-        mainOrderList.first = customer;
+    for (var order in foundList) {
+      if (order == foundList.first) {
+        mainOrderList.first = order;
       } else if (foundList.length > 1) {
-        mainOrderList.add(customer);
+        mainOrderList.add(order);
       }
     }
   }

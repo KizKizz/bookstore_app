@@ -4,6 +4,7 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 
+import '../Data/data_storage_helper.dart';
 import '../Data/order_data_handler.dart';
 import '../main_appbar.dart';
 
@@ -23,7 +24,7 @@ final List<String> _searchDropDownVal = [
     'Order Status',
     'BookIDs'
   ];
-  late String _curSearchChoice = _searchDropDownVal[0];
+  late String _curOrderSearchChoice = _searchDropDownVal[0];
 
 class OrderList extends StatefulWidget {
   const OrderList({Key? key}) : super(key: key);
@@ -81,7 +82,7 @@ class _OrderListState extends State<OrderList> {
         setState(() {
           searchOrderList = [];
           Iterable<Order> foundOrder = [];
-          if (_curSearchChoice == 'Order Number') {
+          if (_curOrderSearchChoice == 'All Fields') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.orderNum.toLowerCase().contains(text.toLowerCase()) ||
                 element.customerName.toLowerCase().contains(text.toLowerCase()) ||
@@ -94,49 +95,49 @@ class _OrderListState extends State<OrderList> {
                 element.paymentMethod.toLowerCase().contains(text.toLowerCase()) ||
                 element.orderStatus.toLowerCase().contains(text.toLowerCase()) ||
                 element.bookIds.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Order Number') {
+          } else if (_curOrderSearchChoice == 'Order Number') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.orderNum.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Customer Name') {
+          } else if (_curOrderSearchChoice == 'Customer Name') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .customerName
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Customer ID') {
+          } else if (_curOrderSearchChoice == 'Customer ID') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.customerId.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Salesperon Name') {
+          } else if (_curOrderSearchChoice == 'Salesperon Name') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .salesPersonName
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Salesperon ID') {
+          } else if (_curOrderSearchChoice == 'Salesperon ID') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .salesPersonId
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Order Date') {
+          } else if (_curOrderSearchChoice == 'Order Date') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.orderDate.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Delivery Date') {
+          } else if (_curOrderSearchChoice == 'Delivery Date') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .deliveryDate
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Total Cost') {
+          } else if (_curOrderSearchChoice == 'Total Cost') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .totalOrderCost
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Payment Medthod') {
+          } else if (_curOrderSearchChoice == 'Payment Medthod') {
             foundOrder = mainOrderListCopy.where((element) => element
                 .paymentMethod
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Order Status') {
+          } else if (_curOrderSearchChoice == 'Order Status') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.orderStatus.toLowerCase().contains(text.toLowerCase()));
-          } else if (_curSearchChoice == 'Phone Number') {
+          } else if (_curOrderSearchChoice == 'Phone Number') {
             foundOrder = mainOrderListCopy.where((element) =>
                 element.bookIds.toLowerCase().contains(text.toLowerCase()));
           }
@@ -278,11 +279,11 @@ class _OrderListState extends State<OrderList> {
                     color: Theme.of(context).canvasColor,
                   ),
                   dropdownElevation: 2,
-                  value: _curSearchChoice,
+                  value: _curOrderSearchChoice,
                   dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
-                      _curSearchChoice = newValue!;
+                      _curOrderSearchChoice = newValue!;
                     });
                   },
                 )),

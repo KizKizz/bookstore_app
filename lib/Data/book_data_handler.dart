@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
@@ -13,10 +12,9 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import '../InfoScreens/book_list.dart';
 import 'author_data_handler.dart';
+import 'data_storage_helper.dart';
 
-final File bookDataJson = File('assets/jsondatabase/book_data.json');
-List<Book> mainBookList = [];
-List<Book> mainBookListCopy = [];
+
 List<Book> checkoutCartList = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
@@ -178,7 +176,6 @@ class BookDatabase extends DataTableSource {
 
   void sort<T>(Comparable<T> Function(Book d) getField, bool ascending) {
     books.sort((a, b) {
-
       final aValue = getField(a);
       final bValue = getField(b);
 
@@ -227,11 +224,7 @@ class BookDatabase extends DataTableSource {
                 notifyListeners();
               }
             },
-      onTap: hasRowTaps
-          ? () => [
-                _showDialog(context, book)
-              ]
-          : null,
+      onTap: hasRowTaps ? () => [_showDialog(context, book)] : null,
       onDoubleTap: hasRowTaps
           ? () => [
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -267,9 +260,10 @@ class BookDatabase extends DataTableSource {
               message: 'Add to Cart',
               textStyle: const TextStyle(fontSize: 15),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Theme.of(context).primaryColorLight),
-                color: Theme.of(context).cardColor),
+                  borderRadius: BorderRadius.circular(5),
+                  border:
+                      Border.all(color: Theme.of(context).primaryColorLight),
+                  color: Theme.of(context).cardColor),
               waitDuration: const Duration(seconds: 1),
               child: Container(
                   padding: const EdgeInsets.only(right: 15),
@@ -284,19 +278,20 @@ class BookDatabase extends DataTableSource {
           )
         else if (book.sold.toLowerCase() == '*In Cart'.toLowerCase())
           DataCell(
-             Tooltip(
-                message: 'Remove from Cart',
-                textStyle: const TextStyle(fontSize: 15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border:
-                        Border.all(color: Theme.of(context).primaryColorLight),
-                    color: Theme.of(context).cardColor),
-                waitDuration: const Duration(seconds: 1),
-                child: Container(
+            Tooltip(
+              message: 'Remove from Cart',
+              textStyle: const TextStyle(fontSize: 15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border:
+                      Border.all(color: Theme.of(context).primaryColorLight),
+                  color: Theme.of(context).cardColor),
+              waitDuration: const Duration(seconds: 1),
+              child: Container(
                   padding: const EdgeInsets.only(right: 15),
-                  child: Icon(Icons.remove_shopping_cart, color: Theme.of(context).hintColor)),
-             ),
+                  child: Icon(Icons.remove_shopping_cart,
+                      color: Theme.of(context).hintColor)),
+            ),
             onTap: () {
               book.sold = 'Available';
               checkoutCartList.remove(book);
@@ -304,9 +299,8 @@ class BookDatabase extends DataTableSource {
               notifyListeners();
             },
           )
-          else 
-            const DataCell(SizedBox())
-          
+        else
+          const DataCell(SizedBox())
       ],
     );
   }
@@ -359,8 +353,7 @@ class BookDatabase extends DataTableSource {
               title: const Center(
                 child: Center(
                   child: Text('Book Info',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700)),
+                      style: TextStyle(fontWeight: FontWeight.w700)),
                 ),
               ),
               contentPadding:
@@ -384,11 +377,13 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.title,
-                                            onChanged: (text) => {curBook.title = text},
+                                            onChanged: (text) =>
+                                                {curBook.title = text},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -402,7 +397,8 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.edition,
@@ -416,11 +412,13 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.id,
-                                            onChanged: (text) => {curBook.id = text},
+                                            onChanged: (text) =>
+                                                {curBook.id = text},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -430,21 +428,27 @@ class BookDatabase extends DataTableSource {
                                     ],
                                   ),
                                   Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             child: Container(
                                           padding:
                                               const EdgeInsets.only(right: 10),
                                           child: TextFormField(
-                                              controller: TextEditingController()
-                                                ..text = curBook.authorFirstName,
-                                              onChanged: (text) =>
-                                                  {curBook.authorFirstName = text},
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text =
+                                                        curBook.authorFirstName,
+                                              onChanged: (text) => {
+                                                    curBook.authorFirstName =
+                                                        text
+                                                  },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 hintText: '',
-                                                labelText: 'Author\'s First Name',
+                                                labelText:
+                                                    'Author\'s First Name',
                                               )),
                                         )),
                                         Expanded(
@@ -452,14 +456,19 @@ class BookDatabase extends DataTableSource {
                                           padding:
                                               const EdgeInsets.only(left: 10),
                                           child: TextFormField(
-                                              controller: TextEditingController()
-                                                ..text = curBook.authorLastName,
-                                              onChanged: (text) =>
-                                                  {curBook.authorLastName = text},
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text =
+                                                        curBook.authorLastName,
+                                              onChanged: (text) => {
+                                                    curBook.authorLastName =
+                                                        text
+                                                  },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 hintText: '',
-                                                labelText: 'Author\'s Last Name',
+                                                labelText:
+                                                    'Author\'s Last Name',
                                               )),
                                         )),
                                       ]),
@@ -468,7 +477,8 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.publisher,
@@ -482,7 +492,8 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.publishDate,
@@ -501,11 +512,13 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.cost,
-                                            onChanged: (text) => {curBook.cost = text},
+                                            onChanged: (text) =>
+                                                {curBook.cost = text},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -514,7 +527,8 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.retailPrice,
@@ -535,7 +549,8 @@ class BookDatabase extends DataTableSource {
                                           'Condition',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color: Theme.of(context).hintColor),
+                                              color:
+                                                  Theme.of(context).hintColor),
                                         ),
                                         RatingBar.builder(
                                           itemSize: 40,
@@ -544,9 +559,11 @@ class BookDatabase extends DataTableSource {
                                           direction: Axis.horizontal,
                                           allowHalfRating: false,
                                           itemCount: 5,
-                                          itemPadding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0),
-                                          itemBuilder: (context, _) => const Icon(
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                           ),
@@ -576,8 +593,8 @@ class BookDatabase extends DataTableSource {
                                             'Status',
                                             style: TextStyle(
                                                 fontSize: 14,
-                                                color:
-                                                    Theme.of(context).hintColor),
+                                                color: Theme.of(context)
+                                                    .hintColor),
                                           ),
                                         ),
                                         ToggleSwitch(
@@ -621,59 +638,53 @@ class BookDatabase extends DataTableSource {
                         Navigator.pop(context);
                       }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                  ElevatedButton(
+                      child: const Text('CANCEL'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('SAVE'),
-                    onPressed: () async {
-                      int _bookMatchIndex = mainBookListCopy
-                          .indexWhere((element) => element.id == curBook.id);
-                      //debugPrint('curafter: ${_bookMatchIndex}');
-                      // for (var item in curBook.allInfoHeaders) {
-                      //   curBook.setInfo(item);
-                      // }
+                  ElevatedButton(
+                      child: const Text('SAVE'),
+                      onPressed: () async {
+                        int _bookMatchIndex = mainBookListCopy
+                            .indexWhere((element) => element.id == curBook.id);
+                        //debugPrint('curafter: ${_bookMatchIndex}');
+                        // for (var item in curBook.allInfoHeaders) {
+                        //   curBook.setInfo(item);
+                        // }
 
-                      String _authorDataGet =
-                          await authorDataJson.readAsString();
-                      if (_authorDataGet.isEmpty) {
-                        getAuthorsFromBook();
-                      } else if (_authorDataGet.isNotEmpty &&
-                          mainAuthorListCopy.isEmpty) {
-                        var _jsonResponse = await jsonDecode(_authorDataGet);
-                        convertauthorData(_jsonResponse);
-                      }
+                        String _authorDataGet =
+                            await authorDataJson.readAsString();
+                        if (_authorDataGet.isEmpty) {
+                          getAuthorsFromBook();
+                        } else if (_authorDataGet.isNotEmpty &&
+                            mainAuthorListCopy.isEmpty) {
+                          var _jsonResponse = await jsonDecode(_authorDataGet);
+                          convertauthorData(_jsonResponse);
+                        }
 
-                      if (_bookMatchIndex >= 0) {
-                        mainBookListCopy[_bookMatchIndex] = curBook;
-                      }
+                        if (_bookMatchIndex >= 0) {
+                          mainBookListCopy[_bookMatchIndex] = curBook;
+                        }
 
-                      //Fetch author data again?
-                      final foundAuthor = mainAuthorListCopy.singleWhere(
-                          (element) => element.id
-                              .toLowerCase()
-                              .contains(_curBookAuthor.toLowerCase()));
-                      foundAuthor.firstName = curBook.authorFirstName;
-                      foundAuthor.lastName = curBook.authorLastName;
+                        //Fetch author data again?
+                        final foundAuthor = mainAuthorListCopy.singleWhere(
+                            (element) => element.id
+                                .toLowerCase()
+                                .contains(_curBookAuthor.toLowerCase()));
+                        foundAuthor.firstName = curBook.authorFirstName;
+                        foundAuthor.lastName = curBook.authorLastName;
 
-                      notifyListeners();
-                      Navigator.pop(context);
+                        notifyListeners();
+                        Navigator.pop(context);
 
-                      if (!kIsWeb) {
-                        mainBookListCopy
-                            .map(
-                              (book) => book.toJson(),
-                            )
-                            .toList();
-                        bookDataJson
-                            .writeAsStringSync(json.encode(mainBookListCopy));
-                      }
-                      // notifyListeners();
-                      // Navigator.pop(context);
-                    })
+                        if (!kIsWeb) {
+                          localDatabaseUpdate('books');
+                        }
+                        // notifyListeners();
+                        // Navigator.pop(context);
+                      })
               ],
             ),
           );
@@ -711,8 +722,7 @@ Future<void> bookDataAdder(context) async {
                   titlePadding: const EdgeInsets.only(top: 10),
                   title: const Center(
                     child: Text('Add Book',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700)),
+                        style: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   contentPadding:
                       const EdgeInsets.only(top: 10, left: 16, bottom: 10),
@@ -722,8 +732,7 @@ Future<void> bookDataAdder(context) async {
                       child: SingleChildScrollView(
                           child: Padding(
                               padding: const EdgeInsets.only(right: 16),
-                              child: Row(
-                                children: <Widget>[
+                              child: Row(children: <Widget>[
                                 Expanded(
                                     child: Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -1275,6 +1284,14 @@ Future<void> bookDataAdder(context) async {
                           // }
                           mainBookList.add(newBook);
                           mainBookListCopy.add(newBook);
+                          
+
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: const Duration(seconds: 1),
+                            //backgroundColor: Theme.of(context).focusColor,
+                            content: Text(
+                                'File found at ${bookDataJson.existsSync().toString()}'),
+                          ));
 
                           //Update Author List
                           if ((mainAuthorListCopy.indexWhere(
@@ -1286,25 +1303,11 @@ Future<void> bookDataAdder(context) async {
 
                           //write to json
                           if (!kIsWeb) {
-                            mainAuthorList
-                                .map(
-                                  (author) => author.toJson(),
-                                )
-                                .toList();
-                            authorDataJson
-                                .writeAsStringSync(json.encode(mainAuthorList));
-                          }
-
-                          if (!kIsWeb) {
-                            mainBookListCopy
-                                .map(
-                                  (book) => book.toJson(),
-                                )
-                                .toList();
-                            bookDataJson.writeAsStringSync(
-                                json.encode(mainBookListCopy));
+                            localDatabaseUpdate('books');
+                            localDatabaseUpdate('authors');
                           }
                           Navigator.pop(context);
+
                           //debugPrint(newBook.allInfo.toString());
                         })
                   ],

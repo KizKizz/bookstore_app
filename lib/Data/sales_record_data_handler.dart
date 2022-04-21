@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
@@ -9,10 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-final File salesRecordDataJson =
-    File('assets/jsondatabase/sales_record_data.json');
-List<SalesRecord> mainSalesRecordList = [];
-List<SalesRecord> mainSalesRecordListCopy = [];
+import 'data_storage_helper.dart';
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -563,13 +558,7 @@ class SalesRecordDatabase extends DataTableSource {
                       notifyListeners();
                       Navigator.pop(context);
                       if (!kIsWeb) {
-                        mainSalesRecordListCopy
-                            .map(
-                              (salesRecord) => salesRecord.toJson(),
-                            )
-                            .toList();
-                        salesRecordDataJson.writeAsStringSync(
-                            json.encode(mainSalesRecordListCopy));
+                        localDatabaseUpdate('salesRecords');
                       }
                     })
               ],
@@ -635,13 +624,7 @@ Future<void> salesRecordDataAdder(context) async {
                     mainSalesRecordListCopy.add(newSalesRecord);
                     Navigator.pop(context);
                     if (!kIsWeb) {
-                      mainSalesRecordListCopy
-                          .map(
-                            (customer) => customer.toJson(),
-                          )
-                          .toList();
-                      salesRecordDataJson.writeAsStringSync(
-                          json.encode(mainSalesRecordListCopy));
+                      localDatabaseUpdate('salesRecords');
                     }
 
                     //debugPrint(newBook.allInfo.toString());

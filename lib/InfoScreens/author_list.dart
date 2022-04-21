@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:bookstore_project/Data/author_data_handler.dart';
 
+import '../Data/data_storage_helper.dart';
 import '../main_appbar.dart';
 
 bool showBooks = false;
@@ -274,7 +275,7 @@ class _AuthorListState extends State<AuthorList> {
                 .loadString('assets/jsondatabase/author_data.json'),
             builder: (context, snapshot) {
               if (snapshot.data.toString().isEmpty) {
-                getAuthorsFromBook();
+                //getAuthorsFromBook();
               } else if (snapshot.hasData &&
                   _authorsDataSource.authors.isEmpty) {
                 var jsonResponse = jsonDecode(snapshot.data.toString());
