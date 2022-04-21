@@ -375,7 +375,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.bookTitle,
                                       onChanged: (text) =>
-                                          {curSalesRecord.bookTitle = text},
+                                          {curSalesRecord.infoEdited('Book Title', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -390,7 +390,7 @@ class SalesRecordDatabase extends DataTableSource {
                                   controller: TextEditingController()
                                     ..text = curSalesRecord.bookId,
                                   onChanged: (text) =>
-                                      {curSalesRecord.bookId = text},
+                                      {curSalesRecord.infoEdited('Book ID', text)},
                                   decoration: const InputDecoration(
                                     //icon: Icon(Icons.person),
                                     hintText: '',
@@ -410,7 +410,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.customerName,
                                       onChanged: (text) =>
-                                          {curSalesRecord.customerName = text},
+                                          {curSalesRecord.infoEdited('Customer Name', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -425,7 +425,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.customerId,
                                       onChanged: (text) =>
-                                          {curSalesRecord.customerId = text},
+                                          {curSalesRecord.infoEdited('Customer ID', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -445,7 +445,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.salesPersonName,
                                       onChanged: (text) =>
-                                          {curSalesRecord.salesPersonName = text},
+                                          {curSalesRecord.infoEdited('Salesperson Name', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -460,7 +460,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.salesPersonId,
                                       onChanged: (text) =>
-                                          {curSalesRecord.salesPersonId = text},
+                                          {curSalesRecord.infoEdited('Salesperson ID', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -480,7 +480,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.soldPrice,
                                       onChanged: (text) =>
-                                          {curSalesRecord.soldPrice = text},
+                                          {curSalesRecord.infoEdited('Sold Price', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -495,7 +495,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.orderDate,
                                       onChanged: (text) =>
-                                          {curSalesRecord.orderDate = text},
+                                          {curSalesRecord.infoEdited('Order Date', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',
@@ -510,7 +510,7 @@ class SalesRecordDatabase extends DataTableSource {
                                       controller: TextEditingController()
                                         ..text = curSalesRecord.deliveryDate,
                                       onChanged: (text) =>
-                                          {curSalesRecord.deliveryDate = text},
+                                          {curSalesRecord.infoEdited('Delivery Date', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
                                         hintText: '',

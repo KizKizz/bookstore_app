@@ -83,7 +83,7 @@ class Author {
   String description;
 
   bool selected = false;
-  List editResults = List.filled(10, null);
+  List editResults = List.filled(6, null);
 
   List get allInfo {
     return [
@@ -94,6 +94,49 @@ class Author {
       yearDead,
       description,
     ];
+  }
+
+  List get allInfoHeaders {
+    return [
+      'First Name',
+      'Last Name',
+      'ID',
+      'Year of Birth',
+      'Year of Dead',
+      'Description',
+    ];
+  }
+
+  void setInfo(var info) {
+    if (info == 'First Name' && editResults[0] != null)
+      firstName = editResults[0];
+    else if (info == 'Last Name' && editResults[1] != null)
+      lastName = editResults[1];
+    else if (info == 'ID' && editResults[2] != null)
+      id = editResults[2];
+    else if (info == 'Year of Birth' && editResults[3] != null)
+      yearBirth = editResults[3];
+    else if (info == 'Year of Dead' && editResults[4] != null)
+      yearDead = editResults[4];
+    else if (info == 'Description' && editResults[5] != null)
+      description = editResults[5];
+  }
+
+  void infoEdited(var info, var editedVal) {
+    if (info == 'First Name')
+      editResults[0] = editedVal;
+    else if (info == 'Last Name')
+      editResults[1] = editedVal;
+    else if (info == 'ID')
+      editResults[2] = editedVal;
+    else if (info == 'Year of Birth')
+      editResults[3] = editedVal;
+    else if (info == 'Year of Dead')
+      editResults[4] = editedVal;
+    else if (info == 'Description')
+      editResults[5] = editedVal;
+    else
+      editResults[0] = editedVal;
   }
 
   fromJson(Map<String, dynamic> json) {
@@ -289,7 +332,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.firstName,
                                           onChanged: (text) =>
-                                              {curAuthor.firstName = text},
+                                              {curAuthor.infoEdited('First Name', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: '',
@@ -304,7 +347,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.lastName,
                                           onChanged: (text) =>
-                                              {curAuthor.lastName = text},
+                                              {curAuthor.infoEdited('Last Name', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: '',
@@ -324,7 +367,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.id,
                                           onChanged: (text) =>
-                                              {curAuthor.id = text},
+                                              {curAuthor.infoEdited('ID', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: 'ABCD1234',
@@ -339,7 +382,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearBirth,
                                           onChanged: (text) =>
-                                              {curAuthor.yearBirth = text},
+                                              {curAuthor.infoEdited('Year of Birth', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: 'YYYY',
@@ -354,7 +397,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.yearDead,
                                           onChanged: (text) =>
-                                              {curAuthor.yearDead = text},
+                                              {curAuthor.infoEdited('Year of Dead', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: 'YYYY',
@@ -374,7 +417,7 @@ class AuthorDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                             ..text = curAuthor.description,
                                           onChanged: (text) =>
-                                              {curAuthor.description = text},
+                                              {curAuthor.infoEdited('Description', text)},
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
                                             hintText: '',
@@ -525,9 +568,9 @@ class AuthorDatabase extends DataTableSource {
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () {
-                        // for (var item in curAuthor.allInfoHeaders) {
-                        //   curAuthor.setInfo(item);
-                        // }
+                        for (var item in curAuthor.allInfoHeaders) {
+                          curAuthor.setInfo(item);
+                        }
 
                         //write to json
                         if (!kIsWeb) {

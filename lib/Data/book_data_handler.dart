@@ -14,7 +14,6 @@ import '../InfoScreens/book_list.dart';
 import 'author_data_handler.dart';
 import 'data_storage_helper.dart';
 
-
 List<Book> checkoutCartList = [];
 
 // Copyright 2019 The Flutter team. All rights reserved.
@@ -97,7 +96,7 @@ class Book {
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(10, null);
+  List editResults = List.filled(12, null);
 
   List get allInfo {
     return [
@@ -114,6 +113,79 @@ class Book {
       condition,
       sold
     ];
+  }
+
+  List get allInfoHeaders {
+    return [
+      'Title',
+      'ID',
+      'Author First Name',
+      'Author Last Name',
+      'Author ID',
+      'Publisher',
+      'Publish Date',
+      'Edition',
+      'Cost',
+      'Retail Price',
+      'Condition',
+      'Sold'
+    ];
+  }
+
+  void setInfo(var info) {
+    if (info == 'Title' && editResults[0] != null)
+      title = editResults[0];
+    else if (info == 'ID' && editResults[1] != null)
+      id = editResults[1];
+    else if (info == 'Author First Name' && editResults[2] != null)
+      authorFirstName = editResults[2];
+    else if (info == 'Author Last Name' && editResults[3] != null)
+      authorLastName = editResults[3];
+    else if (info == 'Author ID' && editResults[4] != null)
+      authorID = editResults[4];
+    else if (info == 'Publisher' && editResults[5] != null)
+      publisher = editResults[5];
+    else if (info == 'Publish Date' && editResults[6] != null)
+      publishDate = editResults[6];
+    else if (info == 'Edition' && editResults[7] != null)
+      edition = editResults[7];
+    else if (info == 'Cost' && editResults[8] != null)
+      cost = editResults[8];
+    else if (info == 'Retail Price' && editResults[9] != null)
+      retailPrice = editResults[9];
+    else if (info == 'Condition' && editResults[10] != null)
+      condition = editResults[10];
+    else if (info == 'Sold' && editResults[11] != null)
+      sold = editResults[11];
+  }
+
+  void infoEdited(var info, var editedVal) {
+    if (info == 'Title')
+      editResults[0] = editedVal;
+    else if (info == 'ID')
+      editResults[1] = editedVal;
+    else if (info == 'Author First Name')
+      editResults[2] = editedVal;
+    else if (info == 'Author Last Name')
+      editResults[3] = editedVal;
+    else if (info == 'Author ID')
+      editResults[4] = editedVal;
+    else if (info == 'Publisher')
+      editResults[5] = editedVal;
+    else if (info == 'Publish Date')
+      editResults[6] = editedVal;
+    else if (info == 'Edition')
+      editResults[7] = editedVal;
+    else if (info == 'Cost')
+      editResults[8] = editedVal;
+    else if (info == 'Retail Price')
+      editResults[9] = editedVal;
+    else if (info == 'Condition')
+      editResults[10] = editedVal;
+    else if (info == 'Sold')
+      editResults[11] = editedVal;
+    else
+      editResults[0] = editedVal;
   }
 
   fromJson(Map<String, dynamic> json) {
@@ -326,7 +398,6 @@ class BookDatabase extends DataTableSource {
   _showDialog(context, Book curBook) async {
     double _conditionRating = 1.0;
     int _statusRating = 0;
-    String _curBookAuthor = curBook.authorID;
     if (curBook.condition == 'Poor') {
       _conditionRating = 1.0;
     } else if (curBook.condition == 'Fair') {
@@ -383,7 +454,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.title,
                                             onChanged: (text) =>
-                                                {curBook.title = text},
+                                                {curBook.infoEdited('Title', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -403,7 +474,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.edition,
                                             onChanged: (text) =>
-                                                {curBook.edition = text},
+                                                {curBook.infoEdited('Edition', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -418,7 +489,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.id,
                                             onChanged: (text) =>
-                                                {curBook.id = text},
+                                                {curBook.infoEdited('ID', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -441,8 +512,7 @@ class BookDatabase extends DataTableSource {
                                                     ..text =
                                                         curBook.authorFirstName,
                                               onChanged: (text) => {
-                                                    curBook.authorFirstName =
-                                                        text
+                                                    curBook.infoEdited('Author First Name', text)
                                                   },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
@@ -461,8 +531,7 @@ class BookDatabase extends DataTableSource {
                                                     ..text =
                                                         curBook.authorLastName,
                                               onChanged: (text) => {
-                                                    curBook.authorLastName =
-                                                        text
+                                                    curBook.infoEdited('Author Last Name', text)
                                                   },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
@@ -483,7 +552,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.publisher,
                                             onChanged: (text) =>
-                                                {curBook.publisher = text},
+                                                {curBook.infoEdited('Publisher', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -498,7 +567,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.publishDate,
                                             onChanged: (text) =>
-                                                {curBook.publishDate = text},
+                                                {curBook.infoEdited('Publish Date', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -518,7 +587,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.cost,
                                             onChanged: (text) =>
-                                                {curBook.cost = text},
+                                                {curBook.infoEdited('Cost', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -533,7 +602,7 @@ class BookDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curBook.retailPrice,
                                             onChanged: (text) =>
-                                                {curBook.retailPrice = text},
+                                                {curBook.infoEdited('Retail Price', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -569,15 +638,15 @@ class BookDatabase extends DataTableSource {
                                           ),
                                           onRatingUpdate: (rating) {
                                             if (rating == 1.0) {
-                                              curBook.condition = 'Poor';
+                                              curBook.infoEdited('Condition', 'Poor');
                                             } else if (rating == 2.0) {
-                                              curBook.condition = 'Fair';
+                                              curBook.infoEdited('Condition', 'Fair');
                                             } else if (rating == 3.0) {
-                                              curBook.condition = 'Good';
+                                              curBook.infoEdited('Condition', 'Good');
                                             } else if (rating == 4.0) {
-                                              curBook.condition = 'Excellent';
+                                              curBook.infoEdited('Condition', 'Excellent');
                                             } else if (rating == 5.0) {
-                                              curBook.condition = 'Superb';
+                                              curBook.infoEdited('Condition', 'Superb');
                                             }
                                           },
                                         )
@@ -617,9 +686,9 @@ class BookDatabase extends DataTableSource {
                                           ],
                                           onToggle: (index) {
                                             if (index == 0) {
-                                              curBook.sold = 'Available';
+                                              curBook.infoEdited('Sold', 'Available');
                                             } else if (index == 1) {
-                                              curBook.sold = 'Sold';
+                                              curBook.infoEdited('Sold', 'Sold');
                                             }
                                           },
                                         )
@@ -650,38 +719,27 @@ class BookDatabase extends DataTableSource {
                         int _bookMatchIndex = mainBookListCopy
                             .indexWhere((element) => element.id == curBook.id);
                         //debugPrint('curafter: ${_bookMatchIndex}');
-                        // for (var item in curBook.allInfoHeaders) {
-                        //   curBook.setInfo(item);
-                        // }
-
-                        String _authorDataGet =
-                            await authorDataJson.readAsString();
-                        if (_authorDataGet.isEmpty) {
-                          getAuthorsFromBook();
-                        } else if (_authorDataGet.isNotEmpty &&
-                            mainAuthorListCopy.isEmpty) {
-                          var _jsonResponse = await jsonDecode(_authorDataGet);
-                          convertauthorData(_jsonResponse);
+                        for (var item in curBook.allInfoHeaders) {
+                          curBook.setInfo(item);
                         }
 
                         if (_bookMatchIndex >= 0) {
                           mainBookListCopy[_bookMatchIndex] = curBook;
                         }
 
-                        //Fetch author data again?
-                        final foundAuthor = mainAuthorListCopy.singleWhere(
-                            (element) => element.id
-                                .toLowerCase()
-                                .contains(_curBookAuthor.toLowerCase()));
-                        foundAuthor.firstName = curBook.authorFirstName;
-                        foundAuthor.lastName = curBook.authorLastName;
+                        //Fetch author data to update
+                        Author _matchAuthor = mainAuthorListCopy.firstWhere(
+                            (element) => element.id == curBook.authorID);
+                        _matchAuthor.firstName = curBook.authorFirstName;
+                        _matchAuthor.lastName = curBook.authorLastName;
 
                         notifyListeners();
-                        Navigator.pop(context);
 
                         if (!kIsWeb) {
+                          localDatabaseUpdate('authors');
                           localDatabaseUpdate('books');
                         }
+                        Navigator.pop(context);
                         // notifyListeners();
                         // Navigator.pop(context);
                       })
@@ -1284,7 +1342,6 @@ Future<void> bookDataAdder(context) async {
                           // }
                           mainBookList.add(newBook);
                           mainBookListCopy.add(newBook);
-                          
 
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: const Duration(seconds: 1),

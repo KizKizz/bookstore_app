@@ -109,7 +109,106 @@ class Employee {
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(10, null);
+  List editResults = List.filled(17, null);
+
+  List get allInfoHeaders {
+    return [
+      'First Name',
+      'Last Name',
+      'ID',
+      'Street Address',
+      'Suite Number',
+      'City',
+      'State',
+      'Postal Code',
+      'Phone Number',
+      'Email',
+      'Date of Birth',
+      'Hire Date',
+      'Termination Date',
+      'Position',
+      'Books Sold',
+      'Last Sold Books',
+      'Description'
+    ];
+  }
+
+  void setInfo(var info) {
+    if (info == 'First Name' && editResults[0] != null)
+      firstName = editResults[0];
+    else if (info == 'Last Name' && editResults[1] != null)
+      lastName = editResults[1];
+    else if (info == 'ID' && editResults[2] != null)
+      id = editResults[2];
+    else if (info == 'Street Address' && editResults[3] != null)
+      streetAddress = editResults[3];
+    else if (info == 'Suite Number' && editResults[4] != null)
+      suiteNum = editResults[4];
+    else if (info == 'City' && editResults[5] != null)
+      city = editResults[5];
+    else if (info == 'State' && editResults[6] != null)
+      state = editResults[6];
+    else if (info == 'Postal Code' && editResults[7] != null)
+      zipCode = editResults[7];
+    else if (info == 'Phone Number' && editResults[8] != null)
+      phoneNumber = editResults[8];
+    else if (info == 'Email' && editResults[9] != null)
+      email = editResults[9];
+    else if (info == 'Date of Birth' && editResults[10] != null)
+      dateOfBirth = editResults[10];
+    else if (info == 'Hire Date' && editResults[11] != null) 
+      hireDate = editResults[11];
+    else if (info == 'Termination Date' && editResults[12] != null) 
+      terminationDate = editResults[12];
+    else if (info == 'Position' && editResults[13] != null) 
+      position = editResults[13];
+    else if (info == 'Books Sold' && editResults[14] != null) 
+      numBookSold = editResults[14];
+    else if (info == 'Last Sold Books' && editResults[15] != null) 
+      lastSoldBooks = editResults[15];
+    else if (info == 'Description' && editResults[16] != null) 
+      description = editResults[16]; 
+  }
+
+  void infoEdited(var info, var editedVal) {
+    if (info == 'First Name')
+      editResults[0] = editedVal;
+    else if (info == 'Last Name')
+      editResults[1] = editedVal;
+    else if (info == 'ID')
+      editResults[2] = editedVal;
+    else if (info == 'Street Address')
+      editResults[3] = editedVal;
+    else if (info == 'Suite Number')
+      editResults[4] = editedVal;
+    else if (info == 'City')
+      editResults[5] = editedVal;
+    else if (info == 'State')
+      editResults[6] = editedVal;
+    else if (info == 'Postal Code')
+      editResults[7] = editedVal;
+    else if (info == 'Phone Number')
+      editResults[8] = editedVal;
+    else if (info == 'Email')
+      editResults[9] = editedVal;
+    else if (info == 'Date of Birth')
+      editResults[10] = editedVal;
+    else if (info == 'Hire Date')
+      editResults[11] = editedVal;
+    else if (info == 'Termination Date')
+      editResults[12] = editedVal;
+    else if (info == 'Position')
+      editResults[13] = editedVal;
+    else if (info == 'Books Sold')
+      editResults[14] = editedVal;
+    else if (info == 'Last Sold Books')
+      editResults[15] = editedVal;
+    else if (info == 'Description')
+      editResults[16] = editedVal;
+    else
+      editResults[0] = editedVal;
+  }
+
 
   fromJson(Map<String, dynamic> json) {
     firstName = json['firstName'];
@@ -334,7 +433,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.firstName,
                                             onChanged: (text) =>
-                                                {curEmployee.firstName = text},
+                                                {curEmployee.infoEdited('First Name', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -348,7 +447,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.lastName,
                                             onChanged: (text) =>
-                                                {curEmployee.lastName = text},
+                                                {curEmployee.infoEdited('Last Name', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -367,7 +466,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.id,
                                             onChanged: (text) =>
-                                                {curEmployee.id = text},
+                                                {curEmployee.infoEdited('ID', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -381,7 +480,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.dateOfBirth,
                                             onChanged: (text) =>
-                                                {curEmployee.dateOfBirth = text},
+                                                {curEmployee.infoEdited('Date of Birth', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -400,7 +499,7 @@ class EmployeeDatabase extends DataTableSource {
                                           controller: TextEditingController()
                                               ..text = curEmployee.streetAddress,
                                             onChanged: (text) => {
-                                                  curEmployee.streetAddress = text
+                                                  curEmployee.infoEdited('Street Address', text)
                                                 },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
@@ -420,7 +519,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.suiteNum,
                                             onChanged: (text) =>
-                                                {curEmployee.suiteNum = text},
+                                                {curEmployee.infoEdited('Suite Number', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -434,7 +533,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.city,
                                             onChanged: (text) =>
-                                                {curEmployee.city = text},
+                                                {curEmployee.infoEdited('City', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -453,7 +552,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.state,
                                             onChanged: (text) =>
-                                                {curEmployee.state = text},
+                                                {curEmployee.infoEdited('State', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -467,7 +566,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.zipCode,
                                             onChanged: (text) =>
-                                                {curEmployee.zipCode = text},
+                                                {curEmployee.infoEdited('Postal Code', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -486,7 +585,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.hireDate,
                                             onChanged: (text) =>
-                                                {curEmployee.hireDate = text},
+                                                {curEmployee.infoEdited('Hire Date', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -501,8 +600,7 @@ class EmployeeDatabase extends DataTableSource {
                                               ..text =
                                                   curEmployee.terminationDate,
                                             onChanged: (text) => {
-                                                  curEmployee.terminationDate =
-                                                      text
+                                                  curEmployee.infoEdited('Termination Date', text)
                                                 },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
@@ -522,7 +620,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.email,
                                             onChanged: (text) =>
-                                                {curEmployee.email = text},
+                                                {curEmployee.infoEdited('Email', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: 'example@domain.com',
@@ -541,7 +639,7 @@ class EmployeeDatabase extends DataTableSource {
                                             controller: TextEditingController()
                                               ..text = curEmployee.description,
                                             onChanged: (text) =>
-                                                {curEmployee.description = text},
+                                                {curEmployee.infoEdited('Description', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -599,7 +697,7 @@ class EmployeeDatabase extends DataTableSource {
                                             setState(
                                               () {
                                                 _curJobPosChoice = newValue!;
-                                                curEmployee.position = newValue;
+                                                curEmployee.infoEdited('Position', newValue);
                                               },
                                             );
                                           },
@@ -631,6 +729,9 @@ class EmployeeDatabase extends DataTableSource {
                       int _employeeMatchIndex = mainEmployeeListCopy.indexWhere(
                           (element) => element.id == curEmployee.id);
                       //debugPrint('curafter: ${_employeeMatchIndex}');
+                      for (var item in curEmployee.allInfoHeaders) {
+                          curEmployee.setInfo(item);
+                        }
 
                       if (_employeeMatchIndex >= 0) {
                         mainEmployeeListCopy[_employeeMatchIndex] = curEmployee;
