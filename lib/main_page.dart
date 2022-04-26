@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                   children: [
                     Expanded(
-                      child: MoveWindow(
+                      child: MoveWindowEX(
                         child:
                         const Padding(
                           padding: EdgeInsets.only(left: 133),

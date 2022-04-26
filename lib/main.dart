@@ -18,7 +18,7 @@ void main() {
     const initialSize = Size(1300, 850);
     appWindow.minSize = const Size(852, 480);
     appWindow.size = initialSize;
-    //appWindow.alignment = Alignment.center;
+    appWindow.alignment = Alignment.center;
     appWindow.title = 'Antique Publications Bookstore';
     appWindow.show();
   });
@@ -78,6 +78,14 @@ class _MyAppState extends State<MyApp> {
     return temp;
   }
 
+  int _upCounter = 0;
+
+  void _incrementUp(PointerEvent details) {
+    setState(() {
+      _upCounter++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
@@ -86,28 +94,32 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
               // Remove the debug banner
               debugShowCheckedModeBanner: false,
-              title: 'BookStore',
+              title: 'Antique Publications Bookstore',
               theme: ThemeData(
                 primarySwatch: Colors.teal,
               ),
               darkTheme: ThemeData.dark(),
               themeMode: currentMode,
               home: Scaffold(
-                  body: WindowBorder(
-                      color: borderColor,
-                      width: 1,
-                      child: Column(children: [
-                        WindowTitleBarBox(
-                            child: Row(
-                              children: [
-                                Expanded(child: MoveWindow()),
-                                const WindowButtons()
-                        ])),
-
-                        Expanded(child: loginState())
-                      
-                      ]))));
+                  body: Listener(
+                      onPointerSignal: (details) {
+                        setState(() {
+                          _incrementUp(details);
+                          print(_upCounter);
+                        });
+                        //context.read<checkoutNotif>().appMaximize();
+                      },
+                      child: WindowBorder(
+                          color: borderColor,
+                          width: 1,
+                          child: Column(children: [
+                            WindowTitleBarBox(
+                                child: Row(children: [
+                              Expanded(child: MoveWindowEX()),
+                              WindowButtons()
+                            ])),
+                            Expanded(child: loginState())
+                          ])))));
         });
   }
 }
-

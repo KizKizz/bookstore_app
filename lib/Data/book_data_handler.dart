@@ -1343,12 +1343,12 @@ Future<void> bookDataAdder(context) async {
                           mainBookList.add(newBook);
                           mainBookListCopy.add(newBook);
 
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            duration: const Duration(seconds: 1),
-                            //backgroundColor: Theme.of(context).focusColor,
-                            content: Text(
-                                'File found at ${bookDataJson.existsSync().toString()}'),
-                          ));
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //   duration: const Duration(seconds: 1),
+                          //   //backgroundColor: Theme.of(context).focusColor,
+                          //   content: Text(
+                          //       'File found at ${bookDataJson.existsSync().toString()}'),
+                          // ));
 
                           //Update Author List
                           if ((mainAuthorListCopy.indexWhere(
