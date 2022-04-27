@@ -2142,7 +2142,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           MultiSplitView(
             children: [checkoutInfo, orderSummary],
             initialWeights: const [0.55],
-            minimalWeight: 0.45,
+            minimalWeights: const [0.45],
           ),
         ]);
 
