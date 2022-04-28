@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 import 'data_storage_helper.dart';
-
-
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -334,11 +333,7 @@ class CustomerDatabase extends DataTableSource {
                 notifyListeners();
               }
             },
-      onTap: hasRowTaps
-          ? () => [
-                _showDialog(context, customer)
-              ]
-          : null,
+      onTap: hasRowTaps ? () => [_showDialog(context, customer)] : null,
       onDoubleTap: hasRowTaps
           ? () => [
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -358,7 +353,7 @@ class CustomerDatabase extends DataTableSource {
               ))
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
-      cells: [       
+      cells: [
         DataCell(Text(customer.id)),
         DataCell(Text('${customer.firstName} ${customer.lastName}')),
         if (customer.suiteNum.isNotEmpty)
@@ -511,8 +506,8 @@ class CustomerDatabase extends DataTableSource {
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
                                           controller: TextEditingController()
-                                            ..text =
-                                                curCustomer.headerToInfo('City'),
+                                            ..text = curCustomer
+                                                .headerToInfo('City'),
                                           onChanged: (text) => {
                                                 curCustomer.infoEdited(
                                                     'City', text)
@@ -534,8 +529,8 @@ class CustomerDatabase extends DataTableSource {
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
                                           controller: TextEditingController()
-                                            ..text =
-                                                curCustomer.headerToInfo('State'),
+                                            ..text = curCustomer
+                                                .headerToInfo('State'),
                                           onChanged: (text) => {
                                                 curCustomer.infoEdited(
                                                     'State', text)
@@ -590,11 +585,13 @@ class CustomerDatabase extends DataTableSource {
                                         child: Container(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: TextFormField(
+                                          enabled: false,
                                           controller: TextEditingController()
                                             ..text =
                                                 curCustomer.headerToInfo('ID'),
                                           onChanged: (text) => {
-                                                curCustomer.infoEdited('ID', text)
+                                                curCustomer.infoEdited(
+                                                    'ID', text)
                                               },
                                           decoration: const InputDecoration(
                                             //icon: Icon(Icons.person),
@@ -612,8 +609,8 @@ class CustomerDatabase extends DataTableSource {
                                       padding: const EdgeInsets.only(right: 10),
                                       child: TextFormField(
                                           controller: TextEditingController()
-                                            ..text =
-                                                curCustomer.headerToInfo('Email'),
+                                            ..text = curCustomer
+                                                .headerToInfo('Email'),
                                           onChanged: (text) => {
                                                 curCustomer.infoEdited(
                                                     'Email', text)
@@ -653,7 +650,8 @@ class CustomerDatabase extends DataTableSource {
                                           controller: ScrollController(),
                                           children: [
                                             for (int i =
-                                                    _purchasedBookList.length - 1;
+                                                    _purchasedBookList.length -
+                                                        1;
                                                 i >= 0;
                                                 i--)
                                               SizedBox(
@@ -678,8 +676,8 @@ class CustomerDatabase extends DataTableSource {
                                                     onTap: () {
                                                       setState(() {});
                                                     },
-                                                    leading: const Icon(
-                                                        Icons.menu_book_outlined),
+                                                    leading: const Icon(Icons
+                                                        .menu_book_outlined),
                                                     title: Text(
                                                       _purchasedBookList[i],
                                                       style: const TextStyle(
@@ -719,31 +717,33 @@ class CustomerDatabase extends DataTableSource {
                         Navigator.pop(context);
                       }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                  ElevatedButton(
+                      child: const Text('CANCEL'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('SAVE'),
-                    onPressed: () {
-                      int _customerMatchIndex = mainCustomerListCopy.indexWhere(
-                          (element) => element.id == curCustomer.id);
-                      //debugPrint('curafter: ${_customerMatchIndex}');
-                      for (var item in curCustomer.allInfoHeaders) {
-                        curCustomer.setInfo(item);
-                      }
+                  ElevatedButton(
+                      child: const Text('SAVE'),
+                      onPressed: () {
+                        int _customerMatchIndex =
+                            mainCustomerListCopy.indexWhere(
+                                (element) => element.id == curCustomer.id);
+                        //debugPrint('curafter: ${_customerMatchIndex}');
+                        for (var item in curCustomer.allInfoHeaders) {
+                          curCustomer.setInfo(item);
+                        }
 
-                      if (_customerMatchIndex >= 0) {
-                        mainCustomerListCopy[_customerMatchIndex] = curCustomer;
-                      }
-                      notifyListeners();
-                      Navigator.pop(context);
-                      if (!kIsWeb) {
-                        localDatabaseUpdate('customers');
-                      }
-                    })
+                        if (_customerMatchIndex >= 0) {
+                          mainCustomerListCopy[_customerMatchIndex] =
+                              curCustomer;
+                        }
+                        notifyListeners();
+                        Navigator.pop(context);
+                        if (!kIsWeb) {
+                          localDatabaseUpdate('customers');
+                        }
+                      })
               ],
             );
           });
@@ -755,6 +755,7 @@ class CustomerDatabase extends DataTableSource {
 Future<void> customerDataAdder(context) async {
   Customer newCustomer =
       Customer('', '', '', '', '', '', '', '', '', '', '0', '', '');
+  newCustomer.id = idGenerator('C');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -901,6 +902,9 @@ Future<void> customerDataAdder(context) async {
                                       child: Container(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: TextFormField(
+                                        enabled: false,
+                                        controller: TextEditingController()
+                                          ..text = newCustomer.id,
                                         onChanged: (text) =>
                                             {newCustomer.id = text},
                                         decoration: const InputDecoration(

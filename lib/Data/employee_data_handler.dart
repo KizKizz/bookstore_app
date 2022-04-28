@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 
+import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -463,6 +464,7 @@ class EmployeeDatabase extends DataTableSource {
                                           child: Container(
                                         padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
+                                          enabled: false,
                                             controller: TextEditingController()
                                               ..text = curEmployee.id,
                                             onChanged: (text) =>
@@ -754,6 +756,7 @@ Future<void> employeeDataAdder(context) async {
   _curJobPosChoice = _jobPosDropDownVal[2];
   Employee newEmployee = Employee(
       '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', '', '');
+  newEmployee.id = idGenerator('E');
   await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -813,6 +816,10 @@ Future<void> employeeDataAdder(context) async {
                                       child: Container(
                                     padding: const EdgeInsets.only(right: 10),
                                     child: TextFormField(
+                                      enabled: false,
+                                      controller: TextEditingController()
+                                            ..text =
+                                                newEmployee.id,
                                         onChanged: (text) =>
                                             {newEmployee.id = text},
                                         decoration: const InputDecoration(

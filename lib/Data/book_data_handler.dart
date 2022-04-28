@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -155,8 +156,7 @@ class Book {
       retailPrice = editResults[9];
     else if (info == 'Condition' && editResults[10] != null)
       condition = editResults[10];
-    else if (info == 'Sold' && editResults[11] != null)
-      sold = editResults[11];
+    else if (info == 'Sold' && editResults[11] != null) sold = editResults[11];
   }
 
   void infoEdited(var info, var editedVal) {
@@ -453,8 +453,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.title,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Title', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Title', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -473,8 +475,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.edition,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Edition', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Edition', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -486,10 +490,12 @@ class BookDatabase extends DataTableSource {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: TextFormField(
+                                            enabled: false,
                                             controller: TextEditingController()
                                               ..text = curBook.id,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('ID', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited('ID', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -512,7 +518,9 @@ class BookDatabase extends DataTableSource {
                                                     ..text =
                                                         curBook.authorFirstName,
                                               onChanged: (text) => {
-                                                    curBook.infoEdited('Author First Name', text)
+                                                    curBook.infoEdited(
+                                                        'Author First Name',
+                                                        text)
                                                   },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
@@ -531,7 +539,9 @@ class BookDatabase extends DataTableSource {
                                                     ..text =
                                                         curBook.authorLastName,
                                               onChanged: (text) => {
-                                                    curBook.infoEdited('Author Last Name', text)
+                                                    curBook.infoEdited(
+                                                        'Author Last Name',
+                                                        text)
                                                   },
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
@@ -551,8 +561,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.publisher,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Publisher', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Publisher', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -566,8 +578,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.publishDate,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Publish Date', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Publish Date', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -586,8 +600,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.cost,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Cost', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Cost', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -601,8 +617,10 @@ class BookDatabase extends DataTableSource {
                                         child: TextFormField(
                                             controller: TextEditingController()
                                               ..text = curBook.retailPrice,
-                                            onChanged: (text) =>
-                                                {curBook.infoEdited('Retail Price', text)},
+                                            onChanged: (text) => {
+                                                  curBook.infoEdited(
+                                                      'Retail Price', text)
+                                                },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -638,15 +656,20 @@ class BookDatabase extends DataTableSource {
                                           ),
                                           onRatingUpdate: (rating) {
                                             if (rating == 1.0) {
-                                              curBook.infoEdited('Condition', 'Poor');
+                                              curBook.infoEdited(
+                                                  'Condition', 'Poor');
                                             } else if (rating == 2.0) {
-                                              curBook.infoEdited('Condition', 'Fair');
+                                              curBook.infoEdited(
+                                                  'Condition', 'Fair');
                                             } else if (rating == 3.0) {
-                                              curBook.infoEdited('Condition', 'Good');
+                                              curBook.infoEdited(
+                                                  'Condition', 'Good');
                                             } else if (rating == 4.0) {
-                                              curBook.infoEdited('Condition', 'Excellent');
+                                              curBook.infoEdited(
+                                                  'Condition', 'Excellent');
                                             } else if (rating == 5.0) {
-                                              curBook.infoEdited('Condition', 'Superb');
+                                              curBook.infoEdited(
+                                                  'Condition', 'Superb');
                                             }
                                           },
                                         )
@@ -686,9 +709,11 @@ class BookDatabase extends DataTableSource {
                                           ],
                                           onToggle: (index) {
                                             if (index == 0) {
-                                              curBook.infoEdited('Sold', 'Available');
+                                              curBook.infoEdited(
+                                                  'Sold', 'Available');
                                             } else if (index == 1) {
-                                              curBook.infoEdited('Sold', 'Sold');
+                                              curBook.infoEdited(
+                                                  'Sold', 'Sold');
                                             }
                                           },
                                         )
@@ -759,6 +784,8 @@ Future<void> bookDataAdder(context) async {
   TextEditingController _authorNameController = TextEditingController();
   int _statusIndex = 0;
   double _ratingIndex = 3.0;
+  newBook.id = idGenerator('B');
+  newAuthor.id = idGenerator('A');
 
   await showDialog<String>(
       context: context,
@@ -838,6 +865,10 @@ Future<void> bookDataAdder(context) async {
                                             padding:
                                                 const EdgeInsets.only(left: 10),
                                             child: TextFormField(
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text = newBook.id,
+                                                enabled: false,
                                                 onChanged: (text) =>
                                                     {newBook.id = text},
                                                 decoration:
@@ -934,7 +965,8 @@ Future<void> bookDataAdder(context) async {
                                                     left: 15),
                                                 child: Column(
                                                   children: [
-                                                    TextField(
+                                                    TextFormField(
+                                                      enabled: false,
                                                         controller:
                                                             TextEditingController()
                                                               ..text =
@@ -952,7 +984,7 @@ Future<void> bookDataAdder(context) async {
                                                                     'Author\'s ID:',
                                                                 hintText:
                                                                     'Author ID')),
-                                                    TextField(
+                                                    TextFormField(
                                                         controller:
                                                             TextEditingController()
                                                               ..text = newAuthor
@@ -969,7 +1001,7 @@ Future<void> bookDataAdder(context) async {
                                                                     'Author\'s Year of Birth:',
                                                                 hintText:
                                                                     'YYYY')),
-                                                    TextField(
+                                                    TextFormField(
                                                         controller:
                                                             TextEditingController()
                                                               ..text = newAuthor
@@ -986,7 +1018,7 @@ Future<void> bookDataAdder(context) async {
                                                                     'Author\'s Year of Dead:',
                                                                 hintText:
                                                                     'YYYY')),
-                                                    TextField(
+                                                    TextFormField(
                                                         controller:
                                                             TextEditingController()
                                                               ..text = newAuthor
