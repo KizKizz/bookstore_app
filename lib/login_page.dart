@@ -24,6 +24,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
+  final String _managerID = 'admin';
+  final String _managerPass = 'admin';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,47 +64,23 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         children: [
                           //Manager login page
                           if (isManager)
-                            Column(
-                              children: [
-                                Container(
-                                  width: 500,
-                                  constraints: const BoxConstraints(
-                                      minWidth: 200, maxWidth: 400),
-                                  padding: const EdgeInsets.only(
-                                      top: 40, bottom: 10, left: 5, right: 5),
-                                  child: Text('Manager login:',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Theme.of(context).hintColor)),
-                                ),
-                                Container(
-                                  constraints: const BoxConstraints(
-                                      minWidth: 200, maxWidth: 400),
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10, left: 15, right: 15),
-                                  child: const TextField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Login ID',
-                                      hintText: 'Enter your login ID',
-                                    ),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 500,
+                                    constraints: const BoxConstraints(
+                                        minWidth: 200, maxWidth: 400),
+                                    padding: const EdgeInsets.only(
+                                        top: 40, bottom: 10, left: 5, right: 5),
+                                    child: Text('Manager login:',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color:
+                                                Theme.of(context).hintColor)),
                                   ),
-                                ),
-                                Container(
-                                  constraints: const BoxConstraints(
-                                      minWidth: 200, maxWidth: 400),
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10, left: 15, right: 15),
-                                  child: const TextField(
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Password',
-                                      hintText: 'Enter your password',
-                                    ),
-                                  ),
-                                ),
-                                Container(
+                                  Container(
                                     constraints: const BoxConstraints(
                                         minWidth: 200, maxWidth: 400),
                                     padding: const EdgeInsets.only(
@@ -108,59 +88,116 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         bottom: 10,
                                         left: 15,
                                         right: 15),
-                                    child: SizedBox(
-                                      width: 250,
-                                      height: 50,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 11)),
-                                          onPressed: () async {
-                                            final prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            prefs.setBool(
-                                                'isLoggedinEmployee', false);
-                                            prefs.setBool(
-                                                'isLoggedinManager', true);
-                                            Navigator.pushReplacement(
-                                              context,
-                                              PageRouteBuilder(
-                                                pageBuilder: (context,
-                                                        animation1,
-                                                        animation2) =>
-                                                    const MainPage(),
-                                                transitionDuration:
-                                                    Duration.zero,
-                                                reverseTransitionDuration:
-                                                    Duration.zero,
-                                              ),
-                                            );
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Login ID can\'t be empty';
+                                        }
+                                        if (value != _managerID) {
+                                          return 'Login ID is incorrect';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText: 'Login ID',
+                                        hintText:
+                                            'Enter your login ID (hint: $_managerID)',
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    constraints: const BoxConstraints(
+                                        minWidth: 200, maxWidth: 400),
+                                    padding: const EdgeInsets.only(
+                                        top: 10,
+                                        bottom: 10,
+                                        left: 15,
+                                        right: 15),
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Password can\'t be empty';
+                                        }
+                                        if (value != _managerPass) {
+                                          return 'Password is incorrect';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText: 'Password',
+                                        hintText: 'Enter your password (hint: $_managerPass)',
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      constraints: const BoxConstraints(
+                                          minWidth: 200, maxWidth: 400),
+                                      padding: const EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 10,
+                                          left: 15,
+                                          right: 15),
+                                      child: SizedBox(
+                                        width: 250,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 11)),
+                                            onPressed: () async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                final prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setBool(
+                                                    'isLoggedinEmployee',
+                                                    false);
+                                                prefs.setBool(
+                                                    'isLoggedinManager', true);
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (context,
+                                                            animation1,
+                                                            animation2) =>
+                                                        const MainPage(),
+                                                    transitionDuration:
+                                                        Duration.zero,
+                                                    reverseTransitionDuration:
+                                                        Duration.zero,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            child: const Text(
+                                              'Login',
+                                              style: TextStyle(fontSize: 30),
+                                            )),
+                                      )),
+                                  Container(
+                                      constraints: const BoxConstraints(
+                                          minWidth: 200, maxWidth: 400),
+                                      padding: const EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 10,
+                                          left: 15,
+                                          right: 15),
+                                      child: TextButton(
+                                          onPressed: () {
+                                            isManager = false;
+                                            setState(() {});
                                           },
                                           child: const Text(
-                                            'Login',
-                                            style: TextStyle(fontSize: 30),
-                                          )),
-                                    )),
-                                Container(
-                                    constraints: const BoxConstraints(
-                                        minWidth: 200, maxWidth: 400),
-                                    padding: const EdgeInsets.only(
-                                        top: 10,
-                                        bottom: 10,
-                                        left: 15,
-                                        right: 15),
-                                    child: TextButton(
-                                        onPressed: () {
-                                          isManager = false;
-                                          setState(() {});
-                                        },
-                                        child: const Text(
-                                            'Not a manager? Click here to return.',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                            ))))
-                              ],
+                                              'Not a manager? Click here to return.',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                              ))))
+                                ],
+                              ),
                             ),
 
                           //Login Selection Screen
