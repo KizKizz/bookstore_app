@@ -21,7 +21,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Help Menu',
+                    'Support Menu',
                     style: TextStyle(fontSize: 25),
                   ),
                   IconButton(

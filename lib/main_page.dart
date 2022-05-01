@@ -438,7 +438,7 @@ class _MainPageState extends State<MainPage> {
                                                             const EdgeInsets
                                                                 .all(2.0),
                                                         child: Text(
-                                                          "Help",
+                                                          "Support",
                                                           style: TextStyle(
                                                               color: Theme.of(
                                                                       context)
