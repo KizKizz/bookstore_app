@@ -40,6 +40,12 @@ bool idDupCheck(String leadChar, String newId) {
     if (found > -1) {
       return false;
     }
+  } else if (leadChar == 'O') {
+    final found =
+        mainOrderListCopy.indexWhere((element) => element.orderId == newId);
+    if (found > -1) {
+      return false;
+    }
   }
   return true;
 }

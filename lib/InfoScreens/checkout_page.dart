@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:bookstore_project/Data/order_data_handler.dart';
 import 'package:bookstore_project/Data/sales_record_data_handler.dart';
+import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/InfoScreens/book_list.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -38,7 +39,7 @@ List<String> checkoutPrices = [];
 Customer curOrderingCustomer =
     Customer('', '', '', '', '', '', '', '', '', '', '0', '', '');
 Employee curSalesperson = Employee(
-    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 final List<String> _orderStatusList = [
   'Picked Up',
@@ -47,6 +48,8 @@ final List<String> _orderStatusList = [
   'Shipped'
 ];
 String _orderStatus = _orderStatusList[0];
+//Get orderId
+String _curOrderId = idGenerator('O');
 
 enum ShippingOptions { inPerson, inStore, nextDay, express, standard }
 
@@ -79,8 +82,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
 
     now = DateTime.now();
-    _orderDate = DateFormat('MM-dd-yyyy HH:mm').format(now);
-    _deliveryDate = DateFormat('MM-dd-yyyy HH:mm').format(now);
+    _orderDate = DateFormat('MM/dd/yyyy HH:mm').format(now);
+    _deliveryDate = DateFormat('MM/dd/yyyy HH:mm').format(now);
 
     //Get prices to a separated list
     if (checkoutPrices.isEmpty) {
@@ -276,24 +279,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       //print('OrderNum: $orderNumber');
                       //Build table
                       return Text(
-                        'Order #$orderNumber',
+                        'Order ID: $_curOrderId',
                         textAlign: TextAlign.left,
                         style: const TextStyle(fontSize: 30),
                       );
                     })),
-            Row(
+            Column(
               children: [
+                // Container(
+                //   //padding: const EdgeInsets.only(top: 20),
+                //   child: const Text(
+                //     'Salesperson:',
+                //     style: TextStyle(fontSize: 15),
+                //   ),
+                // ),
                 Container(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: const Text(
-                    'Salesperson:',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 20),
-                  height: 40,
-                  width: 250,
+                  padding: const EdgeInsets.only(top: 20, left: 10, right: 20),
+                  // height: 40,
+                  // width: 250,
                   child: FutureBuilder(
                       future: DefaultAssetBundle.of(context)
                           .loadString('assets/jsondatabase/employee_data.json'),
@@ -317,7 +320,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         }
                         //Build table
                         return CustomDropdownButton2(
-                          hint: 'Select Employee',
+                          hint: 'Select Salesperson',
                           dropdownDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(3),
                             border:
@@ -330,10 +333,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 Border.all(color: Theme.of(context).hintColor),
                             //color: Colors.redAccent,
                           ),
+                          buttonWidth: 250,
+                          buttonHeight: 25,
                           dropdownElevation: 3,
-                          offset: const Offset(-30, 0),
-                          hintAlignment: Alignment.center,
-                          valueAlignment: Alignment.center,
+                          //offset: const Offset(-30, 0),
+                          //hintAlignment: Alignment.center,
+                          //valueAlignment: Alignment.center,
                           icon: const Icon(Icons.arrow_drop_down),
                           iconSize: 20,
                           dropdownWidth: 250,
@@ -686,7 +691,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             const InputDecoration(
                                                           //icon: Icon(Icons.person),
                                                           hintText:
-                                                              '(123) 456-789',
+                                                              '123-456-789',
                                                           labelText:
                                                               'Phone Number*',
                                                         ),
@@ -1976,7 +1981,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              //Add database here
+                              curSalesperson.totalCostSold =
+                                  (double.parse(curSalesperson.totalCostSold) +
+                                          subTotal)
+                                      .toString();
                               subTotal = 0.00;
 
                               //print('checkout $orderNumber');
@@ -1994,7 +2002,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   curPaymentMethod,
                                   _orderStatus,
                                   '',
-                                  '');
+                                  '',
+                                  _curOrderId);
                               String _allBookIDs = '',
                                   _bookNames = '',
                                   _purchasedDates = '';
@@ -2009,11 +2018,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   _allBookIDs = book.id;
                                 }
 
-                                if (_bookNames.isEmpty) {
-                                  _bookNames = book.title;
+                                if (_purchasedDates.isEmpty) {
+                                  //_bookNames = book.title;
                                   _purchasedDates = _orderDate;
                                 } else {
-                                  _bookNames = _bookNames + '||' + book.title;
+                                  //_bookNames = _bookNames + '||' + book.title;
                                   _purchasedDates =
                                       _purchasedDates + '||' + _orderDate;
                                 }
@@ -2082,12 +2091,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   (int.parse(curSalesperson.numBookSold) +
                                           _numOfBook)
                                       .toString();
+                              if (curSalesperson.lastSoldBooks.isEmpty) {
+                                curSalesperson.lastSoldBooks = _allBookIDs;
+                              } else {
+                                curSalesperson.lastSoldBooks +=
+                                    (' ' + _allBookIDs);
+                              }
 
                               curOrderingCustomer.totalPurchases = (int.parse(
                                           curOrderingCustomer.totalPurchases) +
                                       _numOfBook)
                                   .toString();
-                              curOrderingCustomer.bookPurchased = _bookNames;
+                              curOrderingCustomer.bookPurchased += (' ' + _allBookIDs);
                               curOrderingCustomer.purchasedDates =
                                   _purchasedDates;
 

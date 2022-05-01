@@ -606,6 +606,7 @@ class BookDatabase extends DataTableSource {
                                                 },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
+                                              prefixText: '\$',
                                               hintText: '',
                                               labelText: 'Cost',
                                             )),
@@ -623,6 +624,7 @@ class BookDatabase extends DataTableSource {
                                                 },
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
+                                              prefixText: '\$',
                                               hintText: '',
                                               labelText: 'Retail Price',
                                             )),
@@ -1239,6 +1241,7 @@ Future<void> bookDataAdder(context) async {
                                                   {newBook.cost = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
+                                                prefixText: '\$',
                                                 hintText: '',
                                                 labelText: 'Cost',
                                               )),
@@ -1252,6 +1255,7 @@ Future<void> bookDataAdder(context) async {
                                                   {newBook.retailPrice = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
+                                                prefixText: '\$',
                                                 hintText: '',
                                                 labelText: 'Retail Price',
                                               )),

@@ -483,6 +483,7 @@ class SalesRecordDatabase extends DataTableSource {
                                           {curSalesRecord.infoEdited('Sold Price', text)},
                                       decoration: const InputDecoration(
                                         //icon: Icon(Icons.person),
+                                        prefixText: '\$',
                                         hintText: '',
                                         labelText: 'Sold Price',
                                       )),

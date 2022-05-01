@@ -4,6 +4,7 @@ import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../Data/data_storage_helper.dart';
 import '../Data/employee_data_handler.dart';
@@ -190,6 +191,7 @@ class _EmployeeListState extends State<EmployeeList> {
                     employee.position,
                     employee.numBookSold,
                     employee.terminationDate,
+                    employee.totalCostSold,
                     employee.description);
                 searchEmployeeList.add(tempEmployee);
               }
@@ -321,7 +323,37 @@ class _EmployeeListState extends State<EmployeeList> {
                 )),
 
             //Add Data Button
-            if (isManager) const SizedBox(width: 48),
+            //if (isManager) const SizedBox(width: 48),
+            if (isManager)
+            MaterialButton(
+              onPressed: () => [
+                setState(() {
+                  setState(() {
+                    // employeeDataAdder(context).then((_) {
+                    //   setState(() {});
+                    // });
+                  });
+                })
+              ],
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: Icon(
+                        FontAwesomeIcons.person,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: Text(
+                        "Job Position",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ]),
+            ),
             isManager
                 ? MaterialButton(
                     onPressed: () => [
@@ -477,7 +509,7 @@ class _EmployeeListState extends State<EmployeeList> {
                           // ),
                           DataColumn2(
                             label: const Text(
-                              'Total Book\nSales',
+                              'Books\nSold',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
@@ -497,6 +529,18 @@ class _EmployeeListState extends State<EmployeeList> {
                           //   onSort: (columnIndex, ascending) => _sort<String>(
                           //       (d) => d.description, columnIndex, ascending),
                           // ),
+                          DataColumn2(
+                            label: const Text(
+                              'Total Cost\nSold',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            size: ColumnSize.S,
+                            numeric: false,
+                            onSort: (columnIndex, ascending) => _sort<num>(
+                                (d) => double.parse(d.totalCostSold),
+                                columnIndex,
+                                ascending),
+                          ),
                         ],
                         rows: List<DataRow>.generate(
                             _employeesDataSource.rowCount,

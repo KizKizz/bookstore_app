@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -70,19 +69,19 @@ class RestorableOrderSelections extends RestorableProperty<Set<int>> {
 /// Domain model entity
 class Order {
   Order(
-    this.orderNum,
-    this.customerName,
-    this.customerId,
-    this.salesPersonName,
-    this.salesPersonId,
-    this.orderDate,
-    this.deliveryDate,
-    this.totalOrderCost,
-    this.paymentMethod,
-    this.orderStatus,
-    this.bookIds,
-    this.bookSoldPrices,
-  );
+      this.orderNum,
+      this.customerName,
+      this.customerId,
+      this.salesPersonName,
+      this.salesPersonId,
+      this.orderDate,
+      this.deliveryDate,
+      this.totalOrderCost,
+      this.paymentMethod,
+      this.orderStatus,
+      this.bookIds,
+      this.bookSoldPrices,
+      this.orderId);
 
   String orderNum;
   String customerName;
@@ -96,10 +95,11 @@ class Order {
   String orderStatus;
   String bookIds;
   String bookSoldPrices;
+  String orderId;
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(12, null);
+  List editResults = List.filled(13, null);
 
   List get allInfo {
     return [
@@ -115,6 +115,7 @@ class Order {
       orderStatus,
       bookIds,
       bookSoldPrices,
+      orderId,
     ];
   }
 
@@ -131,7 +132,8 @@ class Order {
       'Payment Method',
       'Order Status',
       'BookIDs',
-      'BookSoldPrices'
+      'BookSoldPrices',
+      'OrderID'
     ];
   }
 
@@ -160,6 +162,8 @@ class Order {
       bookIds = editResults[10];
     else if (info == 'BookSoldPrices' && editResults[11] != null)
       bookIds = editResults[11];
+    else if (info == 'OrderID' && editResults[12] != null)
+      bookIds = editResults[12];
   }
 
   String headerToInfo(var header) {
@@ -187,6 +191,8 @@ class Order {
       return bookIds;
     else if (header == 'BookSoldPrices')
       return bookSoldPrices;
+    else if (header == 'OrderID')
+      return orderId;
     else
       return 'error';
   }
@@ -206,7 +212,7 @@ class Order {
       editResults[5] = editedVal;
     else if (info == 'Delivery Date')
       editResults[6] = editedVal;
-     else if (info == 'Total Cost')
+    else if (info == 'Total Cost')
       editResults[7] = editedVal;
     else if (info == 'Payment Method')
       editResults[8] = editedVal;
@@ -216,6 +222,8 @@ class Order {
       editResults[10] = editedVal;
     else if (info == 'BookSoldPrices')
       editResults[11] = editedVal;
+    else if (info == 'OrderID')
+      editResults[12] = editedVal;
     else
       editResults[0] = editedVal;
   }
@@ -233,6 +241,7 @@ class Order {
     orderStatus = json['orderStatus'];
     bookIds = json['bookIds'];
     bookSoldPrices = json['BookSoldPrices'];
+    orderId = json['orderId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -249,6 +258,7 @@ class Order {
     data['orderStatus'] = orderStatus;
     data['bookIds'] = bookIds;
     data['bookSoldPrices'] = bookSoldPrices;
+    data['orderId'] = orderId;
 
     return data;
   }
@@ -331,7 +341,7 @@ class OrderDatabase extends DataTableSource {
       onTap: hasRowTaps
           ? () => [
                 //if (isManager) {
-                  _showDialog(context, customer)
+                _showDialog(context, customer)
                 //}
               ]
           : null,
@@ -355,7 +365,7 @@ class OrderDatabase extends DataTableSource {
           : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
-        DataCell(Text(customer.orderNum)),
+        DataCell(Text(customer.orderId)),
         DataCell(Text(customer.customerName)),
         //DataCell(Text(customer.customerId)),
         DataCell(Text(customer.salesPersonName)),
@@ -448,8 +458,8 @@ class OrderDatabase extends DataTableSource {
                                 padding: const EdgeInsets.only(left: 10),
                                 child: TextFormField(
                                     controller: TextEditingController()
-                                      ..text = curOrder
-                                          .headerToInfo('Customer ID'),
+                                      ..text =
+                                          curOrder.headerToInfo('Customer ID'),
                                     onChanged: (text) => {
                                           curOrder.infoEdited(
                                               'Customer ID', text)
@@ -565,14 +575,15 @@ class OrderDatabase extends DataTableSource {
                                 padding: const EdgeInsets.only(left: 10),
                                 child: TextFormField(
                                     controller: TextEditingController()
-                                      ..text = curOrder
-                                          .headerToInfo('Total Cost'),
+                                      ..text =
+                                          curOrder.headerToInfo('Total Cost'),
                                     onChanged: (text) => {
                                           curOrder.infoEdited(
                                               'Total Cost', text)
                                         },
                                     decoration: const InputDecoration(
                                       //icon: Icon(Icons.person),
+                                      prefixText: '\$',
                                       hintText: '',
                                       labelText: 'Total Cost',
                                     )),
@@ -581,13 +592,14 @@ class OrderDatabase extends DataTableSource {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [ 
+                            children: [
                               Expanded(
                                   child: Column(
                                 children: [
                                   Container(
                                     alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.only(top: 11, bottom: 7),
+                                    padding: const EdgeInsets.only(
+                                        top: 11, bottom: 7),
                                     child: Text(
                                       'Order Status',
                                       style: TextStyle(
@@ -606,27 +618,25 @@ class OrderDatabase extends DataTableSource {
                                           borderRadius:
                                               BorderRadius.circular(3),
                                           border: Border.all(
-                                              color: Theme.of(context)
-                                                  .cardColor),
+                                              color:
+                                                  Theme.of(context).cardColor),
                                           //color: Colors.redAccent,
                                         ),
                                         buttonDecoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(3),
                                           border: Border.all(
-                                              color: Theme.of(context)
-                                                  .hintColor),
+                                              color:
+                                                  Theme.of(context).hintColor),
                                           //color: Colors.redAccent,
                                         ),
                                         dropdownElevation: 2,
                                         offset: const Offset(0, 0),
                                         valueAlignment: Alignment.center,
-                                        icon:
-                                            const Icon(Icons.arrow_drop_down),
+                                        icon: const Icon(Icons.arrow_drop_down),
                                         iconSize: 20,
                                         dropdownWidth: 400,
-                                        dropdownItems:
-                                            _orderStatusDropDownVal,
+                                        dropdownItems: _orderStatusDropDownVal,
                                         value: _curOrderStatusChoice,
                                         onChanged: (value) {
                                           setState(() {
@@ -649,12 +659,12 @@ class OrderDatabase extends DataTableSource {
                                     fontSize: 14)),
                           ),
                           Container(
-                            height: 75 * double.parse(_orderedBooks.length.toString()),
+                            height: 75 *
+                                double.parse(_orderedBooks.length.toString()),
                             width: 400,
                             constraints: const BoxConstraints(maxHeight: 330),
                             child: ListView(
-                              padding:
-                                  const EdgeInsets.only(left: 7, right: 7),
+                              padding: const EdgeInsets.only(left: 7, right: 7),
                               clipBehavior: Clip.antiAlias,
                               shrinkWrap: true,
                               //controller: ScrollController(),
@@ -685,13 +695,11 @@ class OrderDatabase extends DataTableSource {
                                             Icons.menu_book_outlined),
                                         title: Text(
                                           _orderedBooks[i].title,
-                                          style:
-                                              const TextStyle(fontSize: 15),
+                                          style: const TextStyle(fontSize: 15),
                                         ),
                                         subtitle: Text(
                                           '${_orderedBooks[i].authorFirstName} ${_orderedBooks[i].authorLastName}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
-                                          style:
-                                              const TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 14),
                                         ),
                                         // trailing: const Icon(Icons.clear),
                                         isThreeLine: true,
@@ -757,6 +765,7 @@ Future<void> orderDataAdder(context) async {
     '',
     '',
     '',
+    '',
   );
   await showDialog<String>(
       context: context,
@@ -801,7 +810,7 @@ Future<void> orderDataAdder(context) async {
                     mainOrderListCopy.add(newOrder);
                     Navigator.pop(context);
                     if (!kIsWeb) {
-                     localDatabaseUpdate('orders');
+                      localDatabaseUpdate('orders');
                     }
 
                     //debugPrint(newBook.allInfo.toString());
@@ -828,6 +837,7 @@ void convertOrderData(var jsonResponse) {
       b['orderStatus'],
       b['bookIds'],
       b['bookSoldPrices'],
+      b['orderId']
     );
     mainOrderList.add(order);
     mainOrderListCopy.add(order);
@@ -840,6 +850,7 @@ Future<void> orderSearchHelper(context, List<Order> foundList) async {
   if (foundList.isEmpty) {
     mainOrderList.removeRange(1, mainOrderList.length);
     mainOrderList.first = Order(
+      '',
       '',
       '',
       '',

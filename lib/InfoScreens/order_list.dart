@@ -157,6 +157,7 @@ class _OrderListState extends State<OrderList> {
                 order.orderStatus,
                 order.bookIds,
                 order.bookSoldPrices,
+                order.orderId,
               );
               searchOrderList.add(tempOrder);
             }
@@ -323,12 +324,12 @@ class _OrderListState extends State<OrderList> {
                         columns: [
                           DataColumn2(
                             label: const Text(
-                              'Order\nNumber',
+                              'ID',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             size: ColumnSize.S,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.orderNum, columnIndex, ascending),
+                                (d) => d.orderId, columnIndex, ascending),
                           ),
                           DataColumn2(
                             label: const Text(

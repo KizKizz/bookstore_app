@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-
+import 'package:bookstore_project/Data/book_data_handler.dart';
 import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 import 'data_storage_helper.dart';
-
 
 final List<String> _jobPosDropDownVal = [
   'Owner',
@@ -88,6 +87,7 @@ class Employee {
       this.position,
       this.numBookSold,
       this.lastSoldBooks,
+      this.totalCostSold,
       this.description);
 
   String firstName;
@@ -106,11 +106,12 @@ class Employee {
   String position;
   String numBookSold;
   String lastSoldBooks;
+  String totalCostSold;
   String description;
 
   bool selected = false;
   bool isSearched = false;
-  List editResults = List.filled(17, null);
+  List editResults = List.filled(18, null);
 
   List get allInfoHeaders {
     return [
@@ -130,7 +131,8 @@ class Employee {
       'Position',
       'Books Sold',
       'Last Sold Books',
-      'Description'
+      'Total Cost Sold'
+          'Description'
     ];
   }
 
@@ -157,18 +159,20 @@ class Employee {
       email = editResults[9];
     else if (info == 'Date of Birth' && editResults[10] != null)
       dateOfBirth = editResults[10];
-    else if (info == 'Hire Date' && editResults[11] != null) 
+    else if (info == 'Hire Date' && editResults[11] != null)
       hireDate = editResults[11];
-    else if (info == 'Termination Date' && editResults[12] != null) 
+    else if (info == 'Termination Date' && editResults[12] != null)
       terminationDate = editResults[12];
-    else if (info == 'Position' && editResults[13] != null) 
+    else if (info == 'Position' && editResults[13] != null)
       position = editResults[13];
-    else if (info == 'Books Sold' && editResults[14] != null) 
+    else if (info == 'Books Sold' && editResults[14] != null)
       numBookSold = editResults[14];
-    else if (info == 'Last Sold Books' && editResults[15] != null) 
+    else if (info == 'Last Sold Books' && editResults[15] != null)
       lastSoldBooks = editResults[15];
-    else if (info == 'Description' && editResults[16] != null) 
-      description = editResults[16]; 
+    else if (info == 'Total Cost Sold' && editResults[15] != null)
+      lastSoldBooks = editResults[16];
+    else if (info == 'Description' && editResults[16] != null)
+      description = editResults[17];
   }
 
   void infoEdited(var info, var editedVal) {
@@ -204,12 +208,13 @@ class Employee {
       editResults[14] = editedVal;
     else if (info == 'Last Sold Books')
       editResults[15] = editedVal;
-    else if (info == 'Description')
+    else if (info == 'Total Cost Sold')
       editResults[16] = editedVal;
+    else if (info == 'Description')
+      editResults[17] = editedVal;
     else
       editResults[0] = editedVal;
   }
-
 
   fromJson(Map<String, dynamic> json) {
     firstName = json['firstName'];
@@ -228,6 +233,7 @@ class Employee {
     position = json['position'];
     numBookSold = json['numBookSold'];
     lastSoldBooks = json['lastSoldBooks'];
+    totalCostSold = json['totalCostSold'];
     description = json['description'];
   }
 
@@ -249,6 +255,7 @@ class Employee {
     data['position'] = position;
     data['numBookSold'] = numBookSold;
     data['lastSoldBooks'] = lastSoldBooks;
+    data['totalCostSold'] = totalCostSold;
     data['description'] = description;
 
     return data;
@@ -329,11 +336,7 @@ class EmployeeDatabase extends DataTableSource {
                 notifyListeners();
               }
             },
-      onTap: hasRowTaps
-          ? () => [
-                _showDialog(context, employee)
-              ]
-          : null,
+      onTap: hasRowTaps ? () => [_showDialog(context, employee)] : null,
       onDoubleTap: hasRowTaps
           ? () => [
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -369,6 +372,7 @@ class EmployeeDatabase extends DataTableSource {
         DataCell(Text(employee.position)),
         //DataCell(Text(employee.email)),
         DataCell(Text(employee.numBookSold)),
+        DataCell(Text('\$${employee.totalCostSold}')),
         //DataCell(Text(employee.description)),
       ],
     );
@@ -393,6 +397,14 @@ class EmployeeDatabase extends DataTableSource {
 
   //Edit Popup
   _showDialog(context, Employee curEmployee) async {
+    List<Book> _soldBooksList = [];
+    if (curEmployee.lastSoldBooks.isNotEmpty) {
+      List<String> _soldBooksIDList = curEmployee.lastSoldBooks.split(' ');
+      for (var id in _soldBooksIDList) {
+        _soldBooksList.add(mainBookListCopy.singleWhere((element) => element.id == id));
+      }
+    }
+
     for (var pos in _jobPosDropDownVal) {
       if (pos == curEmployee.position) {
         _curJobPosChoice = pos;
@@ -406,7 +418,7 @@ class EmployeeDatabase extends DataTableSource {
               titlePadding: const EdgeInsets.only(top: 10),
               title: Center(
                 child: Text(
-                    '${curEmployee.firstName} ${curEmployee.lastName}\'s Info',
+                    '${curEmployee.firstName} ${curEmployee.lastName}\'s Info & Performance',
                     style: const TextStyle(fontWeight: FontWeight.w700)),
               ),
               contentPadding:
@@ -415,299 +427,479 @@ class EmployeeDatabase extends DataTableSource {
                   child: Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: SizedBox(
-                        width: 400,
+                        width: 800,
                         child: AbsorbPointer(
                           absorbing: !isManager,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.firstName,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('First Name', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'First Name',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.lastName,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Last Name', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Last Name',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                          enabled: false,
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.id,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('ID', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'ID',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.dateOfBirth,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Date of Birth', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Date of Birth',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                          controller: TextEditingController()
-                                              ..text = curEmployee.streetAddress,
-                                            onChanged: (text) => {
-                                                  curEmployee.infoEdited('Street Address', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Street Address',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.suiteNum,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Suite Number', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Suite / Apt#',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.city,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('City', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'City',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.state,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('State', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'State',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.zipCode,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Postal Code', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Postal Code',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.hireDate,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Hire Date', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Hire Date',
-                                            )),
-                                      )),
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text =
-                                                  curEmployee.terminationDate,
-                                            onChanged: (text) => {
-                                                  curEmployee.infoEdited('Termination Date', text)
-                                                },
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Termination Date',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 0),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.email,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Email', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: 'example@domain.com',
-                                              labelText: 'Email Address',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        padding: const EdgeInsets.only(right: 0),
-                                        child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curEmployee.description,
-                                            onChanged: (text) =>
-                                                {curEmployee.infoEdited('Description', text)},
-                                            decoration: const InputDecoration(
-                                              //icon: Icon(Icons.person),
-                                              hintText: '',
-                                              labelText: 'Description',
-                                            )),
-                                      )),
-                                    ],
-                                  ),
-                                  Container(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: Column(children: [
-                                        Container(
-                                          alignment: const Alignment(-1, 0),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
                                           padding:
-                                              const EdgeInsets.only(bottom: 5),
-                                          child: Text(
-                                            'Job Position:',
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.firstName,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'First Name', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'First Name',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.lastName,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Last Name', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Last Name',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              enabled: false,
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.id,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'ID', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'ID',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.dateOfBirth,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Date of Birth', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Date of Birth',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 0),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text =
+                                                    curEmployee.streetAddress,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Street Address', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Street Address',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.suiteNum,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Suite Number', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Suite / Apt#',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.city,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'City', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'City',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.state,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'State', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'State',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.zipCode,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Postal Code', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Postal Code',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.hireDate,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Hire Date', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Hire Date',
+                                              )),
+                                        )),
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text =
+                                                    curEmployee.terminationDate,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Termination Date', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: '',
+                                                labelText: 'Termination Date',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 0),
+                                          child: TextFormField(
+                                              controller: TextEditingController()
+                                                ..text = curEmployee.email,
+                                              onChanged: (text) => {
+                                                    curEmployee.infoEdited(
+                                                        'Email', text)
+                                                  },
+                                              decoration: const InputDecoration(
+                                                //icon: Icon(Icons.person),
+                                                hintText: 'example@domain.com',
+                                                labelText: 'Email Address',
+                                              )),
+                                        )),
+                                      ],
+                                    ),
+                                    
+                                    Container(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Column(children: [
+                                          Container(
+                                            alignment: const Alignment(-1, 0),
+                                            padding:
+                                                const EdgeInsets.only(bottom: 5),
+                                            child: Text(
+                                              'Job Position:',
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Theme.of(context)
+                                                      .hintColor),
+                                            ),
+                                          ),
+                                          CustomDropdownButton2(
+                                            buttonHeight: 25,
+                                            buttonWidth: 400,
+                                            buttonPadding:
+                                                const EdgeInsets.only(bottom: 3),
+                                            hint: 'Select Status',
+                                            dropdownDecoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .cardColor),
+                                              //color: Colors.redAccent,
+                                            ),
+                                            buttonDecoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .hintColor),
+                                              //color: Colors.redAccent,
+                                            ),
+                                            dropdownElevation: 2,
+                                            offset: const Offset(0, 0),
+                                            valueAlignment: Alignment.center,
+                                            icon:
+                                                const Icon(Icons.arrow_drop_down),
+                                            iconSize: 20,
+                                            dropdownWidth: 400,
+                                            dropdownItems: _jobPosDropDownVal,
+                                            value: _curJobPosChoice,
+                                            onChanged: (String? newValue) {
+                                              setState(
+                                                () {
+                                                  _curJobPosChoice = newValue!;
+                                                  curEmployee.infoEdited(
+                                                      'Position', newValue);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ])),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                                child: Container(
+                                              padding:
+                                                  const EdgeInsets.only(right: 0),
+                                              child: TextFormField(
+                                                  controller: TextEditingController()
+                                                    ..text = curEmployee.description,
+                                                  onChanged: (text) => {
+                                                        curEmployee.infoEdited(
+                                                            'Description', text)
+                                                      },
+                                                  decoration: const InputDecoration(
+                                                    //icon: Icon(Icons.person),
+                                                    hintText: '',
+                                                    labelText: 'Job Description',
+                                                  )),
+                                            )),
+                                          ],
+                                        ),
+                                  ],
+                                )),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 10, right: 10),
+                                //   height: 500,
+                                //   child: const VerticalDivider(thickness: 1, width: 1)),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  child: VerticalDivider(thickness: 1, width: 1, indent: 20,),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      // const Padding(
+                                      //   padding: EdgeInsets.only(top: 10),
+                                      //   child: Text('Performance',
+                                      //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                      // ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                            padding:
+                                                const EdgeInsets.only(right: 10),
+                                            child: TextFormField(
+                                              enabled: false,
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          curEmployee.numBookSold,
+                                                onChanged: (text) => {
+                                                      curEmployee.infoEdited(
+                                                          'Book Sold', text)
+                                                    },
+                                                decoration: const InputDecoration(
+                                                  //icon: Icon(Icons.person),
+                                                  hintText: '',
+                                                  labelText: 'Number Of Books Sold',
+                                                )),
+                                          )),
+                                          Expanded(
+                                              child: Container(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: TextFormField(
+                                              enabled: false,
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          curEmployee.totalCostSold,
+                                                onChanged: (text) => {
+                                                      curEmployee.infoEdited(
+                                                          'Total Cost Sold', text)
+                                                    },
+                                                decoration: const InputDecoration(
+                                                  //icon: Icon(Icons.person),
+                                                  prefixText: '\$',
+                                                  hintText: '',
+                                                  labelText: 'Total Cost Of Books Sold ',
+                                                )),
+                                          )),
+                                        ],
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                        child: Text('Books Sold',
                                             style: TextStyle(
-                                                fontSize: 13,
                                                 color:
-                                                    Theme.of(context).hintColor),
+                                                    Theme.of(context).hintColor,
+                                                fontSize: 14)),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 75 *
+                                              double.parse(_soldBooksList.length
+                                                  .toString()),
+                                          width: 400,
+                                          constraints: const BoxConstraints(
+                                              maxHeight: 330),
+                                          child: ListView(
+                                            padding: const EdgeInsets.only(
+                                                left: 7, right: 7),
+                                            clipBehavior: Clip.antiAlias,
+                                            shrinkWrap: true,
+                                            //controller: ScrollController(),
+                                            children: [
+                                              for (int i =
+                                                _soldBooksList.length - 1;
+                                                i >= 0;
+                                                i--)
+                                                SizedBox(
+                                                  height: 75,
+                                                  child: Card(
+                                                    elevation: 2,
+                                                    clipBehavior: Clip.antiAlias,
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                5),
+                                                        side: BorderSide(
+                                                          color: Theme.of(context)
+                                                              .hintColor
+                                                              .withOpacity(0.3),
+                                                          //color: Colors.grey.withOpacity(0.2),
+                                                          width: 1,
+                                                        )),
+                                                    child: ListTile(
+                                                      dense: true,
+                                                      //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                                      onTap: () {
+                                                        setState(() {});
+                                                      },
+                                                      leading: const Icon(Icons
+                                                          .menu_book_outlined),
+                                                      title: Text(
+                                                        _soldBooksList[i].title,
+                                                        style: const TextStyle(
+                                                            fontSize: 15),
+                                                      ),
+                                                      subtitle: Text(
+                                                        '${_soldBooksList[i].authorFirstName} ${_soldBooksList[i].authorLastName}\nID: ${_soldBooksList[i].id}',
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                      // trailing: const Icon(Icons.clear),
+                                                      isThreeLine: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
                                           ),
                                         ),
-                                        CustomDropdownButton2(
-                                          buttonHeight: 25,
-                                          buttonWidth: 400,
-                                          buttonPadding:
-                                              const EdgeInsets.only(bottom: 3),
-                                          hint: 'Select Status',
-                                          dropdownDecoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color:
-                                                    Theme.of(context).cardColor),
-                                            //color: Colors.redAccent,
-                                          ),
-                                          buttonDecoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color:
-                                                    Theme.of(context).hintColor),
-                                            //color: Colors.redAccent,
-                                          ),
-                                          dropdownElevation: 2,
-                                          offset: const Offset(0, 0),
-                                          valueAlignment: Alignment.center,
-                                          icon: const Icon(Icons.arrow_drop_down),
-                                          iconSize: 20,
-                                          dropdownWidth: 400,
-                                          dropdownItems: _jobPosDropDownVal,
-                                          value: _curJobPosChoice,
-                                          onChanged: (String? newValue) {
-                                            setState(
-                                              () {
-                                                _curJobPosChoice = newValue!;
-                                                curEmployee.infoEdited('Position', newValue);
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ])),
-                                ],
-                              ))
-                            ],
+                                      )
+
+                                    ],
+                                )),
+                              ],
+                            ),
                           ),
                         ),
                       ))),
@@ -719,31 +911,33 @@ class EmployeeDatabase extends DataTableSource {
                         Navigator.pop(context);
                       }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                  ElevatedButton(
+                      child: const Text('CANCEL'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
                 if (isManager)
-                ElevatedButton(
-                    child: const Text('SAVE'),
-                    onPressed: () {
-                      int _employeeMatchIndex = mainEmployeeListCopy.indexWhere(
-                          (element) => element.id == curEmployee.id);
-                      //debugPrint('curafter: ${_employeeMatchIndex}');
-                      for (var item in curEmployee.allInfoHeaders) {
+                  ElevatedButton(
+                      child: const Text('SAVE'),
+                      onPressed: () {
+                        int _employeeMatchIndex =
+                            mainEmployeeListCopy.indexWhere(
+                                (element) => element.id == curEmployee.id);
+                        //debugPrint('curafter: ${_employeeMatchIndex}');
+                        for (var item in curEmployee.allInfoHeaders) {
                           curEmployee.setInfo(item);
                         }
 
-                      if (_employeeMatchIndex >= 0) {
-                        mainEmployeeListCopy[_employeeMatchIndex] = curEmployee;
-                      }
-                      notifyListeners();
-                      Navigator.pop(context);
-                      if (!kIsWeb) {
-                        localDatabaseUpdate('employees');
-                      }
-                    })
+                        if (_employeeMatchIndex >= 0) {
+                          mainEmployeeListCopy[_employeeMatchIndex] =
+                              curEmployee;
+                        }
+                        notifyListeners();
+                        Navigator.pop(context);
+                        if (!kIsWeb) {
+                          localDatabaseUpdate('employees');
+                        }
+                      })
               ],
             );
           });
@@ -755,7 +949,7 @@ class EmployeeDatabase extends DataTableSource {
 Future<void> employeeDataAdder(context) async {
   _curJobPosChoice = _jobPosDropDownVal[2];
   Employee newEmployee = Employee(
-      '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', '', '');
+      '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', '', '0.00','');
   newEmployee.id = idGenerator('E');
   await showDialog<String>(
       context: context,
@@ -816,10 +1010,9 @@ Future<void> employeeDataAdder(context) async {
                                       child: Container(
                                     padding: const EdgeInsets.only(right: 10),
                                     child: TextFormField(
-                                      enabled: false,
-                                      controller: TextEditingController()
-                                            ..text =
-                                                newEmployee.id,
+                                        enabled: false,
+                                        controller: TextEditingController()
+                                          ..text = newEmployee.id,
                                         onChanged: (text) =>
                                             {newEmployee.id = text},
                                         decoration: const InputDecoration(
@@ -859,7 +1052,7 @@ Future<void> employeeDataAdder(context) async {
                                 children: [
                                   Expanded(
                                       child: Container(
-                                    padding: const EdgeInsets.only(right: 10),
+                                    padding: const EdgeInsets.only(right: 0),
                                     child: TextFormField(
                                         onChanged: (text) =>
                                             {newEmployee.streetAddress = text},
@@ -976,23 +1169,6 @@ Future<void> employeeDataAdder(context) async {
                                   )),
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: Container(
-                                    padding: const EdgeInsets.only(right: 0),
-                                    child: TextFormField(
-                                        onChanged: (text) =>
-                                            {newEmployee.description = text},
-                                        decoration: const InputDecoration(
-                                          //icon: Icon(Icons.person),
-                                          hintText: '',
-                                          labelText: 'Description',
-                                        )),
-                                  )),
-                                ],
-                              ),
                               Container(
                                   padding: const EdgeInsets.only(top: 15),
                                   child: Column(children: [
@@ -1041,9 +1217,28 @@ Future<void> employeeDataAdder(context) async {
                                         );
                                       },
                                     ),
-                                  ]))
+                                  ])),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(right: 0),
+                                    child: TextFormField(
+                                        onChanged: (text) =>
+                                            {newEmployee.description = text},
+                                        decoration: const InputDecoration(
+                                          //icon: Icon(Icons.person),
+                                          hintText: '',
+                                          labelText: 'Job Description',
+                                        )),
+                                  )),
+                                ],
+                              ),
+                              
                             ],
-                          ))
+                          )),
+                         
                         ],
                       ),
                     ))),
@@ -1092,6 +1287,7 @@ void convertEmployeeData(var jsonResponse) {
         b['position'],
         b['numBookSold'],
         b['lastSoldBooks'],
+        b['totalCostSold'],
         b['description']);
     mainEmployeeList.add(employee);
     mainEmployeeListCopy.add(employee);
@@ -1104,7 +1300,7 @@ Future<void> employeeSearchHelper(context, List<Employee> foundList) async {
   if (foundList.isEmpty) {
     mainEmployeeList.removeRange(1, mainEmployeeList.length);
     mainEmployeeList.first = Employee(
-        '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
   } else {
     if (mainEmployeeList.length > 1) {
       mainEmployeeList.removeRange(1, mainEmployeeList.length);
