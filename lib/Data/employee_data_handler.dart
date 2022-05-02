@@ -273,7 +273,7 @@ class EmployeeDatabase extends DataTableSource {
 
   EmployeeDatabase(this.context,
       [sortedByName = true,
-      this.hasRowTaps = false,
+      this.hasRowTaps = true,
       this.hasRowHeightOverrides = false]) {
     employees = mainEmployeeList;
     if (sortedByName) {
