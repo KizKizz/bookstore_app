@@ -11,13 +11,13 @@ import 'package:data_table_2/data_table_2.dart';
 
 import 'data_storage_helper.dart';
 
-final List<String> _jobPosDropDownVal = [
+final List<String> jobPosDropDownVal = [
   'Owner',
   'Assistant Manager',
   'Full Time Sales Clerk',
   'Part Time Sales Clerk',
 ];
-late String _curJobPosChoice = _jobPosDropDownVal[0];
+late String _curJobPosChoice = jobPosDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -273,7 +273,7 @@ class EmployeeDatabase extends DataTableSource {
 
   EmployeeDatabase(this.context,
       [sortedByName = true,
-      this.hasRowTaps = true,
+      this.hasRowTaps = false,
       this.hasRowHeightOverrides = false]) {
     employees = mainEmployeeList;
     if (sortedByName) {
@@ -378,70 +378,6 @@ class EmployeeDatabase extends DataTableSource {
     );
   }
 
-  DataRow getRowPosition(int index) {
-    // ignore: unused_local_variable
-    final format = NumberFormat.decimalPercentPattern(
-      locale: 'en',
-      decimalDigits: 0,
-    );
-    assert(index >= 0);
-    if (index >= employees.length) throw 'index > .length';
-    final employee = employees[index];
-    return DataRow2.byIndex(
-      index: index,
-      selected: employee.selected,
-      onSelectChanged: hasRowTaps
-          ? null
-          : (value) {
-              if (employee.selected != value) {
-                _selectedCount += value! ? 1 : -1;
-                assert(_selectedCount >= 0);
-                employee.selected = value;
-                notifyListeners();
-              }
-            },
-      onTap: hasRowTaps ? () => [_showDialog(context, employee)] : null,
-      onDoubleTap: hasRowTaps
-          ? () => [
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  duration: const Duration(seconds: 1),
-                  //backgroundColor: Theme.of(context).focusColor,
-                  content: Text(
-                      'Double Tapped on ${employee.firstName} ${employee.lastName}'),
-                )),
-              ]
-          : null,
-      onSecondaryTap: hasRowTaps
-          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: const Duration(seconds: 1),
-                backgroundColor: Theme.of(context).errorColor,
-                content: Text(
-                    'Double Tapped on ${employee.firstName} ${employee.lastName}'),
-              ))
-          : null,
-      specificRowHeight: hasRowHeightOverrides ? 100 : null,
-      cells: [
-        //DataCell(Text(employee.id)),
-        DataCell(Text('${employee.firstName} ${employee.lastName}')),
-        // if (employee.suiteNum.isNotEmpty)
-        //   DataCell(Text(
-        //       '${employee.streetAddress} ${employee.suiteNum} ${employee.city} ${employee.state}, ${employee.zipCode}')),
-        // if (employee.suiteNum.isEmpty)
-        //   DataCell(Text(
-        //       '${employee.streetAddress} ${employee.city} ${employee.state}, ${employee.zipCode}')),
-        // DataCell(Text(employee.phoneNumber)),
-        // DataCell(Text(employee.dateOfBirth)),
-        // DataCell(Text(employee.hireDate)),
-        // DataCell(Text(employee.terminationDate)),
-        DataCell(Text(employee.position)),
-        //DataCell(Text(employee.email)),
-        // DataCell(Text(employee.numBookSold)),
-        // DataCell(Text('\$${employee.totalCostSold}')),
-        DataCell(Text(employee.description)),
-      ],
-    );
-  }
-
   @override
   int get rowCount => employees.length;
 
@@ -469,7 +405,7 @@ class EmployeeDatabase extends DataTableSource {
       }
     }
 
-    for (var pos in _jobPosDropDownVal) {
+    for (var pos in jobPosDropDownVal) {
       if (pos == curEmployee.position) {
         _curJobPosChoice = pos;
       }
@@ -788,7 +724,7 @@ class EmployeeDatabase extends DataTableSource {
                                                 const Icon(Icons.arrow_drop_down),
                                             iconSize: 20,
                                             dropdownWidth: 400,
-                                            dropdownItems: _jobPosDropDownVal,
+                                            dropdownItems: jobPosDropDownVal,
                                             value: _curJobPosChoice,
                                             onChanged: (String? newValue) {
                                               setState(
@@ -1011,7 +947,7 @@ class EmployeeDatabase extends DataTableSource {
 
 //Add
 Future<void> employeeDataAdder(context) async {
-  _curJobPosChoice = _jobPosDropDownVal[2];
+  _curJobPosChoice = jobPosDropDownVal[2];
   Employee newEmployee = Employee(
       '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', '', '0.00','');
   newEmployee.id = idGenerator('E');
@@ -1270,7 +1206,7 @@ Future<void> employeeDataAdder(context) async {
                                       icon: const Icon(Icons.arrow_drop_down),
                                       iconSize: 20,
                                       dropdownWidth: 400,
-                                      dropdownItems: _jobPosDropDownVal,
+                                      dropdownItems: jobPosDropDownVal,
                                       value: _curJobPosChoice,
                                       onChanged: (String? newValue) {
                                         setState(

@@ -547,95 +547,70 @@ class _EmployeeListState extends State<EmployeeList> {
   }
 
   _jobPosDialog() async {
+
     await showDialog<String>(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
-              title: const Center(
-                child: Text('Job Position',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
+              title: Center(
+                child: Column(
+                  children: const [
+                    Text('Job Position',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    Divider(thickness: 1, indent: 20, endIndent: 20,)
+                  ],
+                ),
               ),
               contentPadding:
-                  const EdgeInsets.only(left: 16, right: 16, top: 10),
+                  const EdgeInsets.only(left: 16, right: 16, top: 0),
               content: SizedBox(
                   width: double.maxFinite,
                   height: double.maxFinite,
                   child: Padding(
                       padding: const EdgeInsets.all(5),
-                      child: Stack(
+                      child: Row(
                         children: [
-                          DataTable2(
-                              scrollController: _controller,
-                              showCheckboxColumn: false,
-                              columnSpacing: 3,
-                              horizontalMargin: 5,
-                              bottomMargin: 5,
-                              minWidth: 1100,
-                              smRatio: 0.6,
-                              lmRatio: 1.5,
-                              sortColumnIndex: _sortColumnIndex,
-                              sortAscending: _sortAscending,
-                              onSelectAll: (val) => setState(
-                                  () => _employeesDataSource.selectAll(val)),
-                              columns: [
-                                DataColumn2(
-                                  label: const Text(
-                                    'Employee Name',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  size: ColumnSize.S,
-                                  numeric: false,
-                                  onSort: (columnIndex, ascending) {
-                                    setState(
-                                      () {
-                                        _sort<String>(
-                                            (d) => d.firstName + d.lastName,
-                                            columnIndex,
-                                            ascending);
-                                      },
-                                    );
-                                  },
+                          for (var item in jobPosDropDownVal)
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item, style: const TextStyle(fontWeight: FontWeight.w600)),
+                                Container(padding: EdgeInsets.only(top: 15) ,height: 1, width: double.maxFinite, child: const Divider()),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: ListView(
+                                    // padding: const EdgeInsets.only(
+                                    //     left: 7, right: 7),
+                                    clipBehavior: Clip.antiAlias,
+                                    shrinkWrap: true,
+                                    //controller: ScrollController(),
+                                    children: [
+                                      for (var employee in mainEmployeeListCopy)
+                                      if (employee.position == item)
+                                      ListTile(
+                                        shape: Border(
+                                          top: BorderSide(
+                                            color: Theme.of(context).dividerColor,
+                                            width: 1)
+                                        ),
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(employee.firstName +
+                                                      ' ' +
+                                                      employee.lastName),
+                                        onTap: (){},
+                                      )
+                                    ]),
                                 ),
-                                DataColumn2(
-                                    label: const Text(
-                                      'Position',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    size: ColumnSize.S,
-                                    numeric: false,
-                                    onSort: (columnIndex, ascending) =>
-                                        setState(
-                                          () {
-                                            _sort<String>((d) => d.position,
-                                                columnIndex, ascending);
-                                          },
-                                        )),
-                                DataColumn2(
-                                    label: const Text(
-                                      'Description',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    size: ColumnSize.L,
-                                    numeric: false,
-                                    onSort: (columnIndex, ascending) =>
-                                        setState(
-                                          () {
-                                            _sort<String>((d) => d.description,
-                                                columnIndex, ascending);
-                                          },
-                                        )),
                               ],
-                              rows: List<DataRow>.generate(
-                                  _employeesDataSource.rowCount,
-                                  (index) => _employeesDataSource
-                                      .getRowPosition(index))),
+                            ),
+                          )
                         ],
-                      ))),
+                      )
+                      )),
               actions: <Widget>[
                 ElevatedButton(
                     child: const Text('CLOSE'),
