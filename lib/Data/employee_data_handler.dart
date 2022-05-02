@@ -378,6 +378,70 @@ class EmployeeDatabase extends DataTableSource {
     );
   }
 
+  DataRow getRowPosition(int index) {
+    // ignore: unused_local_variable
+    final format = NumberFormat.decimalPercentPattern(
+      locale: 'en',
+      decimalDigits: 0,
+    );
+    assert(index >= 0);
+    if (index >= employees.length) throw 'index > .length';
+    final employee = employees[index];
+    return DataRow2.byIndex(
+      index: index,
+      selected: employee.selected,
+      onSelectChanged: hasRowTaps
+          ? null
+          : (value) {
+              if (employee.selected != value) {
+                _selectedCount += value! ? 1 : -1;
+                assert(_selectedCount >= 0);
+                employee.selected = value;
+                notifyListeners();
+              }
+            },
+      onTap: hasRowTaps ? () => [_showDialog(context, employee)] : null,
+      onDoubleTap: hasRowTaps
+          ? () => [
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: const Duration(seconds: 1),
+                  //backgroundColor: Theme.of(context).focusColor,
+                  content: Text(
+                      'Double Tapped on ${employee.firstName} ${employee.lastName}'),
+                )),
+              ]
+          : null,
+      onSecondaryTap: hasRowTaps
+          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: const Duration(seconds: 1),
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text(
+                    'Double Tapped on ${employee.firstName} ${employee.lastName}'),
+              ))
+          : null,
+      specificRowHeight: hasRowHeightOverrides ? 100 : null,
+      cells: [
+        //DataCell(Text(employee.id)),
+        DataCell(Text('${employee.firstName} ${employee.lastName}')),
+        // if (employee.suiteNum.isNotEmpty)
+        //   DataCell(Text(
+        //       '${employee.streetAddress} ${employee.suiteNum} ${employee.city} ${employee.state}, ${employee.zipCode}')),
+        // if (employee.suiteNum.isEmpty)
+        //   DataCell(Text(
+        //       '${employee.streetAddress} ${employee.city} ${employee.state}, ${employee.zipCode}')),
+        // DataCell(Text(employee.phoneNumber)),
+        // DataCell(Text(employee.dateOfBirth)),
+        // DataCell(Text(employee.hireDate)),
+        // DataCell(Text(employee.terminationDate)),
+        DataCell(Text(employee.position)),
+        //DataCell(Text(employee.email)),
+        // DataCell(Text(employee.numBookSold)),
+        // DataCell(Text('\$${employee.totalCostSold}')),
+        DataCell(Text(employee.description)),
+      ],
+    );
+  }
+
   @override
   int get rowCount => employees.length;
 

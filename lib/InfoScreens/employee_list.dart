@@ -13,19 +13,19 @@ import '../main_appbar.dart';
 final searchEmployeeController = TextEditingController();
 //String _searchDropDownVal = 'Title';
 final List<String> _searchDropDownVal = [
-    'All Fields',
-    'First Name',
-    'Last Name',
-    'ID',
-    'Address',
-    'Phone Number',
-    'Date of Birth',
-    'Hire Date',
-    'Position',
-    'Books Sold',
-    'Description',
-  ];
-  late String curSearchChoice = _searchDropDownVal[0];
+  'All Fields',
+  'First Name',
+  'Last Name',
+  'ID',
+  'Address',
+  'Phone Number',
+  'Date of Birth',
+  'Hire Date',
+  'Position',
+  'Books Sold',
+  'Description',
+];
+late String curSearchChoice = _searchDropDownVal[0];
 
 class EmployeeList extends StatefulWidget {
   const EmployeeList({Key? key}) : super(key: key);
@@ -42,8 +42,6 @@ class _EmployeeListState extends State<EmployeeList> {
   final ScrollController _controller = ScrollController();
   List<Employee> searchEmployeeList = [];
   final List<Employee> preSearchList = mainEmployeeListCopy;
-
-  
 
   @override
   void didChangeDependencies() {
@@ -78,142 +76,135 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Widget _searchField() {
     return TextField(
-        controller: searchEmployeeController,
-        onChanged: (String text) {
-          setState(() {
-            searchEmployeeList = [];
-            Iterable<Employee> foundEmployee = [];
-            if (curSearchChoice == 'All Fields') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.firstName.toLowerCase().contains(text.toLowerCase()) ||
-                  element.lastName.toLowerCase().contains(text.toLowerCase()) ||
-                  element.id.toLowerCase().contains(text.toLowerCase()) ||
-                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
-                  element.suiteNum
+      controller: searchEmployeeController,
+      onChanged: (String text) {
+        setState(() {
+          searchEmployeeList = [];
+          Iterable<Employee> foundEmployee = [];
+          if (curSearchChoice == 'All Fields') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.firstName.toLowerCase().contains(text.toLowerCase()) ||
+                element.lastName.toLowerCase().contains(text.toLowerCase()) ||
+                element.id.toLowerCase().contains(text.toLowerCase()) ||
+                element.streetAddress
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.city
+                element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                element.city.toLowerCase().contains(text.toLowerCase()) ||
+                element.state.toLowerCase().contains(text.toLowerCase()) ||
+                element.zipCode.toLowerCase().contains(text.toLowerCase()) ||
+                element.phoneNumber
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.state
+                element.email.toLowerCase().contains(text.toLowerCase()) ||
+                element.dateOfBirth
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.zipCode
+                element.hireDate.toLowerCase().contains(text.toLowerCase()) ||
+                element.terminationDate
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.phoneNumber.toLowerCase().contains(text.toLowerCase()) ||
-                  element.email
+                element.position.toLowerCase().contains(text.toLowerCase()) ||
+                element.numBookSold
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.dateOfBirth.toLowerCase().contains(text.toLowerCase()) ||
-                  element.hireDate.toLowerCase().contains(text.toLowerCase()) ||
-                  element.terminationDate
+                element.lastSoldBooks
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.position.toLowerCase().contains(text.toLowerCase()) ||
-                  element.numBookSold.toLowerCase().contains(text.toLowerCase()) ||
-                  element.lastSoldBooks
+                element.description.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'First Name') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.firstName.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Last Name') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.lastName.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'ID') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.id.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Address') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.streetAddress
                     .toLowerCase()
                     .contains(text.toLowerCase()) ||
-                  element.description.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'First Name') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.firstName.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Last Name') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.lastName.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'ID') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.id.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Address') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.streetAddress.toLowerCase().contains(text.toLowerCase()) ||
-                  element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
-                  element.city.toLowerCase().contains(text.toLowerCase()) ||
-                  element.state.toLowerCase().contains(text.toLowerCase()) ||
-                  element.zipCode.toLowerCase().contains(text.toLowerCase())
-                  );
-            } else if (curSearchChoice == 'Phone Number') {
-              foundEmployee = mainEmployeeListCopy.where((element) => element
-                  .phoneNumber
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Email') {
+                element.suiteNum.toLowerCase().contains(text.toLowerCase()) ||
+                element.city.toLowerCase().contains(text.toLowerCase()) ||
+                element.state.toLowerCase().contains(text.toLowerCase()) ||
+                element.zipCode.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Phone Number') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.phoneNumber.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Email') {
             foundEmployee = mainEmployeeListCopy.where((element) =>
                 element.email.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Date of Birth') {
-              foundEmployee = mainEmployeeListCopy.where((element) => element
-                  .dateOfBirth
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Hire Date') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.hireDate.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Termination Date') {
+          } else if (curSearchChoice == 'Date of Birth') {
             foundEmployee = mainEmployeeListCopy.where((element) =>
-                element.terminationDate.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Position') {
-              foundEmployee = mainEmployeeListCopy.where((element) =>
-                  element.position.toLowerCase().contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Books Sold') {
-              foundEmployee = mainEmployeeListCopy.where((element) => element
-                  .numBookSold
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            } else if (curSearchChoice == 'Last Sold Books') {
+                element.dateOfBirth.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Hire Date') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.hireDate.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Termination Date') {
+            foundEmployee = mainEmployeeListCopy.where((element) => element
+                .terminationDate
+                .toLowerCase()
+                .contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Position') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.position.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Books Sold') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.numBookSold.toLowerCase().contains(text.toLowerCase()));
+          } else if (curSearchChoice == 'Last Sold Books') {
             foundEmployee = mainEmployeeListCopy.where((element) => element
                 .lastSoldBooks
                 .toLowerCase()
                 .contains(text.toLowerCase()));
-            }  else if (curSearchChoice == 'Description') {
-              foundEmployee = mainEmployeeListCopy.where((element) => element
-                  .description
-                  .toLowerCase()
-                  .contains(text.toLowerCase()));
-            }
+          } else if (curSearchChoice == 'Description') {
+            foundEmployee = mainEmployeeListCopy.where((element) =>
+                element.description.toLowerCase().contains(text.toLowerCase()));
+          }
 
-            if (foundEmployee.isNotEmpty) {
-              for (var employee in foundEmployee) {
-                Employee tempEmployee = Employee(
-                    employee.firstName,
-                    employee.lastName,
-                    employee.id,
-                    employee.streetAddress,
-                    employee.suiteNum,
-                    employee.city,
-                    employee.state,
-                    employee.zipCode,
-                    employee.phoneNumber,
-                    employee.email,
-                    employee.dateOfBirth,
-                    employee.hireDate,
-                    employee.terminationDate,
-                    employee.position,
-                    employee.numBookSold,
-                    employee.terminationDate,
-                    employee.totalCostSold,
-                    employee.description);
-                searchEmployeeList.add(tempEmployee);
-              }
-              setState(() {
-                employeeSearchHelper(context, searchEmployeeList).then((_) {
-                  setState(() {});
-                  //debugPrint('test ${mainBookList.toString()}');
-                });
-              });
-            } else {
-              setState(() {
-                employeeSearchHelper(context, searchEmployeeList).then((_) {
-                  setState(() {});
-                });
-              });
+          if (foundEmployee.isNotEmpty) {
+            for (var employee in foundEmployee) {
+              Employee tempEmployee = Employee(
+                  employee.firstName,
+                  employee.lastName,
+                  employee.id,
+                  employee.streetAddress,
+                  employee.suiteNum,
+                  employee.city,
+                  employee.state,
+                  employee.zipCode,
+                  employee.phoneNumber,
+                  employee.email,
+                  employee.dateOfBirth,
+                  employee.hireDate,
+                  employee.terminationDate,
+                  employee.position,
+                  employee.numBookSold,
+                  employee.terminationDate,
+                  employee.totalCostSold,
+                  employee.description);
+              searchEmployeeList.add(tempEmployee);
             }
-          });
-        },
-        onSubmitted: (String text) {
-          setState(() {});
-        },
-        autofocus: false,
+            setState(() {
+              employeeSearchHelper(context, searchEmployeeList).then((_) {
+                setState(() {});
+                //debugPrint('test ${mainBookList.toString()}');
+              });
+            });
+          } else {
+            setState(() {
+              employeeSearchHelper(context, searchEmployeeList).then((_) {
+                setState(() {});
+              });
+            });
+          }
+        });
+      },
+      onSubmitted: (String text) {
+        setState(() {});
+      },
+      autofocus: false,
       maxLines: 1,
       cursorColor: Theme.of(context).hintColor,
       style: const TextStyle(fontSize: 21),
@@ -255,9 +246,9 @@ class _EmployeeListState extends State<EmployeeList> {
               right: 368,
             ),
             child: Container(
-              padding: const EdgeInsets.only(left: 2, right: 0),
+                padding: const EdgeInsets.only(left: 2, right: 0),
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: _searchField()),
+                child: _searchField()),
           ),
           widgets: <Widget>[
             // Clear
@@ -314,7 +305,7 @@ class _EmployeeListState extends State<EmployeeList> {
                   ),
                   dropdownElevation: 2,
                   value: curSearchChoice,
-                  dropdownItems: _searchDropDownVal,     
+                  dropdownItems: _searchDropDownVal,
                   onChanged: (String? newValue) {
                     setState(() {
                       curSearchChoice = newValue!;
@@ -325,35 +316,36 @@ class _EmployeeListState extends State<EmployeeList> {
             //Add Data Button
             //if (isManager) const SizedBox(width: 48),
             if (isManager)
-            MaterialButton(
-              onPressed: () => [
-                setState(() {
+              MaterialButton(
+                onPressed: () => [
                   setState(() {
-                    // employeeDataAdder(context).then((_) {
-                    //   setState(() {});
-                    // });
-                  });
-                })
-              ],
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Icon(
-                        FontAwesomeIcons.person,
-                        color: Colors.white,
+                    setState(() {
+                      _jobPosDialog();
+                      // employeeDataAdder(context).then((_) {
+                      //   setState(() {});
+                      // });
+                    });
+                  })
+                ],
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Icon(
+                          FontAwesomeIcons.person,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        "Job Position",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ]),
-            ),
+                      Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Text(
+                          "Job Position",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ]),
+              ),
             isManager
                 ? MaterialButton(
                     onPressed: () => [
@@ -435,7 +427,9 @@ class _EmployeeListState extends State<EmployeeList> {
                             ),
                             size: ColumnSize.M,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.firstName + d.lastName, columnIndex, ascending),
+                                (d) => d.firstName + d.lastName,
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -485,7 +479,9 @@ class _EmployeeListState extends State<EmployeeList> {
                             size: ColumnSize.S,
                             numeric: false,
                             onSort: (columnIndex, ascending) => _sort<String>(
-                                (d) => d.terminationDate, columnIndex, ascending),
+                                (d) => d.terminationDate,
+                                columnIndex,
+                                ascending),
                           ),
                           DataColumn2(
                             label: const Text(
@@ -549,6 +545,108 @@ class _EmployeeListState extends State<EmployeeList> {
                   ]));
             }));
   }
+
+  _jobPosDialog() async {
+    await showDialog<String>(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 10),
+              title: const Center(
+                child: Text('Job Position',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              contentPadding:
+                  const EdgeInsets.only(left: 16, right: 16, top: 10),
+              content: SizedBox(
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Stack(
+                        children: [
+                          DataTable2(
+                              scrollController: _controller,
+                              showCheckboxColumn: false,
+                              columnSpacing: 3,
+                              horizontalMargin: 5,
+                              bottomMargin: 5,
+                              minWidth: 1100,
+                              smRatio: 0.6,
+                              lmRatio: 1.5,
+                              sortColumnIndex: _sortColumnIndex,
+                              sortAscending: _sortAscending,
+                              onSelectAll: (val) => setState(
+                                  () => _employeesDataSource.selectAll(val)),
+                              columns: [
+                                DataColumn2(
+                                  label: const Text(
+                                    'Employee Name',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  size: ColumnSize.S,
+                                  numeric: false,
+                                  onSort: (columnIndex, ascending) {
+                                    setState(
+                                      () {
+                                        _sort<String>(
+                                            (d) => d.firstName + d.lastName,
+                                            columnIndex,
+                                            ascending);
+                                      },
+                                    );
+                                  },
+                                ),
+                                DataColumn2(
+                                    label: const Text(
+                                      'Position',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    size: ColumnSize.S,
+                                    numeric: false,
+                                    onSort: (columnIndex, ascending) =>
+                                        setState(
+                                          () {
+                                            _sort<String>((d) => d.position,
+                                                columnIndex, ascending);
+                                          },
+                                        )),
+                                DataColumn2(
+                                    label: const Text(
+                                      'Description',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    size: ColumnSize.L,
+                                    numeric: false,
+                                    onSort: (columnIndex, ascending) =>
+                                        setState(
+                                          () {
+                                            _sort<String>((d) => d.description,
+                                                columnIndex, ascending);
+                                          },
+                                        )),
+                              ],
+                              rows: List<DataRow>.generate(
+                                  _employeesDataSource.rowCount,
+                                  (index) => _employeesDataSource
+                                      .getRowPosition(index))),
+                        ],
+                      ))),
+              actions: <Widget>[
+                ElevatedButton(
+                    child: const Text('CLOSE'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+              ],
+            );
+          });
+        });
+  }
 }
 
 class _ScrollUpButton extends StatefulWidget {
@@ -596,5 +694,20 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
                   foregroundColor: MaterialStateProperty.all(Colors.white)),
             ))
         : const SizedBox();
+  }
+}
+
+class _SystemPadding extends StatelessWidget {
+  final Widget child;
+
+  const _SystemPadding({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    return AnimatedContainer(
+        padding: mediaQuery.viewInsets,
+        duration: const Duration(milliseconds: 300),
+        child: child);
   }
 }
