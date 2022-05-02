@@ -333,7 +333,7 @@ class _EmployeeListState extends State<EmployeeList> {
                       Padding(
                         padding: EdgeInsets.all(2.0),
                         child: Icon(
-                          FontAwesomeIcons.person,
+                          FontAwesomeIcons.peopleLine,
                           color: Colors.white,
                         ),
                       ),
@@ -547,70 +547,102 @@ class _EmployeeListState extends State<EmployeeList> {
   }
 
   _jobPosDialog() async {
-
     await showDialog<String>(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: Theme.of(context).canvasColor,
               titlePadding: const EdgeInsets.only(top: 10),
               title: Center(
                 child: Column(
                   children: const [
-                    Text('Job Position',
+                    Text('Job Position Details',
                         style: TextStyle(fontWeight: FontWeight.w700)),
-                    Divider(thickness: 1, indent: 20, endIndent: 20,)
+                    //Divider(thickness: 1, indent: 20, endIndent: 20,)
                   ],
                 ),
               ),
               contentPadding:
-                  const EdgeInsets.only(left: 16, right: 16, top: 0),
+                  const EdgeInsets.only(left: 16, right: 16, top: 20),
               content: SizedBox(
                   width: double.maxFinite,
                   height: double.maxFinite,
-                  child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Row(
-                        children: [
-                          for (var item in jobPosDropDownVal)
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item, style: const TextStyle(fontWeight: FontWeight.w600)),
-                                Container(padding: EdgeInsets.only(top: 15) ,height: 1, width: double.maxFinite, child: const Divider()),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15),
-                                  child: ListView(
-                                    // padding: const EdgeInsets.only(
-                                    //     left: 7, right: 7),
-                                    clipBehavior: Clip.antiAlias,
-                                    shrinkWrap: true,
-                                    //controller: ScrollController(),
-                                    children: [
-                                      for (var employee in mainEmployeeListCopy)
-                                      if (employee.position == item)
-                                      ListTile(
-                                        shape: Border(
-                                          top: BorderSide(
-                                            color: Theme.of(context).dividerColor,
-                                            width: 1)
-                                        ),
-                                        contentPadding: EdgeInsets.zero,
-                                        title: Text(employee.firstName +
-                                                      ' ' +
-                                                      employee.lastName),
-                                        onTap: (){},
-                                      )
-                                    ]),
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var jobItem in jobPosDropDownVal)
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: DataTable2(
+                              scrollController: _controller,
+                              showCheckboxColumn: false,
+                              columnSpacing: 3,
+                              horizontalMargin: 5,
+                              bottomMargin: 5,
+                              showBottomBorder: true,
+                              //minWidth: 1100,
+                              smRatio: 0.6,
+                              lmRatio: 1.5,
+                              sortColumnIndex: _sortColumnIndex,
+                              sortAscending: _sortAscending,
+                              // onSelectAll: (val) =>
+                              //     setState(() => _employeesDataSource.selectAll(val)),
+                              columns: [
+                                DataColumn2(
+                                  label: Center(
+                                    child: Container(
+                                      height: 40,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            jobItem,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            'Description',
+                                            style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  size: ColumnSize.M,
+                                  numeric: false,
+                                  // onSort: (columnIndex, ascending) =>
+                                  //     _sort<num>(
+                                  //         (d) => double.parse(d.totalCostSold),
+                                  //         columnIndex,
+                                  //         ascending),
                                 ),
                               ],
-                            ),
-                          )
-                        ],
-                      )
-                      )),
+                              rows: [
+                                for (var employee in mainEmployeeListCopy)
+                                if (employee.position == jobItem)
+                                DataRow(
+                                  cells: [
+                                  DataCell(Center(child: Text(employee.firstName + ' ' + employee.lastName))),
+                                ]),
+                              ],
+                            ),),
+                            
+                            if (jobItem != jobPosDropDownVal.last)
+                            const VerticalDivider(
+                                thickness: 0, indent: 50,
+                              )
+                          ],
+                        ),
+                      ),
+                      
+                    ],
+                  )
+                ),
               actions: <Widget>[
                 ElevatedButton(
                     child: const Text('CLOSE'),
