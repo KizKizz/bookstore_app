@@ -419,8 +419,14 @@ class OrderDatabase extends DataTableSource {
             return AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
               title: Center(
-                child: Text('Order #${curOrder.orderNum} Info',
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
+                child: Column(
+                  children: [
+                    const Text('Order Info',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    Text('(ID: ${curOrder.orderId})',
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                  ],
+                ),
               ),
               contentPadding:
                   const EdgeInsets.only(top: 10, left: 16, bottom: 10),
