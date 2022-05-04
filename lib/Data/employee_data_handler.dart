@@ -337,24 +337,24 @@ class EmployeeDatabase extends DataTableSource {
               }
             },
       onTap: hasRowTaps ? () => [_showDialog(context, employee)] : null,
-      onDoubleTap: hasRowTaps
-          ? () => [
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  duration: const Duration(seconds: 1),
-                  //backgroundColor: Theme.of(context).focusColor,
-                  content: Text(
-                      'Double Tapped on ${employee.firstName} ${employee.lastName}'),
-                )),
-              ]
-          : null,
-      onSecondaryTap: hasRowTaps
-          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: const Duration(seconds: 1),
-                backgroundColor: Theme.of(context).errorColor,
-                content: Text(
-                    'Double Tapped on ${employee.firstName} ${employee.lastName}'),
-              ))
-          : null,
+      // onDoubleTap: hasRowTaps
+      //     ? () => [
+      //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //             duration: const Duration(seconds: 1),
+      //             //backgroundColor: Theme.of(context).focusColor,
+      //             content: Text(
+      //                 'Double Tapped on ${employee.firstName} ${employee.lastName}'),
+      //           )),
+      //         ]
+      //     : null,
+      // onSecondaryTap: hasRowTaps
+      //     ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //           duration: const Duration(seconds: 1),
+      //           backgroundColor: Theme.of(context).errorColor,
+      //           content: Text(
+      //               'Double Tapped on ${employee.firstName} ${employee.lastName}'),
+      //         ))
+      //     : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(employee.id)),

@@ -297,23 +297,23 @@ class BookDatabase extends DataTableSource {
               }
             },
       onTap: hasRowTaps ? () => [_showDialog(context, book)] : null,
-      onDoubleTap: hasRowTaps
-          ? () => [
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  duration: const Duration(seconds: 1),
-                  //backgroundColor: Theme.of(context).focusColor,
-                  content: Text('Double Tapped on ${book.title}'),
-                )),
-              ]
-          : null,
-      onSecondaryTap: hasRowTaps
-          ? () => //_bookDataAdder()
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: const Duration(seconds: 1),
-                backgroundColor: Theme.of(context).errorColor,
-                content: Text('Right clicked on ${book.title}'),
-              ))
-          : null,
+      // onDoubleTap: hasRowTaps
+      //     ? () => [
+      //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //             duration: const Duration(seconds: 1),
+      //             //backgroundColor: Theme.of(context).focusColor,
+      //             content: Text('Double Tapped on ${book.title}'),
+      //           )),
+      //         ]
+      //     : null,
+      // onSecondaryTap: hasRowTaps
+      //     ? () => //_bookDataAdder()
+      //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //           duration: const Duration(seconds: 1),
+      //           backgroundColor: Theme.of(context).errorColor,
+      //           content: Text('Right clicked on ${book.title}'),
+      //         ))
+      //     : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(book.id)),

@@ -345,24 +345,24 @@ class OrderDatabase extends DataTableSource {
                 //}
               ]
           : null,
-      onDoubleTap: hasRowTaps
-          ? () => [
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  duration: const Duration(seconds: 1),
-                  //backgroundColor: Theme.of(context).focusColor,
-                  content: Text(
-                      'Double Tapped on ${customer.orderNum} ${customer.customerName}'),
-                )),
-              ]
-          : null,
-      onSecondaryTap: hasRowTaps
-          ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: const Duration(seconds: 1),
-                backgroundColor: Theme.of(context).errorColor,
-                content: Text(
-                    'Double Tapped on ${customer.orderNum} ${customer.customerName}'),
-              ))
-          : null,
+      // onDoubleTap: hasRowTaps
+      //     ? () => [
+      //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //             duration: const Duration(seconds: 1),
+      //             //backgroundColor: Theme.of(context).focusColor,
+      //             content: Text(
+      //                 'Double Tapped on ${customer.orderNum} ${customer.customerName}'),
+      //           )),
+      //         ]
+      //     : null,
+      // onSecondaryTap: hasRowTaps
+      //     ? () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //           duration: const Duration(seconds: 1),
+      //           backgroundColor: Theme.of(context).errorColor,
+      //           content: Text(
+      //               'Double Tapped on ${customer.orderNum} ${customer.customerName}'),
+      //         ))
+      //     : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(customer.orderId)),
