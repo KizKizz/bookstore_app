@@ -186,10 +186,22 @@ class _MainDrawerState extends State<MainDrawer> {
                     style: TextStyle(fontWeight: FontWeight.w700)),
               ),
               contentPadding: const EdgeInsets.only(left: 16, right: 16),
-              content: const Center(
+              content: Center(
                 child: SizedBox(
                   width: double.maxFinite,
-                  child: Center(child: Text('Documentation information goes here.'))),
+                  child: Center(child: 
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text('Antique Publications Bookstore Project', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                      Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                      Text('Group #5', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                      SizedBox(height: 20,),
+                      Text('Jeremy Ha, Daniel Lee, Camplesg Nguyen'),
+                      Text('James Nguyen, Mark Nguyen, Khang Truong'),
+                    ],
+                  ))),
               ),
               actions: <Widget>[
                 ElevatedButton(

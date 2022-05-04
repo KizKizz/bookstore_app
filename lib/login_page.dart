@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final String _managerID = 'admin';
   final String _managerPass = 'admin';
+  final passFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +99,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         }
                                         return null;
                                       },
+                                      textInputAction: TextInputAction.next,
+                                      onFieldSubmitted: (value) {FocusScope.of(context).requestFocus(passFocus);},
                                       decoration: InputDecoration(
                                         border: const OutlineInputBorder(),
                                         labelText: 'Login ID',
@@ -115,6 +118,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         left: 15,
                                         right: 15),
                                     child: TextFormField(
+                                      focusNode: passFocus,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Password can\'t be empty';
@@ -130,6 +134,32 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         labelText: 'Password',
                                         hintText: 'Enter your password (hint: $_managerPass)',
                                       ),
+                                      onFieldSubmitted: (value) async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                final prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setBool(
+                                                    'isLoggedinEmployee',
+                                                    false);
+                                                prefs.setBool(
+                                                    'isLoggedinManager', true);
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (context,
+                                                            animation1,
+                                                            animation2) =>
+                                                        const MainPage(),
+                                                    transitionDuration:
+                                                        Duration.zero,
+                                                    reverseTransitionDuration:
+                                                        Duration.zero,
+                                                  ),
+                                                );
+                                              }
+                                            },
                                     ),
                                   ),
                                   Container(
