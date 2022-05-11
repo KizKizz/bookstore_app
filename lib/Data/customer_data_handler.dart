@@ -435,268 +435,268 @@ class CustomerDatabase extends DataTableSource {
                       padding: const EdgeInsets.only(right: 16),
                       child: SizedBox(
                         width: 800,
-                        child: AbsorbPointer(
-                          absorbing: !isManager,
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'First Name'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'First Name', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'First Name',
-                                              )),
-                                        )),
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'Last Name'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Last Name', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Last Name',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 0),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'Street Address'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Street Address', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Street Address',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'Suite Number'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Suite Number', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Suite / Apt#',
-                                              )),
-                                        )),
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo('City'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'City', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'City',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'First Name'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'First Name', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'First Name',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'Last Name'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Last Name', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Last Name',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 0),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'Street Address'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Street Address', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Street Address',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'Suite Number'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Suite Number', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Suite / Apt#',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo('City'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'City', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'City',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
 
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo('State'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'State', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'State',
-                                              )),
-                                        )),
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'Postal Code'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Postal Code', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Postal Code',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo('State'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'State', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'State',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'Postal Code'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Postal Code', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Postal Code',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
 
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo(
-                                                            'Phone Number'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Phone Number', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Phone Number',
-                                              )),
-                                        )),
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: TextFormField(
-                                              enabled: false,
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo('ID'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'ID', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'ID',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 0),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text = curCustomer
-                                                        .headerToInfo('Email'),
-                                              onChanged: (text) => {
-                                                    curCustomer.infoEdited(
-                                                        'Email', text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText: 'Email',
-                                              )),
-                                        )),
-                                      ],
-                                    ),
-                                    //List of Books
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text('Last Purchased Books',
-                                          style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                              fontSize: 14)),
-                                    ),
-                                    Container(
-                                      height: 75 *
-                                          double.parse(_purchasedBooksList
-                                              .length
-                                              .toString()),
-                                      width: 400,
-                                      constraints:
-                                          const BoxConstraints(maxHeight: 250),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo(
+                                                          'Phone Number'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Phone Number', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Phone Number',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            enabled: false,
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo('ID'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'ID', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'ID',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 0),
+                                        child: TextFormField(
+                                            controller:
+                                                TextEditingController()
+                                                  ..text = curCustomer
+                                                      .headerToInfo('Email'),
+                                            onChanged: (text) => {
+                                                  curCustomer.infoEdited(
+                                                      'Email', text)
+                                                },
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Email',
+                                            )),
+                                      )),
+                                    ],
+                                  ),
+                                  //List of Books
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text('Last Purchased Books',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).hintColor,
+                                            fontSize: 14)),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    height: 100 *
+                                        double.parse(_purchasedBooksList
+                                            .length
+                                            .toString()),
+                                    width: 400,
+                                    constraints:
+                                        const BoxConstraints(maxHeight: 300),
+                                    child: SingleChildScrollView(
                                       child: Column(
                                         children: [
                                           if (_purchasedBooksList.isNotEmpty)
@@ -770,118 +770,118 @@ class CustomerDatabase extends DataTableSource {
                                         ],
                                       ),
                                     ),
-                                  ],
-                                )),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  child: VerticalDivider(
-                                    thickness: 1,
-                                    width: 1,
-                                    indent: 20,
                                   ),
+                                ],
+                              )),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: VerticalDivider(
+                                  thickness: 1,
+                                  width: 1,
+                                  indent: 20,
                                 ),
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 10),
-                                      child: Text('Recommended Books',
-                                          style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                              fontSize: 14)),
-                                    ),
-                                    if (_recomBooksList.isNotEmpty)
-                                    Expanded(
-                                      child: Container(
-                                        height: 75 *
-                                            double.parse(_recomBooksList.length
-                                                .toString()),
-                                        width: 400,
-                                        constraints: const BoxConstraints(
-                                            maxHeight: 330),
-                                        child: ListView(
-                                          padding: const EdgeInsets.only(
-                                              left: 7, right: 7),
-                                          clipBehavior: Clip.antiAlias,
-                                          shrinkWrap: true,
-                                          //controller: ScrollController(),
-                                          children: [
-                                            for (int i =
-                                                    _recomBooksList.length - 1;
-                                                i >= 0;
-                                                i--)
-                                              SizedBox(
-                                                height: 75,
-                                                child: Card(
-                                                  elevation: 2,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      side: BorderSide(
-                                                        color: Theme.of(context)
-                                                            .hintColor
-                                                            .withOpacity(0.3),
-                                                        //color: Colors.grey.withOpacity(0.2),
-                                                        width: 1,
-                                                      )),
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    //contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                                    onTap: () {
-                                                      setState(() {});
-                                                    },
-                                                    leading: const Icon(Icons
-                                                        .menu_book_outlined),
-                                                    title: Text(
-                                                      _recomBooksList[i].title,
-                                                      style: const TextStyle(
-                                                          fontSize: 15),
-                                                    ),
-                                                    subtitle: Text(
-                                                      '${_recomBooksList[i].authorFirstName} ${_recomBooksList[i].authorLastName}\nID: ${_recomBooksList[i].id}',
-                                                      style: const TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                    // trailing: const Icon(Icons.clear),
-                                                    isThreeLine: true,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10),
+                                    child: Text('Recommended Books',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).hintColor,
+                                            fontSize: 14)),
+                                  ),
+                                  if (_recomBooksList.isNotEmpty)
+                                  Expanded(
+                                    child: Container(
+                                      height: 75 *
+                                          double.parse(_recomBooksList.length
+                                              .toString()),
+                                      width: 400,
+                                      constraints: const BoxConstraints(
+                                          maxHeight: 330),
+                                      child: ListView(
+                                        padding: const EdgeInsets.only(
+                                            left: 7, right: 7),
+                                        clipBehavior: Clip.antiAlias,
+                                        shrinkWrap: true,
+                                        //controller: ScrollController(),
+                                        children: [
+                                          for (int i =
+                                                  _recomBooksList.length - 1;
+                                              i >= 0;
+                                              i--)
+                                            SizedBox(
+                                              height: 75,
+                                              child: Card(
+                                                elevation: 2,
+                                                clipBehavior: Clip.antiAlias,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    side: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .hintColor
+                                                          .withOpacity(0.3),
+                                                      //color: Colors.grey.withOpacity(0.2),
+                                                      width: 1,
+                                                    )),
+                                                child: ListTile(
+                                                  dense: true,
+                                                  //contentPadding: EdgeInsets.symmetric(vertical: 0),
+                                                  onTap: () {
+                                                    setState(() {});
+                                                  },
+                                                  leading: const Icon(Icons
+                                                      .menu_book_outlined),
+                                                  title: Text(
+                                                    _recomBooksList[i].title,
+                                                    style: const TextStyle(
+                                                        fontSize: 15),
                                                   ),
+                                                  subtitle: Text(
+                                                    '${_recomBooksList[i].authorFirstName} ${_recomBooksList[i].authorLastName}\nID: ${_recomBooksList[i].id}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  // trailing: const Icon(Icons.clear),
+                                                  isThreeLine: true,
                                                 ),
                                               ),
-                                          ],
-                                        ),
+                                            ),
+                                        ],
                                       ),
                                     ),
-                                    if (_recomBooksList.isEmpty)
-                                      const Text(
-                                        'No Recommended Books Found',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                  ],
-                                )),
-                              ],
-                            ),
+                                  ),
+                                  if (_recomBooksList.isEmpty)
+                                    const Text(
+                                      'No Recommended Books Found',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                ],
+                              )),
+                            ],
                           ),
                         ),
                       ))),
               actions: <Widget>[
-                if (!isManager)
-                  ElevatedButton(
-                      child: const Text('CLOSE'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                if (isManager)
+                // if (!isManager)
+                //   ElevatedButton(
+                //       child: const Text('CLOSE'),
+                //       onPressed: () {
+                //         Navigator.pop(context);
+                //       }),
+                // if (isManager)
                   ElevatedButton(
                       child: const Text('CANCEL'),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
-                if (isManager)
+                //if (isManager)
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () {

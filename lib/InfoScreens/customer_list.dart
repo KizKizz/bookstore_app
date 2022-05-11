@@ -274,9 +274,10 @@ class _CustomerListState extends State<CustomerList> {
                 )),
 
             //Add Data Button
-            if (isManager) const SizedBox(width: 48),
-            isManager
-                ? MaterialButton(
+            const SizedBox(width: 48),
+            //isManager
+                //?
+                 MaterialButton(
                     onPressed: () => [
                       setState(() {
                         setState(() {
@@ -306,7 +307,7 @@ class _CustomerListState extends State<CustomerList> {
                         ]),
                   )
                 //Padding for nonmanager
-                : const SizedBox(width: 128),
+                //: const SizedBox(width: 128),
           ],
         ),
         body: FutureBuilder(
