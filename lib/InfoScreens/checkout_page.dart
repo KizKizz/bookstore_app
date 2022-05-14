@@ -2005,7 +2005,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   '',
                                   _curOrderId);
                               String _allBookIDs = '',
-                                  _bookNames = '',
                                   _purchasedDates = curOrderingCustomer.purchasedDates;
                               int _numOfBook = 0;
                               for (var book in checkoutCartList) {

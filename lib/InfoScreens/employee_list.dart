@@ -596,7 +596,7 @@ class _EmployeeListState extends State<EmployeeList> {
                               columns: [
                                 DataColumn2(
                                   label: Center(
-                                    child: Container(
+                                    child: SizedBox(
                                       height: 40,
                                       child: Column(
                                         children: [
@@ -704,17 +704,3 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
   }
 }
 
-class _SystemPadding extends StatelessWidget {
-  final Widget child;
-
-  const _SystemPadding({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
-  }
-}

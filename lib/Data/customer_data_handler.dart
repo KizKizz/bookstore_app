@@ -689,13 +689,13 @@ class CustomerDatabase extends DataTableSource {
                                   ),
                                   Container(
                                     padding: const EdgeInsets.only(top: 10),
-                                    height: 100 *
+                                    height: 85 *
                                         double.parse(_purchasedBooksList
                                             .length
                                             .toString()),
                                     width: 400,
                                     constraints:
-                                        const BoxConstraints(maxHeight: 300),
+                                        const BoxConstraints(maxHeight: 250),
                                     child: SingleChildScrollView(
                                       child: Column(
                                         children: [

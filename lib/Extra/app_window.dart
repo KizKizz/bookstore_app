@@ -64,13 +64,10 @@ class RestoreWindowButton extends WindowButton {
 }
 
 class _MoveWindowEX extends StatelessWidget {
-  _MoveWindowEX({Key? key, this.child}) : super(key: key);
+  const _MoveWindowEX({Key? key, this.child}) : super(key: key);
   final Widget? child;
   @override
   Widget build(BuildContext context) {
-    Size size = WidgetsBinding.instance!.window.physicalSize;
-    double _width = size.width;
-    double _height = size.height;
     return GestureDetector(
             behavior: HitTestBehavior.translucent,
             onPanStart: (details) {
@@ -90,20 +87,20 @@ class _MoveWindowEX extends StatelessWidget {
                 context.read<checkoutNotif>().appRestore();
               }
             },
-            child: this.child ?? Container());
+            child: child ?? Container());
   }
 }
 
 class MoveWindowEX extends StatelessWidget {
   final Widget? child;
-  MoveWindowEX({Key? key, this.child}) : super(key: key);
+  const MoveWindowEX({Key? key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (child == null) return _MoveWindowEX();
+    if (child == null) return const _MoveWindowEX();
     return _MoveWindowEX(
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Expanded(child: this.child!)]),
+          children: [Expanded(child: child!)]),
     );
   }
 }

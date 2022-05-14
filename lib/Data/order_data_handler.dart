@@ -528,6 +528,7 @@ class OrderDatabase extends DataTableSource {
                                   child: Container(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: TextFormField(
+                                  enabled: false,
                                     controller: TextEditingController()
                                       ..text =
                                           curOrder.headerToInfo('Order Date'),
@@ -545,6 +546,7 @@ class OrderDatabase extends DataTableSource {
                                   child: Container(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: TextFormField(
+                                  enabled: false,
                                     controller: TextEditingController()
                                       ..text = curOrder
                                           .headerToInfo('Delivery Date'),
@@ -567,6 +569,7 @@ class OrderDatabase extends DataTableSource {
                                   child: Container(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: TextFormField(
+                                  enabled: false,
                                     controller: TextEditingController()
                                       ..text = curOrder
                                           .headerToInfo('Payment Method'),
@@ -584,6 +587,7 @@ class OrderDatabase extends DataTableSource {
                                   child: Container(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: TextFormField(
+                                  enabled: false,
                                     controller: TextEditingController()
                                       ..text =
                                           curOrder.headerToInfo('Total Cost'),

@@ -78,11 +78,9 @@ class _MyAppState extends State<MyApp> {
     return temp;
   }
 
-  int _upCounter = 0;
 
   void _incrementUp(PointerEvent details) {
     setState(() {
-      _upCounter++;
     });
   }
 
@@ -105,7 +103,7 @@ class _MyAppState extends State<MyApp> {
                       onPointerSignal: (details) {
                         setState(() {
                           _incrementUp(details);
-                          print(_upCounter);
+                          //print(_upCounter);
                         });
                         //context.read<checkoutNotif>().appMaximize();
                       },
@@ -114,7 +112,7 @@ class _MyAppState extends State<MyApp> {
                           width: 1,
                           child: Column(children: [
                             WindowTitleBarBox(
-                                child: Row(children: [
+                                child: Row(children: const [
                               Expanded(child: MoveWindowEX()),
                               WindowButtons()
                             ])),
