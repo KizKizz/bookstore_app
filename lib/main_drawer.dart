@@ -33,141 +33,138 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
           ),
           Expanded(
-            child: ListView(
-                controller: ScrollController(),
-                padding: EdgeInsets.zero,
+            child: ListView(controller: ScrollController(), padding: EdgeInsets.zero, children: [
+              const ExpansionTile(
+                title: Text(
+                  'Books',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
                 children: [
-                  const ExpansionTile(
-                    title: Text(
-                      'Books',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Authors',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Orders',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Sales',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Customers',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Employees',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Checkout',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  const ExpansionTile(
-                    title: Text(
-                      'Others',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    childrenPadding: EdgeInsets.all(10),
-                    expandedAlignment: Alignment.centerLeft,
-                    children: [
-                      Text('Help info 1'),
-                      Text('Help info 2'),
-                      Text('Help info 3'),
-                      Text('Help info 4'),
-                    ],
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Documentation',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    onTap: () {
-                      _docDialog();
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Authors',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Orders',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Sales',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Customers',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Employees',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Checkout',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              const ExpansionTile(
+                title: Text(
+                  'Others',
+                  style: TextStyle(fontSize: 18),
+                ),
+                childrenPadding: EdgeInsets.all(10),
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('Help info 1'),
+                  Text('Help info 2'),
+                  Text('Help info 3'),
+                  Text('Help info 4'),
+                ],
+              ),
+              ListTile(
+                title: const Text(
+                  'Documentation',
+                  style: TextStyle(fontSize: 18),
+                ),
+                onTap: () {
+                  _docDialog();
+                },
+              ),
+              Container(
+                alignment: Alignment.bottomLeft,
+                padding: const EdgeInsets.only(left: 10),
+                child: TextButton(
+                    onPressed: () {
+                      _launchDLURLBrowser();
                     },
-                  ),
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    padding: const EdgeInsets.only(left: 10),
-                    child: TextButton(
-                        onPressed: () {
-                          _launchDLURLBrowser();
-                        },
-                        child: const Text('Get Windows App Version')),
-                  )
-                ]),
+                    child: const Text('Get Windows App Version')),
+              )
+            ]),
           ),
         ],
       ),
@@ -182,26 +179,25 @@ class _MainDrawerState extends State<MainDrawer> {
             child: AlertDialog(
               titlePadding: const EdgeInsets.only(top: 10),
               title: const Center(
-                child: Text('Documentation',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
+                child: Text('Documentation', style: TextStyle(fontWeight: FontWeight.w700)),
               ),
               contentPadding: const EdgeInsets.only(left: 16, right: 16),
               content: Center(
                 child: SizedBox(
-                  width: double.maxFinite,
-                  child: Center(child: 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text('Antique Publications Bookstore Project', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                      Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                      Text('Group #5', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                      SizedBox(height: 20,),
-                      Text('Jeremy Ha, Daniel Lee, Camplesg Nguyen'),
-                      Text('James Nguyen, Mark Nguyen, Khang Truong'),
-                    ],
-                  ))),
+                    width: double.maxFinite,
+                    child: Center(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text('Antique Publications Bookstore Project', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                        Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                        Text('Group #5', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ))),
               ),
               actions: <Widget>[
                 ElevatedButton(
@@ -209,7 +205,6 @@ class _MainDrawerState extends State<MainDrawer> {
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                
               ],
             ),
           );
@@ -230,9 +225,6 @@ class _SystemPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
+    return AnimatedContainer(padding: mediaQuery.viewInsets, duration: const Duration(milliseconds: 300), child: child);
   }
 }
