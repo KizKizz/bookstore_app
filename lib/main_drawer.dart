@@ -184,7 +184,6 @@ class _MainDrawerState extends State<MainDrawer> {
               contentPadding: const EdgeInsets.only(left: 16, right: 16),
               content: Center(
                 child: SizedBox(
-<<<<<<< HEAD
                   width: double.maxFinite,
                   child: Center(child: 
                   Column(
@@ -195,22 +194,6 @@ class _MainDrawerState extends State<MainDrawer> {
                       Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
                     ],
                   ))),
-=======
-                    width: double.maxFinite,
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Text('Antique Publications Bookstore Project', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                        Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                        Text('Group #5', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    ))),
->>>>>>> a19c43ccb3a97fca3799c16af5c7eb4715a5488b
               ),
               actions: <Widget>[
                 ElevatedButton(
