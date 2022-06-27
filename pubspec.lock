@@ -91,14 +91,22 @@ packages:
       name: data_table_2
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "2.3.3"
+=======
+    version: "2.2.3"
+>>>>>>> a19c43ccb3a97fca3799c16af5c7eb4715a5488b
   dropdown_button2:
     dependency: "direct main"
     description:
       name: dropdown_button2
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "1.6.2"
+=======
+    version: "1.5.2"
+>>>>>>> a19c43ccb3a97fca3799c16af5c7eb4715a5488b
   editable:
     dependency: "direct main"
     description:

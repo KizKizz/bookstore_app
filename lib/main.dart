@@ -114,6 +114,7 @@ class _MyAppState extends State<MyApp> {
                             WindowTitleBarBox(
                                 child: Row(children: const [
                               Expanded(child: MoveWindowEX()),
+                              
                               WindowButtons()
                             ])),
                             Expanded(child: loginState())
