@@ -196,10 +196,6 @@ class _MainDrawerState extends State<MainDrawer> {
                     children: const [
                       Text('Antique Publications Bookstore Project', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
                       Text('The Department of Software Services System (SSS)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                      Text('Group #5', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                      SizedBox(height: 20,),
-                      Text('Jeremy Ha, Daniel Lee, Camplesg Nguyen'),
-                      Text('James Nguyen, Mark Nguyen, Khang Truong'),
                     ],
                   ))),
               ),
