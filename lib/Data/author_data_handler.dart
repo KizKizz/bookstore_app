@@ -268,7 +268,7 @@ class AuthorDatabase extends DataTableSource {
       cells: [
         DataCell(Text(author.id)),
         DataCell(
-          Text(author.firstName + ' ' + author.lastName),
+          Text('${author.firstName} ${author.lastName}'),
         ),
         DataCell(Text(author.yearBirth.toString())),
         DataCell(Text(author.yearDead.toString())),
@@ -482,12 +482,8 @@ class AuthorDatabase extends DataTableSource {
                                                       curBookSearchChoice =
                                                           'All Fields';
                                                       searchbookController
-                                                          .text = curAuthor
-                                                              .firstName +
-                                                          ' ' +
-                                                          curAuthor.lastName +
-                                                          ' ' +
-                                                          curAuthor.id;
+                                                          .text = '${curAuthor
+                                                              .firstName} ${curAuthor.lastName} ${curAuthor.id}';
                                                       searchBookList = [];
                                                       Iterable<Book> foundBook =
                                                           [];

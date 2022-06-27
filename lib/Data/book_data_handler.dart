@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -68,19 +69,7 @@ class RestorableBookSelections extends RestorableProperty<Set<int>> {
 
 /// Domain model entity
 class Book {
-  Book(
-      this.title,
-      this.id,
-      this.authorFirstName,
-      this.authorLastName,
-      this.authorID,
-      this.publisher,
-      this.publishDate,
-      this.edition,
-      this.cost,
-      this.retailPrice,
-      this.condition,
-      this.sold);
+  Book(this.title, this.id, this.authorFirstName, this.authorLastName, this.authorID, this.publisher, this.publishDate, this.edition, this.cost, this.retailPrice, this.condition, this.sold);
 
   String title;
   String id;
@@ -100,37 +89,11 @@ class Book {
   List editResults = List.filled(12, null);
 
   List get allInfo {
-    return [
-      title,
-      id,
-      authorFirstName,
-      authorLastName,
-      authorID,
-      publisher,
-      publishDate,
-      edition,
-      cost,
-      retailPrice,
-      condition,
-      sold
-    ];
+    return [title, id, authorFirstName, authorLastName, authorID, publisher, publishDate, edition, cost, retailPrice, condition, sold];
   }
 
   List get allInfoHeaders {
-    return [
-      'Title',
-      'ID',
-      'Author First Name',
-      'Author Last Name',
-      'Author ID',
-      'Publisher',
-      'Publish Date',
-      'Edition',
-      'Cost',
-      'Retail Price',
-      'Condition',
-      'Sold'
-    ];
+    return ['Title', 'ID', 'Author First Name', 'Author Last Name', 'Author ID', 'Publisher', 'Publish Date', 'Edition', 'Cost', 'Retail Price', 'Condition', 'Sold'];
   }
 
   void setInfo(var info) {
@@ -231,10 +194,7 @@ class BookDatabase extends DataTableSource {
     books = [];
   }
 
-  BookDatabase(this.context,
-      [sortedByName = true,
-      this.hasRowTaps = true,
-      this.hasRowHeightOverrides = false]) {
+  BookDatabase(this.context, [sortedByName = true, this.hasRowTaps = true, this.hasRowHeightOverrides = false]) {
     books = mainBookList;
     if (sortedByName) {
       sort((d) => d.title, true);
@@ -251,9 +211,7 @@ class BookDatabase extends DataTableSource {
       final aValue = getField(a);
       final bValue = getField(b);
 
-      return ascending
-          ? Comparable.compare(aValue, bValue)
-          : Comparable.compare(bValue, aValue);
+      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
     });
     notifyListeners();
   }
@@ -297,79 +255,58 @@ class BookDatabase extends DataTableSource {
               }
             },
       onTap: hasRowTaps ? () => [_showDialog(context, book)] : null,
-      // onDoubleTap: hasRowTaps
-      //     ? () => [
-      //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //             duration: const Duration(seconds: 1),
-      //             //backgroundColor: Theme.of(context).focusColor,
-      //             content: Text('Double Tapped on ${book.title}'),
-      //           )),
-      //         ]
-      //     : null,
-      // onSecondaryTap: hasRowTaps
-      //     ? () => //_bookDataAdder()
-      //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //           duration: const Duration(seconds: 1),
-      //           backgroundColor: Theme.of(context).errorColor,
-      //           content: Text('Right clicked on ${book.title}'),
-      //         ))
-      //     : null,
       specificRowHeight: hasRowHeightOverrides ? 100 : null,
       cells: [
         DataCell(Text(book.id)),
         DataCell(Text(book.title)),
-        DataCell(Text(book.authorFirstName + ' ' + book.authorLastName)),
+        DataCell(Text('${book.authorFirstName} ${book.authorLastName}')),
         DataCell(Text(book.publisher)),
         DataCell(Text(book.publishDate)),
         DataCell(Text(book.edition)),
-        DataCell(Text('\$' + book.cost)),
-        DataCell(Text('\$' + book.retailPrice)),
+        DataCell(Text('\$${book.cost}')),
+        DataCell(Text('\$${book.retailPrice}')),
         DataCell(Text(book.condition)),
         DataCell(Text(book.sold)),
         if (book.sold.toLowerCase() == 'Available'.toLowerCase())
           DataCell(
             Tooltip(
-              message: 'Add to Cart',
-              textStyle: const TextStyle(fontSize: 15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border:
-                      Border.all(color: Theme.of(context).primaryColorLight),
-                  color: Theme.of(context).cardColor),
-              waitDuration: const Duration(seconds: 1),
-              child: Container(
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Icon(Icons.add_shopping_cart)),
-            ),
-            onTap: () {
-              book.sold = '*In Cart';
-              checkoutCartList.add(book);
-              MenuItems.getItems(checkoutCartList);
-              notifyListeners();
-            },
+                message: 'Add to Cart',
+                textStyle: const TextStyle(fontSize: 15),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: Theme.of(context).primaryColorLight), color: Theme.of(context).cardColor),
+                waitDuration: const Duration(seconds: 1),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: double.infinity,
+                  onPressed: () {
+                    book.sold = '*In Cart';
+                    checkoutCartList.add(book);
+                    MenuItems.getItems(checkoutCartList);
+                    notifyListeners();
+                  },
+                  child: const Align(alignment: Alignment.centerRight, child: Icon(Icons.add_shopping_cart)),
+                )),
           )
         else if (book.sold.toLowerCase() == '*In Cart'.toLowerCase())
           DataCell(
             Tooltip(
-              message: 'Remove from Cart',
-              textStyle: const TextStyle(fontSize: 15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border:
-                      Border.all(color: Theme.of(context).primaryColorLight),
-                  color: Theme.of(context).cardColor),
-              waitDuration: const Duration(seconds: 1),
-              child: Container(
-                  padding: const EdgeInsets.only(right: 15),
-                  child: Icon(Icons.remove_shopping_cart,
-                      color: Theme.of(context).hintColor)),
-            ),
-            onTap: () {
-              book.sold = 'Available';
-              checkoutCartList.remove(book);
-              MenuItems.getItems(checkoutCartList);
-              notifyListeners();
-            },
+                message: 'Remove from Cart',
+                textStyle: const TextStyle(fontSize: 15),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: Theme.of(context).primaryColorLight), color: Theme.of(context).cardColor),
+                waitDuration: const Duration(seconds: 1),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: double.infinity,
+                  onPressed: () {
+                    book.sold = 'Available';
+                    checkoutCartList.remove(book);
+                    MenuItems.getItems(checkoutCartList);
+                    notifyListeners();
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.remove_shopping_cart, color: Theme.of(context).hintColor),
+                  ),
+                )),
           )
         else
           const DataCell(SizedBox())
@@ -423,12 +360,10 @@ class BookDatabase extends DataTableSource {
               titlePadding: const EdgeInsets.only(top: 10),
               title: const Center(
                 child: Center(
-                  child: Text('Book Info',
-                      style: TextStyle(fontWeight: FontWeight.w700)),
+                  child: Text('Book Info', style: TextStyle(fontWeight: FontWeight.w700)),
                 ),
               ),
-              contentPadding:
-                  const EdgeInsets.only(top: 10, left: 16, bottom: 10),
+              contentPadding: const EdgeInsets.only(top: 10, left: 16, bottom: 10),
               content: Container(
                 width: 400,
                 constraints: const BoxConstraints(maxWidth: 400),
@@ -448,15 +383,10 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.title,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Title', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.title,
+                                            onChanged: (text) => {curBook.infoEdited('Title', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -470,15 +400,10 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.edition,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Edition', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.edition,
+                                            onChanged: (text) => {curBook.infoEdited('Edition', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -487,15 +412,11 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.only(left: 10),
                                         child: TextFormField(
                                             enabled: false,
-                                            controller: TextEditingController()
-                                              ..text = curBook.id,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited('ID', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.id,
+                                            onChanged: (text) => {curBook.infoEdited('ID', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -504,67 +425,41 @@ class BookDatabase extends DataTableSource {
                                       )),
                                     ],
                                   ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text =
-                                                        curBook.authorFirstName,
-                                              onChanged: (text) => {
-                                                    curBook.infoEdited(
-                                                        'Author First Name',
-                                                        text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText:
-                                                    'Author\'s First Name',
-                                              )),
-                                        )),
-                                        Expanded(
-                                            child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: TextFormField(
-                                              controller:
-                                                  TextEditingController()
-                                                    ..text =
-                                                        curBook.authorLastName,
-                                              onChanged: (text) => {
-                                                    curBook.infoEdited(
-                                                        'Author Last Name',
-                                                        text)
-                                                  },
-                                              decoration: const InputDecoration(
-                                                //icon: Icon(Icons.person),
-                                                hintText: '',
-                                                labelText:
-                                                    'Author\'s Last Name',
-                                              )),
-                                        )),
-                                      ]),
+                                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()..text = curBook.authorFirstName,
+                                          onChanged: (text) => {curBook.infoEdited('Author First Name', text)},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: '',
+                                            labelText: 'Author\'s First Name',
+                                          )),
+                                    )),
+                                    Expanded(
+                                        child: Container(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: TextFormField(
+                                          controller: TextEditingController()..text = curBook.authorLastName,
+                                          onChanged: (text) => {curBook.infoEdited('Author Last Name', text)},
+                                          decoration: const InputDecoration(
+                                            //icon: Icon(Icons.person),
+                                            hintText: '',
+                                            labelText: 'Author\'s Last Name',
+                                          )),
+                                    )),
+                                  ]),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.publisher,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Publisher', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.publisher,
+                                            onChanged: (text) => {curBook.infoEdited('Publisher', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -573,15 +468,10 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.only(left: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.publishDate,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Publish Date', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.publishDate,
+                                            onChanged: (text) => {curBook.infoEdited('Publish Date', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               hintText: '',
@@ -595,15 +485,10 @@ class BookDatabase extends DataTableSource {
                                     children: [
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(right: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.cost,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Cost', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.cost,
+                                            onChanged: (text) => {curBook.infoEdited('Cost', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               prefixText: '\$',
@@ -613,15 +498,10 @@ class BookDatabase extends DataTableSource {
                                       )),
                                       Expanded(
                                           child: Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.only(left: 10),
                                         child: TextFormField(
-                                            controller: TextEditingController()
-                                              ..text = curBook.retailPrice,
-                                            onChanged: (text) => {
-                                                  curBook.infoEdited(
-                                                      'Retail Price', text)
-                                                },
+                                            controller: TextEditingController()..text = curBook.retailPrice,
+                                            onChanged: (text) => {curBook.infoEdited('Retail Price', text)},
                                             decoration: const InputDecoration(
                                               //icon: Icon(Icons.person),
                                               prefixText: '\$',
@@ -636,10 +516,7 @@ class BookDatabase extends DataTableSource {
                                       child: Column(children: [
                                         Text(
                                           'Condition',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Theme.of(context).hintColor),
+                                          style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor),
                                         ),
                                         RatingBar.builder(
                                           itemSize: 40,
@@ -648,30 +525,22 @@ class BookDatabase extends DataTableSource {
                                           direction: Axis.horizontal,
                                           allowHalfRating: false,
                                           itemCount: 5,
-                                          itemPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 4.0),
-                                          itemBuilder: (context, _) =>
-                                              const Icon(
+                                          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                          itemBuilder: (context, _) => const Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                           ),
                                           onRatingUpdate: (rating) {
                                             if (rating == 1.0) {
-                                              curBook.infoEdited(
-                                                  'Condition', 'Poor');
+                                              curBook.infoEdited('Condition', 'Poor');
                                             } else if (rating == 2.0) {
-                                              curBook.infoEdited(
-                                                  'Condition', 'Fair');
+                                              curBook.infoEdited('Condition', 'Fair');
                                             } else if (rating == 3.0) {
-                                              curBook.infoEdited(
-                                                  'Condition', 'Good');
+                                              curBook.infoEdited('Condition', 'Good');
                                             } else if (rating == 4.0) {
-                                              curBook.infoEdited(
-                                                  'Condition', 'Excellent');
+                                              curBook.infoEdited('Condition', 'Excellent');
                                             } else if (rating == 5.0) {
-                                              curBook.infoEdited(
-                                                  'Condition', 'Superb');
+                                              curBook.infoEdited('Condition', 'Superb');
                                             }
                                           },
                                         )
@@ -681,14 +550,10 @@ class BookDatabase extends DataTableSource {
                                       child: Column(children: [
                                         Container(
                                           //alignment: const Alignment(-1, 0),
-                                          padding:
-                                              const EdgeInsets.only(bottom: 5),
+                                          padding: const EdgeInsets.only(bottom: 5),
                                           child: Text(
                                             'Status',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Theme.of(context)
-                                                    .hintColor),
+                                            style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor),
                                           ),
                                         ),
                                         ToggleSwitch(
@@ -711,11 +576,9 @@ class BookDatabase extends DataTableSource {
                                           ],
                                           onToggle: (index) {
                                             if (index == 0) {
-                                              curBook.infoEdited(
-                                                  'Sold', 'Available');
+                                              curBook.infoEdited('Sold', 'Available');
                                             } else if (index == 1) {
-                                              curBook.infoEdited(
-                                                  'Sold', 'Sold');
+                                              curBook.infoEdited('Sold', 'Sold');
                                             }
                                           },
                                         )
@@ -743,8 +606,7 @@ class BookDatabase extends DataTableSource {
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () async {
-                        int _bookMatchIndex = mainBookListCopy
-                            .indexWhere((element) => element.id == curBook.id);
+                        int _bookMatchIndex = mainBookListCopy.indexWhere((element) => element.id == curBook.id);
                         //debugPrint('curafter: ${_bookMatchIndex}');
                         for (var item in curBook.allInfoHeaders) {
                           curBook.setInfo(item);
@@ -755,8 +617,7 @@ class BookDatabase extends DataTableSource {
                         }
 
                         //Fetch author data to update
-                        Author _matchAuthor = mainAuthorListCopy.firstWhere(
-                            (element) => element.id == curBook.authorID);
+                        Author _matchAuthor = mainAuthorListCopy.firstWhere((element) => element.id == curBook.authorID);
                         _matchAuthor.firstName = curBook.authorFirstName;
                         _matchAuthor.lastName = curBook.authorLastName;
 
@@ -794,8 +655,7 @@ Future<void> bookDataAdder(context) async {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return FutureBuilder(
-              future: DefaultAssetBundle.of(context)
-                  .loadString('assets/jsondatabase/author_data.json'),
+              future: DefaultAssetBundle.of(context).loadString('assets/jsondatabase/author_data.json'),
               builder: (context, snapshot) {
                 if (snapshot.data.toString().isEmpty) {
                   getAuthorsFromBook();
@@ -808,11 +668,9 @@ Future<void> bookDataAdder(context) async {
                 return AlertDialog(
                   titlePadding: const EdgeInsets.only(top: 10),
                   title: const Center(
-                    child: Text('Add Book',
-                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    child: Text('Add Book', style: TextStyle(fontWeight: FontWeight.w700)),
                   ),
-                  contentPadding:
-                      const EdgeInsets.only(top: 10, left: 16, bottom: 10),
+                  contentPadding: const EdgeInsets.only(top: 10, left: 16, bottom: 10),
                   content: Container(
                       constraints: const BoxConstraints(minWidth: 400),
                       //padding: const EdgeInsets.only(right: 20),
@@ -825,16 +683,13 @@ Future<void> bookDataAdder(context) async {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
+                                          padding: const EdgeInsets.only(right: 10),
                                           child: TextFormField(
-                                              onChanged: (text) =>
-                                                  {newBook.title = text},
+                                              onChanged: (text) => {newBook.title = text},
                                               autofocus: true,
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
@@ -844,352 +699,168 @@ Future<void> bookDataAdder(context) async {
                                         )),
                                       ],
                                     ),
+                                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: TextFormField(
+                                            onChanged: (text) => {newBook.edition = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'Edition',
+                                            )),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: TextFormField(
+                                            controller: TextEditingController()..text = newBook.id,
+                                            enabled: false,
+                                            onChanged: (text) => {newBook.id = text},
+                                            decoration: const InputDecoration(
+                                              //icon: Icon(Icons.person),
+                                              hintText: '',
+                                              labelText: 'ID',
+                                            )),
+                                      )),
+                                    ]),
                                     Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                              child: Container(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: TextFormField(
-                                                onChanged: (text) =>
-                                                    {newBook.edition = text},
-                                                decoration:
-                                                    const InputDecoration(
-                                                  //icon: Icon(Icons.person),
-                                                  hintText: '',
-                                                  labelText: 'Edition',
-                                                )),
-                                          )),
-                                          Expanded(
-                                              child: Container(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: TextFormField(
-                                                controller:
-                                                    TextEditingController()
-                                                      ..text = newBook.id,
-                                                enabled: false,
-                                                onChanged: (text) =>
-                                                    {newBook.id = text},
-                                                decoration:
-                                                    const InputDecoration(
-                                                  //icon: Icon(Icons.person),
-                                                  hintText: '',
-                                                  labelText: 'ID',
-                                                )),
-                                          )),
-                                        ]),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             child: Column(children: [
-                                          Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                    child: Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 10),
-                                                  child: TextFormField(
-                                                      controller:
-                                                          _authorNameController,
-                                                      onChanged: (text) => {
-                                                            setState(
-                                                              () {
-                                                                _authorsExistedInList = mainAuthorListCopy.where((element) => element
-                                                                    .firstName
-                                                                    .toLowerCase()
-                                                                    .contains(text
-                                                                        .toLowerCase()));
-                                                                if (_authorsExistedInList
-                                                                    .isEmpty) {
-                                                                  newBook.authorFirstName =
-                                                                      text;
-                                                                  newAuthor
-                                                                          .firstName =
-                                                                      text;
-                                                                }
+                                          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(right: 10),
+                                              child: TextFormField(
+                                                  controller: _authorNameController,
+                                                  onChanged: (text) => {
+                                                        setState(
+                                                          () {
+                                                            _authorsExistedInList = mainAuthorListCopy.where((element) => element.firstName.toLowerCase().contains(text.toLowerCase()));
+                                                            if (_authorsExistedInList.isEmpty) {
+                                                              newBook.authorFirstName = text;
+                                                              newAuthor.firstName = text;
+                                                            }
 
-                                                                if (_authorsExistedInList
-                                                                        .isNotEmpty &&
-                                                                    text.isNotEmpty) {
-                                                                  _authorListVisible =
-                                                                      true;
-                                                                } else {
-                                                                  _authorListVisible =
-                                                                      false;
-                                                                }
-                                                              },
-                                                            )
+                                                            if (_authorsExistedInList.isNotEmpty && text.isNotEmpty) {
+                                                              _authorListVisible = true;
+                                                            } else {
+                                                              _authorListVisible = false;
+                                                            }
                                                           },
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        //icon: Icon(Icons.person),
-                                                        hintText: '',
-                                                        labelText:
-                                                            'Author\'s First Name',
-                                                      )),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: TextFormField(
-                                                      controller:
-                                                          TextEditingController()
-                                                            ..text = newAuthor
-                                                                .lastName,
-                                                      onChanged: (text) => {
-                                                            newAuthor.lastName =
-                                                                text,
-                                                            newBook.authorLastName =
-                                                                text
-                                                          },
-                                                      autofocus: false,
-                                                      decoration: const InputDecoration(
-                                                          labelText:
-                                                              'Author\'s Last Name',
-                                                          hintText:
-                                                              'Author\'s Last Name')),
-                                                )),
-                                              ]),
+                                                        )
+                                                      },
+                                                  decoration: const InputDecoration(
+                                                    //icon: Icon(Icons.person),
+                                                    hintText: '',
+                                                    labelText: 'Author\'s First Name',
+                                                  )),
+                                            )),
+                                            Expanded(
+                                                child: Container(
+                                              padding: const EdgeInsets.only(left: 10),
+                                              child: TextFormField(
+                                                  controller: TextEditingController()..text = newAuthor.lastName,
+                                                  onChanged: (text) => {newAuthor.lastName = text, newBook.authorLastName = text},
+                                                  autofocus: false,
+                                                  decoration: const InputDecoration(labelText: 'Author\'s Last Name', hintText: 'Author\'s Last Name')),
+                                            )),
+                                          ]),
                                           Stack(
                                             children: [
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15),
+                                                padding: const EdgeInsets.only(left: 15),
                                                 child: Column(
                                                   children: [
                                                     TextFormField(
-                                                      enabled: false,
-                                                        controller:
-                                                            TextEditingController()
-                                                              ..text =
-                                                                  newAuthor.id,
-                                                        onChanged: (text) => {
-                                                              newAuthor.id =
-                                                                  text,
-                                                              newBook.authorID =
-                                                                  text
-                                                            },
+                                                        enabled: false,
+                                                        controller: TextEditingController()..text = newAuthor.id,
+                                                        onChanged: (text) => {newAuthor.id = text, newBook.authorID = text},
                                                         autofocus: false,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                labelText:
-                                                                    'Author\'s ID:',
-                                                                hintText:
-                                                                    'Author ID')),
+                                                        decoration: const InputDecoration(labelText: 'Author\'s ID:', hintText: 'Author ID')),
                                                     TextFormField(
-                                                        controller:
-                                                            TextEditingController()
-                                                              ..text = newAuthor
-                                                                  .yearBirth,
-                                                        onChanged: (text) => {
-                                                              newAuthor
-                                                                      .yearBirth =
-                                                                  text
-                                                            },
+                                                        controller: TextEditingController()..text = newAuthor.yearBirth,
+                                                        onChanged: (text) => {newAuthor.yearBirth = text},
                                                         autofocus: false,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                labelText:
-                                                                    'Author\'s Year of Birth:',
-                                                                hintText:
-                                                                    'YYYY')),
+                                                        decoration: const InputDecoration(labelText: 'Author\'s Year of Birth:', hintText: 'YYYY')),
                                                     TextFormField(
-                                                        controller:
-                                                            TextEditingController()
-                                                              ..text = newAuthor
-                                                                  .yearDead,
-                                                        onChanged: (text) => {
-                                                              newAuthor
-                                                                      .yearDead =
-                                                                  text
-                                                            },
+                                                        controller: TextEditingController()..text = newAuthor.yearDead,
+                                                        onChanged: (text) => {newAuthor.yearDead = text},
                                                         autofocus: false,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                labelText:
-                                                                    'Author\'s Year of Dead:',
-                                                                hintText:
-                                                                    'YYYY')),
+                                                        decoration: const InputDecoration(labelText: 'Author\'s Year of Dead:', hintText: 'YYYY')),
                                                     TextFormField(
-                                                        controller:
-                                                            TextEditingController()
-                                                              ..text = newAuthor
-                                                                  .description,
-                                                        onChanged: (text) => {
-                                                              newAuthor
-                                                                      .description =
-                                                                  text
-                                                            },
+                                                        controller: TextEditingController()..text = newAuthor.description,
+                                                        onChanged: (text) => {newAuthor.description = text},
                                                         autofocus: false,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                labelText:
-                                                                    'Author\'s Description:',
-                                                                hintText:
-                                                                    'Optional')),
+                                                        decoration: const InputDecoration(labelText: 'Author\'s Description:', hintText: 'Optional')),
                                                   ],
                                                 ),
                                               ),
                                               if (_authorListVisible)
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .canvasColor,
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .only(
-                                                              topLeft: Radius
-                                                                  .circular(0),
-                                                              topRight: Radius
-                                                                  .circular(0),
-                                                              bottomLeft: Radius
-                                                                  .circular(5),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          5)),
+                                                      color: Theme.of(context).canvasColor,
+                                                      borderRadius: const BorderRadius.only(
+                                                          topLeft: Radius.circular(0), topRight: Radius.circular(0), bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
                                                       boxShadow: [
                                                         BoxShadow(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .shadowColor
-                                                              .withOpacity(0.4),
+                                                          color: Theme.of(context).shadowColor.withOpacity(0.4),
                                                           spreadRadius: 2,
                                                           blurRadius: 2,
-                                                          offset: const Offset(
-                                                              0,
-                                                              1), // changes position of shadow
+                                                          offset: const Offset(0, 1), // changes position of shadow
                                                         ),
                                                       ]),
                                                   width: 385,
-                                                  height: (55 *
-                                                          double.parse(
-                                                              _authorsExistedInList
-                                                                  .length
-                                                                  .toString())) +
-                                                      5,
-                                                  constraints:
-                                                      const BoxConstraints(
-                                                          maxHeight: 205,
-                                                          minWidth: 385,
-                                                          maxWidth:
-                                                              double.maxFinite),
-                                                  child: ListView(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10,
-                                                              right: 11,
-                                                              top: 2.5,
-                                                              bottom: 5),
-                                                      controller:
-                                                          ScrollController(),
-                                                      children: [
-                                                        for (var author
-                                                            in _authorsExistedInList)
-                                                          Card(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 5),
-                                                            elevation: 3,
-                                                            clipBehavior:
-                                                                Clip.antiAlias,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                5),
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .cardColor
-                                                                          .withOpacity(
-                                                                              0.3),
-                                                                      width: 1,
-                                                                    )),
-                                                            child: ListTile(
-                                                              dense: true,
-                                                              visualDensity:
-                                                                  const VisualDensity(
-                                                                      horizontal:
-                                                                          0,
-                                                                      vertical:
-                                                                          -4),
-                                                              contentPadding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      horizontal:
-                                                                          10.0,
-                                                                      vertical:
-                                                                          0.0),
-                                                              onTap: () {
-                                                                setState(
-                                                                  () {
-                                                                    newBook.authorFirstName =
-                                                                        author
-                                                                            .firstName;
-                                                                    newBook.authorLastName =
-                                                                        author
-                                                                            .lastName;
-                                                                    newBook.authorID =
-                                                                        author
-                                                                            .id;
-                                                                    newAuthor =
-                                                                        author;
-                                                                    _authorNameController
-                                                                            .text =
-                                                                        author
-                                                                            .firstName;
-                                                                    newBook.authorFirstName =
-                                                                        _authorNameController
-                                                                            .text;
-                                                                    _authorListVisible =
-                                                                        false;
-                                                                    _authorsExistedInList =
-                                                                        [];
-                                                                  },
-                                                                );
+                                                  height: (55 * double.parse(_authorsExistedInList.length.toString())) + 5,
+                                                  constraints: const BoxConstraints(maxHeight: 205, minWidth: 385, maxWidth: double.maxFinite),
+                                                  child: ListView(padding: const EdgeInsets.only(left: 10, right: 11, top: 2.5, bottom: 5), controller: ScrollController(), children: [
+                                                    for (var author in _authorsExistedInList)
+                                                      Card(
+                                                        margin: const EdgeInsets.only(top: 5),
+                                                        elevation: 3,
+                                                        clipBehavior: Clip.antiAlias,
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(5),
+                                                            side: BorderSide(
+                                                              color: Theme.of(context).cardColor.withOpacity(0.3),
+                                                              width: 1,
+                                                            )),
+                                                        child: ListTile(
+                                                          dense: true,
+                                                          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                                                          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                                                          onTap: () {
+                                                            setState(
+                                                              () {
+                                                                newBook.authorFirstName = author.firstName;
+                                                                newBook.authorLastName = author.lastName;
+                                                                newBook.authorID = author.id;
+                                                                newAuthor = author;
+                                                                _authorNameController.text = author.firstName;
+                                                                newBook.authorFirstName = _authorNameController.text;
+                                                                _authorListVisible = false;
+                                                                _authorsExistedInList = [];
                                                               },
-                                                              // leading:
-                                                              //     const Icon(Icons.person),
-                                                              title: Text(
-                                                                author.firstName +
-                                                                    ' ' +
-                                                                    author
-                                                                        .lastName,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            15),
-                                                              ),
-                                                              subtitle: Text(
-                                                                'ID: ${author.id}',
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            14),
-                                                              ),
-                                                              trailing:
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .add),
-                                                              isThreeLine:
-                                                                  false,
-                                                            ),
+                                                            );
+                                                          },
+                                                          // leading:
+                                                          //     const Icon(Icons.person),
+                                                          title: Text(
+                                                            author.firstName + ' ' + author.lastName,
+                                                            style: const TextStyle(fontSize: 15),
                                                           ),
-                                                      ]),
+                                                          subtitle: Text(
+                                                            'ID: ${author.id}',
+                                                            style: const TextStyle(fontSize: 14),
+                                                          ),
+                                                          trailing: const Icon(Icons.add),
+                                                          isThreeLine: false,
+                                                        ),
+                                                      ),
+                                                  ]),
                                                 ),
                                             ],
                                           ),
@@ -1197,16 +868,13 @@ Future<void> bookDataAdder(context) async {
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
+                                          padding: const EdgeInsets.only(right: 10),
                                           child: TextFormField(
-                                              onChanged: (text) =>
-                                                  {newBook.publisher = text},
+                                              onChanged: (text) => {newBook.publisher = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 hintText: '',
@@ -1215,11 +883,9 @@ Future<void> bookDataAdder(context) async {
                                         )),
                                         Expanded(
                                             child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.only(left: 10),
                                           child: TextFormField(
-                                              onChanged: (text) =>
-                                                  {newBook.publishDate = text},
+                                              onChanged: (text) => {newBook.publishDate = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 hintText: '',
@@ -1229,16 +895,13 @@ Future<void> bookDataAdder(context) async {
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             child: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
+                                          padding: const EdgeInsets.only(right: 10),
                                           child: TextFormField(
-                                              onChanged: (text) =>
-                                                  {newBook.cost = text},
+                                              onChanged: (text) => {newBook.cost = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 prefixText: '\$',
@@ -1248,11 +911,9 @@ Future<void> bookDataAdder(context) async {
                                         )),
                                         Expanded(
                                             child: Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.only(left: 10),
                                           child: TextFormField(
-                                              onChanged: (text) =>
-                                                  {newBook.retailPrice = text},
+                                              onChanged: (text) => {newBook.retailPrice = text},
                                               decoration: const InputDecoration(
                                                 //icon: Icon(Icons.person),
                                                 prefixText: '\$',
@@ -1267,9 +928,7 @@ Future<void> bookDataAdder(context) async {
                                         child: Column(children: [
                                           Text(
                                             'Condition',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .hintColor),
+                                            style: TextStyle(color: Theme.of(context).hintColor),
                                           ),
                                           RatingBar.builder(
                                             itemSize: 40,
@@ -1278,11 +937,8 @@ Future<void> bookDataAdder(context) async {
                                             direction: Axis.horizontal,
                                             allowHalfRating: false,
                                             itemCount: 5,
-                                            itemPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 4.0),
-                                            itemBuilder: (context, _) =>
-                                                const Icon(
+                                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                            itemBuilder: (context, _) => const Icon(
                                               Icons.star,
                                               color: Colors.amber,
                                             ),
@@ -1306,13 +962,10 @@ Future<void> bookDataAdder(context) async {
                                         child: Column(children: [
                                           Container(
                                             //alignment: const Alignment(-1, 0),
-                                            padding: const EdgeInsets.only(
-                                                bottom: 5),
+                                            padding: const EdgeInsets.only(bottom: 5),
                                             child: Text(
                                               'Status',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .hintColor),
+                                              style: TextStyle(color: Theme.of(context).hintColor),
                                             ),
                                           ),
                                           ToggleSwitch(
@@ -1387,9 +1040,7 @@ Future<void> bookDataAdder(context) async {
                           // ));
 
                           //Update Author List
-                          if ((mainAuthorListCopy.indexWhere(
-                                  (element) => element.id == newAuthor.id) ==
-                              -1)) {
+                          if ((mainAuthorListCopy.indexWhere((element) => element.id == newAuthor.id) == -1)) {
                             mainAuthorList.add(newAuthor);
                             mainAuthorListCopy.add(newAuthor);
                           }
@@ -1413,19 +1064,8 @@ Future<void> bookDataAdder(context) async {
 //JSON Helper
 void convertBookData(var jsonResponse) {
   for (var b in jsonResponse) {
-    Book book = Book(
-        b['title'],
-        b['id'],
-        b['authorFirstName'],
-        b['authorLastName'],
-        b['authorID'],
-        b['publisher'],
-        b['publishDate'],
-        b['edition'],
-        b['cost'],
-        b['retailPrice'],
-        b['condition'],
-        b['sold']);
+    Book book =
+        Book(b['title'], b['id'], b['authorFirstName'], b['authorLastName'], b['authorID'], b['publisher'], b['publishDate'], b['edition'], b['cost'], b['retailPrice'], b['condition'], b['sold']);
     mainBookList.add(book);
     mainBookListCopy.add(book);
   }
@@ -1463,9 +1103,6 @@ class _SystemPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return AnimatedContainer(
-        padding: mediaQuery.viewInsets,
-        duration: const Duration(milliseconds: 300),
-        child: child);
+    return AnimatedContainer(padding: mediaQuery.viewInsets, duration: const Duration(milliseconds: 300), child: child);
   }
 }

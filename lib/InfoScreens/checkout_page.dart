@@ -62,7 +62,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   final MultiSplitViewController _checkoutMvController =
-      MultiSplitViewController(weights: [0.65]);
+      MultiSplitViewController(areas: [Area(weight: 0.65)]);
 
   double _shippingInfoHeight = 330;
   ShippingOptions? _curShippingOption = ShippingOptions.inPerson;
@@ -2154,21 +2154,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
         axis: Axis.horizontal,
         children: [
           MultiSplitView(
+            initialAreas: [Area(weight: 0.55, minimalWeight: 0.45)],
             children: [checkoutInfo, orderSummary],
-            initialWeights: const [0.55],
-            minimalWeights: const [0.45],
           ),
         ]);
 
     MultiSplitViewTheme theme = MultiSplitViewTheme(
-        child: checkoutSplitView,
         data: MultiSplitViewThemeData(
             dividerPainter: DividerPainters.dashed(
                 //highlightedSize: 500,
                 //size: 150,
                 color: Theme.of(context).hintColor,
                 highlightedColor:
-                    Theme.of(context).textTheme.bodyText1!.color)));
+                    Theme.of(context).textTheme.bodyText1!.color)),
+        child: checkoutSplitView);
 
     return Scaffold(
       body: Column(children: [Expanded(child: theme)]),

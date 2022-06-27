@@ -91,22 +91,14 @@ packages:
       name: data_table_2
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.3.3"
-=======
-    version: "2.2.3"
->>>>>>> a19c43ccb3a97fca3799c16af5c7eb4715a5488b
   dropdown_button2:
     dependency: "direct main"
     description:
       name: dropdown_button2
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "1.6.2"
-=======
-    version: "1.5.2"
->>>>>>> a19c43ccb3a97fca3799c16af5c7eb4715a5488b
   editable:
     dependency: "direct main"
     description:
@@ -146,7 +138,7 @@ packages:
       name: flutter_lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.1"
   flutter_rating_bar:
     dependency: "direct main"
     description:
@@ -177,7 +169,7 @@ packages:
       name: horizontal_data_table
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.7.0"
+    version: "4.1.1"
   intl:
     dependency: "direct main"
     description:
@@ -198,7 +190,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0"
   matcher:
     dependency: transitive
     description:
@@ -226,7 +218,7 @@ packages:
       name: multi_split_view
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.13.0"
+    version: "2.1.0"
   nested:
     dependency: transitive
     description:
@@ -324,7 +316,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
+    version: "2.0.15"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -427,7 +419,7 @@ packages:
       name: toggle_switch
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "2.0.1"
   url_launcher:
     dependency: "direct main"
     description:
