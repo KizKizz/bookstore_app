@@ -435,7 +435,7 @@ class AuthorDatabase extends DataTableSource {
                                                 const EdgeInsets.only(top: 15),
                                             child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: Theme.of(context)
+                                                    backgroundColor: Theme.of(context)
                                                         .buttonTheme
                                                         .colorScheme!
                                                         .background,
