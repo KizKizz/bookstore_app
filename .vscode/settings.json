@@ -3,5 +3,4 @@
     "cmake.configureOnOpen": true,
     "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.formatOnSave": true,
-    "C_Cpp.errorSquiggles": "Disabled"
 }

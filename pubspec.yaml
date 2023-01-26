@@ -34,7 +34,7 @@ dependencies:
   horizontal_data_table: ^4.1.1
   editable: ^2.0.0
   data_table_2: ^2.2.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   toggle_switch: ^2.0.1
   dropdown_button2: ^1.2.2
   multi_split_view: ^2.1.0

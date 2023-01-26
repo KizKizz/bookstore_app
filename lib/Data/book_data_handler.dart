@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:bookstore_project/Extra/id_generator.dart';
 import 'package:bookstore_project/login_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

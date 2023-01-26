@@ -342,8 +342,6 @@ class _BookListState extends State<BookList> {
                                       fontSize: 14,
                                     )))),
                     ]))),
-                customItemsIndexes: [checkoutCartList.length],
-                customItemsHeight: 8,
                 items: [
                   ...MenuItems.booksMenu.map(
                     (item) => DropdownMenuItem<MenuItem>(

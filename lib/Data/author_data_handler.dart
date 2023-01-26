@@ -449,7 +449,7 @@ class AuthorDatabase extends DataTableSource {
                                                       fontSize: 15,
                                                       color: Theme.of(context)
                                                           .textTheme
-                                                          .button!
+                                                          .labelLarge!
                                                           .color),
                                                 ),
                                                 onPressed: () {
@@ -659,29 +659,29 @@ void convertauthorData(var jsonResponse) {
 //Get Authors from Book data
 Future<void> getAuthorsFromBook() async {
   if (mainBookListCopy.isNotEmpty && mainAuthorList.isEmpty) {
-    List<String> _authorIDs = [];
+    List<String> authorIDs = [];
     for (var book in mainBookListCopy) {
-      _authorIDs.add(book.authorID);
+      authorIDs.add(book.authorID);
     }
-    _authorIDs = _authorIDs.toSet().toList();
+    authorIDs = authorIDs.toSet().toList();
     //print(_authorNames);
-    for (var id in _authorIDs) {
+    for (var id in authorIDs) {
       mainAuthorList.add(Author('', '', id, '', '', ''));
     }
   } else if (mainBookListCopy.isNotEmpty && mainAuthorList.isNotEmpty) {
-    List<String> _authorIDs = [];
+    List<String> authorIDs0 = [];
     for (var book in mainBookListCopy) {
-      _authorIDs.add(book.authorID);
+      authorIDs0.add(book.authorID);
     }
-    _authorIDs = _authorIDs.toSet().toList();
+    authorIDs0 = authorIDs0.toSet().toList();
     for (var author in mainAuthorList) {
-      final index = _authorIDs.indexWhere((element) => element == author.id);
+      final index = authorIDs0.indexWhere((element) => element == author.id);
       if (index >= 0) {
-        _authorIDs.removeAt(index);
+        authorIDs0.removeAt(index);
       }
     }
-    if (_authorIDs.isNotEmpty) {
-      for (var id in _authorIDs) {
+    if (authorIDs0.isNotEmpty) {
+      for (var id in authorIDs0) {
         mainAuthorList.add(Author('', '', id, '', '', ''));
         mainAuthorListCopy.add(Author('', '', id, '', '', ''));
       }
