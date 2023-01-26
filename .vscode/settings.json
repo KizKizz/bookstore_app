@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/windows/runner",
+    "cmake.sourceDirectory": "${workspaceFolder}/windows",
     "cmake.configureOnOpen": true,
     "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.formatOnSave": true,
