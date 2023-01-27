@@ -395,23 +395,23 @@ class CustomerDatabase extends DataTableSource {
   //Edit Popup
   _showDialog(context, Customer curCustomer) async {
     //final _purchasedBookList = curCustomer.bookPurchased.split('||');
-    final _purchasedDateList = curCustomer.purchasedDates.split('||');
+    final purchasedDateList = curCustomer.purchasedDates.split('||');
     //print(_purchasedBookList.first);
 
-    List<Book> _purchasedBooksList = [];
-    List<Book> _recomBooksList = [];
+    List<Book> purchasedBooksList = [];
+    List<Book> recomBooksList = [];
     if (curCustomer.bookPurchased.isNotEmpty) {
-      List<String> _purchasedBooksIDList = curCustomer.bookPurchased.split(' ');
-      for (var id in _purchasedBooksIDList) {
-        _purchasedBooksList
+      List<String> purchasedBooksIDList = curCustomer.bookPurchased.split(' ');
+      for (var id in purchasedBooksIDList) {
+        purchasedBooksList
             .add(mainBookListCopy.singleWhere((element) => element.id == id));
       }
-      for (var book in _purchasedBooksList) {
-        final _tempRecList = mainBookListCopy.where((element) =>
+      for (var book in purchasedBooksList) {
+        final tempRecList = mainBookListCopy.where((element) =>
             element.authorID == book.authorID && element.sold != 'Sold');
-        if (_tempRecList.isNotEmpty) {
-          for (var item in _tempRecList) {
-            _recomBooksList.add(item);
+        if (tempRecList.isNotEmpty) {
+          for (var item in tempRecList) {
+            recomBooksList.add(item);
           }
         }
       }
@@ -690,7 +690,7 @@ class CustomerDatabase extends DataTableSource {
                                   Container(
                                     padding: const EdgeInsets.only(top: 10),
                                     height: 85 *
-                                        double.parse(_purchasedBooksList
+                                        double.parse(purchasedBooksList
                                             .length
                                             .toString()),
                                     width: 400,
@@ -699,7 +699,7 @@ class CustomerDatabase extends DataTableSource {
                                     child: SingleChildScrollView(
                                       child: Column(
                                         children: [
-                                          if (_purchasedBooksList.isNotEmpty)
+                                          if (purchasedBooksList.isNotEmpty)
                                             ListView(
                                               padding: const EdgeInsets.only(
                                                   left: 7, right: 7),
@@ -707,7 +707,7 @@ class CustomerDatabase extends DataTableSource {
                                               shrinkWrap: true,
                                               controller: ScrollController(),
                                               children: [
-                                                for (int i = _purchasedBooksList
+                                                for (int i = purchasedBooksList
                                                             .length -
                                                         1;
                                                     i >= 0;
@@ -742,14 +742,14 @@ class CustomerDatabase extends DataTableSource {
                                                         leading: const Icon(Icons
                                                             .menu_book_outlined),
                                                         title: Text(
-                                                          _purchasedBooksList[i]
+                                                          purchasedBooksList[i]
                                                               .title,
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 15),
                                                         ),
                                                         subtitle: Text(
-                                                          '${_purchasedBooksList[i].authorFirstName} ${_purchasedBooksList[i].authorLastName} | ID: ${_purchasedBooksList[i].id}\nPurchased Date: ${_purchasedDateList[i]}',
+                                                          '${purchasedBooksList[i].authorFirstName} ${purchasedBooksList[i].authorLastName} | ID: ${purchasedBooksList[i].id}\nPurchased Date: ${purchasedDateList[i]}',
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 14),
@@ -762,7 +762,7 @@ class CustomerDatabase extends DataTableSource {
                                                   ),
                                               ],
                                             ),
-                                          if (_purchasedBooksList.isEmpty)
+                                          if (purchasedBooksList.isEmpty)
                                             const Text(
                                               'No Data Found',
                                               style: TextStyle(fontSize: 16),
@@ -794,11 +794,11 @@ class CustomerDatabase extends DataTableSource {
                                                 Theme.of(context).hintColor,
                                             fontSize: 14)),
                                   ),
-                                  if (_recomBooksList.isNotEmpty)
+                                  if (recomBooksList.isNotEmpty)
                                   Expanded(
                                     child: Container(
                                       height: 75 *
-                                          double.parse(_recomBooksList.length
+                                          double.parse(recomBooksList.length
                                               .toString()),
                                       width: 400,
                                       constraints: const BoxConstraints(
@@ -811,7 +811,7 @@ class CustomerDatabase extends DataTableSource {
                                         //controller: ScrollController(),
                                         children: [
                                           for (int i =
-                                                  _recomBooksList.length - 1;
+                                                  recomBooksList.length - 1;
                                               i >= 0;
                                               i--)
                                             SizedBox(
@@ -839,12 +839,12 @@ class CustomerDatabase extends DataTableSource {
                                                   leading: const Icon(Icons
                                                       .menu_book_outlined),
                                                   title: Text(
-                                                    _recomBooksList[i].title,
+                                                    recomBooksList[i].title,
                                                     style: const TextStyle(
                                                         fontSize: 15),
                                                   ),
                                                   subtitle: Text(
-                                                    '${_recomBooksList[i].authorFirstName} ${_recomBooksList[i].authorLastName}\nID: ${_recomBooksList[i].id}',
+                                                    '${recomBooksList[i].authorFirstName} ${recomBooksList[i].authorLastName}\nID: ${recomBooksList[i].id}',
                                                     style: const TextStyle(
                                                         fontSize: 14),
                                                   ),
@@ -857,7 +857,7 @@ class CustomerDatabase extends DataTableSource {
                                       ),
                                     ),
                                   ),
-                                  if (_recomBooksList.isEmpty)
+                                  if (recomBooksList.isEmpty)
                                     const Text(
                                       'No Recommended Books Found',
                                       style: TextStyle(fontSize: 16),
@@ -885,7 +885,7 @@ class CustomerDatabase extends DataTableSource {
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () {
-                        int _customerMatchIndex =
+                        int customerMatchIndex =
                             mainCustomerListCopy.indexWhere(
                                 (element) => element.id == curCustomer.id);
                         //debugPrint('curafter: ${_customerMatchIndex}');
@@ -893,8 +893,8 @@ class CustomerDatabase extends DataTableSource {
                           curCustomer.setInfo(item);
                         }
 
-                        if (_customerMatchIndex >= 0) {
-                          mainCustomerListCopy[_customerMatchIndex] =
+                        if (customerMatchIndex >= 0) {
+                          mainCustomerListCopy[customerMatchIndex] =
                               curCustomer;
                         }
                         notifyListeners();

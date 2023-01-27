@@ -15,7 +15,7 @@ final List<String> _orderStatusDropDownVal = [
   'To Be shipped',
   'Shipped'
 ];
-late String _curOrderStatusChoice = _orderStatusDropDownVal[0];
+String _curOrderStatusChoice = _orderStatusDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -372,7 +372,7 @@ class OrderDatabase extends DataTableSource {
         //DataCell(Text(customer.salesPersonId)),
         DataCell(Text(customer.orderDate)),
         DataCell(Text(customer.deliveryDate)),
-        DataCell(Text('\$' + customer.totalOrderCost)),
+        DataCell(Text('\$${customer.totalOrderCost}')),
         DataCell(Text(customer.paymentMethod)),
         DataCell(Text(customer.orderStatus)),
         //DataCell(Text(customer.bookIds)),
@@ -400,14 +400,14 @@ class OrderDatabase extends DataTableSource {
 
   //Edit Popup
   _showDialog(context, Order curOrder) async {
-    List<String> _tempBookIDList = curOrder.bookIds.split(' ');
-    List<Book> _orderedBooks = [];
-    for (var id in _tempBookIDList) {
-      _orderedBooks
+    List<String> tempBookIDList = curOrder.bookIds.split(' ');
+    List<Book> orderedBooks = [];
+    for (var id in tempBookIDList) {
+      orderedBooks
           .add(mainBookListCopy.firstWhere((element) => element.id == id));
     }
 
-    List<String> _tempOrderPrices = curOrder.bookSoldPrices.split(' ');
+    List<String> tempOrderPrices = curOrder.bookSoldPrices.split(' ');
 
     _curOrderStatusChoice = _orderStatusDropDownVal
         .firstWhere((element) => element == curOrder.orderStatus);
@@ -674,7 +674,7 @@ class OrderDatabase extends DataTableSource {
                           ),
                           Container(
                             height: 75 *
-                                double.parse(_orderedBooks.length.toString()),
+                                double.parse(orderedBooks.length.toString()),
                             width: 400,
                             constraints: const BoxConstraints(maxHeight: 330),
                             child: ListView(
@@ -683,7 +683,7 @@ class OrderDatabase extends DataTableSource {
                               shrinkWrap: true,
                               //controller: ScrollController(),
                               children: [
-                                for (int i = 0; i < _orderedBooks.length; i++)
+                                for (int i = 0; i < orderedBooks.length; i++)
                                   SizedBox(
                                     height: 75,
                                     child: Card(
@@ -708,11 +708,11 @@ class OrderDatabase extends DataTableSource {
                                         leading: const Icon(
                                             Icons.menu_book_outlined),
                                         title: Text(
-                                          _orderedBooks[i].title,
+                                          orderedBooks[i].title,
                                           style: const TextStyle(fontSize: 15),
                                         ),
                                         subtitle: Text(
-                                          '${_orderedBooks[i].authorFirstName} ${_orderedBooks[i].authorLastName}\nID: ${_orderedBooks[i].id} | \$${_tempOrderPrices[i]}',
+                                          '${orderedBooks[i].authorFirstName} ${orderedBooks[i].authorLastName}\nID: ${orderedBooks[i].id} | \$${tempOrderPrices[i]}',
                                           style: const TextStyle(fontSize: 14),
                                         ),
                                         // trailing: const Icon(Icons.clear),
@@ -738,7 +738,7 @@ class OrderDatabase extends DataTableSource {
                 ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      int _orderMatchIndex = mainOrderListCopy.indexWhere(
+                      int orderMatchIndex = mainOrderListCopy.indexWhere(
                           (element) => element.orderNum == curOrder.orderNum);
                       //debugPrint('curafter: ${_customerMatchIndex}');
                       for (var item in curOrder.allInfoHeaders) {
@@ -748,8 +748,8 @@ class OrderDatabase extends DataTableSource {
                       //Set status addon
                       curOrder.orderStatus = _curOrderStatusChoice;
 
-                      if (_orderMatchIndex >= 0) {
-                        mainOrderListCopy[_orderMatchIndex] = curOrder;
+                      if (orderMatchIndex >= 0) {
+                        mainOrderListCopy[orderMatchIndex] = curOrder;
                       }
                       notifyListeners();
                       Navigator.pop(context);

@@ -11,7 +11,7 @@ class WindowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonColors = WindowButtonColors(
-        iconNormal: Theme.of(context).textTheme.button!.color,
+        iconNormal: Theme.of(context).textTheme.labelLarge!.color,
         mouseOver: Theme.of(context).buttonTheme.colorScheme!.background,
         mouseDown: Theme.of(context).highlightColor,
         iconMouseOver: Theme.of(context).textTheme.button!.color,

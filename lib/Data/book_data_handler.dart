@@ -332,23 +332,23 @@ class BookDatabase extends DataTableSource {
 
   //Edit Book Popup
   _showDialog(context, Book curBook) async {
-    double _conditionRating = 1.0;
-    int _statusRating = 0;
+    double conditionRating = 1.0;
+    int statusRating = 0;
     if (curBook.condition == 'Poor') {
-      _conditionRating = 1.0;
+      conditionRating = 1.0;
     } else if (curBook.condition == 'Fair') {
-      _conditionRating = 2.0;
+      conditionRating = 2.0;
     } else if (curBook.condition == 'Good') {
-      _conditionRating = 3.0;
+      conditionRating = 3.0;
     } else if (curBook.condition == 'Exellent') {
-      _conditionRating = 4.0;
+      conditionRating = 4.0;
     } else if (curBook.condition == 'Superb') {
-      _conditionRating = 5.0;
+      conditionRating = 5.0;
     }
     if (curBook.sold == 'Available') {
-      _statusRating = 0;
+      statusRating = 0;
     } else if (curBook.sold == 'Sold') {
-      _statusRating = 1;
+      statusRating = 1;
     }
 
     await showDialog<String>(
@@ -519,7 +519,7 @@ class BookDatabase extends DataTableSource {
                                         ),
                                         RatingBar.builder(
                                           itemSize: 40,
-                                          initialRating: _conditionRating,
+                                          initialRating: conditionRating,
                                           minRating: 1,
                                           direction: Axis.horizontal,
                                           allowHalfRating: false,
@@ -562,7 +562,7 @@ class BookDatabase extends DataTableSource {
                                           //   Theme.of(context).hintColor
                                           // ],
                                           // borderWidth: 1,
-                                          initialLabelIndex: _statusRating,
+                                          initialLabelIndex: statusRating,
                                           cornerRadius: 5,
                                           activeFgColor: Colors.white,
                                           inactiveBgColor: Colors.grey,
@@ -605,20 +605,20 @@ class BookDatabase extends DataTableSource {
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () async {
-                        int _bookMatchIndex = mainBookListCopy.indexWhere((element) => element.id == curBook.id);
+                        int bookMatchIndex = mainBookListCopy.indexWhere((element) => element.id == curBook.id);
                         //debugPrint('curafter: ${_bookMatchIndex}');
                         for (var item in curBook.allInfoHeaders) {
                           curBook.setInfo(item);
                         }
 
-                        if (_bookMatchIndex >= 0) {
-                          mainBookListCopy[_bookMatchIndex] = curBook;
+                        if (bookMatchIndex >= 0) {
+                          mainBookListCopy[bookMatchIndex] = curBook;
                         }
 
                         //Fetch author data to update
-                        Author _matchAuthor = mainAuthorListCopy.firstWhere((element) => element.id == curBook.authorID);
-                        _matchAuthor.firstName = curBook.authorFirstName;
-                        _matchAuthor.lastName = curBook.authorLastName;
+                        Author matchAuthor = mainAuthorListCopy.firstWhere((element) => element.id == curBook.authorID);
+                        matchAuthor.firstName = curBook.authorFirstName;
+                        matchAuthor.lastName = curBook.authorLastName;
 
                         notifyListeners();
 
@@ -641,11 +641,11 @@ class BookDatabase extends DataTableSource {
 Future<void> bookDataAdder(context) async {
   Book newBook = Book('', '', '', '', '', '', '', '', '', '', '', '');
   Author newAuthor = Author('', '', '', '', '', '');
-  Iterable<Author> _authorsExistedInList = [];
-  bool _authorListVisible = false;
-  TextEditingController _authorNameController = TextEditingController();
-  int _statusIndex = 0;
-  double _ratingIndex = 3.0;
+  Iterable<Author> authorsExistedInList = [];
+  bool authorListVisible = false;
+  TextEditingController authorNameController = TextEditingController();
+  int statusIndex = 0;
+  double ratingIndex = 3.0;
   newBook.id = idGenerator('B');
   newAuthor.id = idGenerator('A');
 
@@ -734,20 +734,20 @@ Future<void> bookDataAdder(context) async {
                                                 child: Container(
                                               padding: const EdgeInsets.only(right: 10),
                                               child: TextFormField(
-                                                  controller: _authorNameController,
+                                                  controller: authorNameController,
                                                   onChanged: (text) => {
                                                         setState(
                                                           () {
-                                                            _authorsExistedInList = mainAuthorListCopy.where((element) => element.firstName.toLowerCase().contains(text.toLowerCase()));
-                                                            if (_authorsExistedInList.isEmpty) {
+                                                            authorsExistedInList = mainAuthorListCopy.where((element) => element.firstName.toLowerCase().contains(text.toLowerCase()));
+                                                            if (authorsExistedInList.isEmpty) {
                                                               newBook.authorFirstName = text;
                                                               newAuthor.firstName = text;
                                                             }
 
-                                                            if (_authorsExistedInList.isNotEmpty && text.isNotEmpty) {
-                                                              _authorListVisible = true;
+                                                            if (authorsExistedInList.isNotEmpty && text.isNotEmpty) {
+                                                              authorListVisible = true;
                                                             } else {
-                                                              _authorListVisible = false;
+                                                              authorListVisible = false;
                                                             }
                                                           },
                                                         )
@@ -798,7 +798,7 @@ Future<void> bookDataAdder(context) async {
                                                   ],
                                                 ),
                                               ),
-                                              if (_authorListVisible)
+                                              if (authorListVisible)
                                                 Container(
                                                   decoration: BoxDecoration(
                                                       color: Theme.of(context).canvasColor,
@@ -813,10 +813,10 @@ Future<void> bookDataAdder(context) async {
                                                         ),
                                                       ]),
                                                   width: 385,
-                                                  height: (55 * double.parse(_authorsExistedInList.length.toString())) + 5,
+                                                  height: (55 * double.parse(authorsExistedInList.length.toString())) + 5,
                                                   constraints: const BoxConstraints(maxHeight: 205, minWidth: 385, maxWidth: double.maxFinite),
                                                   child: ListView(padding: const EdgeInsets.only(left: 10, right: 11, top: 2.5, bottom: 5), controller: ScrollController(), children: [
-                                                    for (var author in _authorsExistedInList)
+                                                    for (var author in authorsExistedInList)
                                                       Card(
                                                         margin: const EdgeInsets.only(top: 5),
                                                         elevation: 3,
@@ -838,17 +838,17 @@ Future<void> bookDataAdder(context) async {
                                                                 newBook.authorLastName = author.lastName;
                                                                 newBook.authorID = author.id;
                                                                 newAuthor = author;
-                                                                _authorNameController.text = author.firstName;
-                                                                newBook.authorFirstName = _authorNameController.text;
-                                                                _authorListVisible = false;
-                                                                _authorsExistedInList = [];
+                                                                authorNameController.text = author.firstName;
+                                                                newBook.authorFirstName = authorNameController.text;
+                                                                authorListVisible = false;
+                                                                authorsExistedInList = [];
                                                               },
                                                             );
                                                           },
                                                           // leading:
                                                           //     const Icon(Icons.person),
                                                           title: Text(
-                                                            author.firstName + ' ' + author.lastName,
+                                                            '${author.firstName} ${author.lastName}',
                                                             style: const TextStyle(fontSize: 15),
                                                           ),
                                                           subtitle: Text(
@@ -931,7 +931,7 @@ Future<void> bookDataAdder(context) async {
                                           ),
                                           RatingBar.builder(
                                             itemSize: 40,
-                                            initialRating: _ratingIndex,
+                                            initialRating: ratingIndex,
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: false,
@@ -943,15 +943,15 @@ Future<void> bookDataAdder(context) async {
                                             ),
                                             onRatingUpdate: (rating) {
                                               if (rating == 1.0) {
-                                                _ratingIndex = 1.0;
+                                                ratingIndex = 1.0;
                                               } else if (rating == 2.0) {
-                                                _ratingIndex = 2.0;
+                                                ratingIndex = 2.0;
                                               } else if (rating == 3.0) {
-                                                _ratingIndex = 3.0;
+                                                ratingIndex = 3.0;
                                               } else if (rating == 4.0) {
-                                                _ratingIndex = 4.0;
+                                                ratingIndex = 4.0;
                                               } else if (rating == 5.0) {
-                                                _ratingIndex = 5.0;
+                                                ratingIndex = 5.0;
                                               }
                                             },
                                           )
@@ -975,7 +975,7 @@ Future<void> bookDataAdder(context) async {
                                             //       .hintColor
                                             // ],
                                             // borderWidth: 1.5,
-                                            initialLabelIndex: _statusIndex,
+                                            initialLabelIndex: statusIndex,
                                             cornerRadius: 5,
                                             activeFgColor: Colors.white,
                                             inactiveBgColor: Colors.grey,
@@ -988,9 +988,9 @@ Future<void> bookDataAdder(context) async {
                                             ],
                                             onToggle: (index) {
                                               if (index == 0) {
-                                                _statusIndex = 0;
+                                                statusIndex = 0;
                                               } else if (index == 1) {
-                                                _statusIndex = 1;
+                                                statusIndex = 1;
                                               }
                                             },
                                           )
@@ -1007,21 +1007,21 @@ Future<void> bookDataAdder(context) async {
                     ElevatedButton(
                         child: const Text('ADD'),
                         onPressed: () {
-                          if (_statusIndex == 0) {
+                          if (statusIndex == 0) {
                             newBook.sold = 'Available';
-                          } else if (_statusIndex == 1) {
+                          } else if (statusIndex == 1) {
                             newBook.sold = 'Sold';
                           }
 
-                          if (_ratingIndex == 1.0) {
+                          if (ratingIndex == 1.0) {
                             newBook.condition = 'Poor';
-                          } else if (_ratingIndex == 2.0) {
+                          } else if (ratingIndex == 2.0) {
                             newBook.condition = 'Fair';
-                          } else if (_ratingIndex == 3.0) {
+                          } else if (ratingIndex == 3.0) {
                             newBook.condition = 'Good';
-                          } else if (_ratingIndex == 4.0) {
+                          } else if (ratingIndex == 4.0) {
                             newBook.condition = 'Excellent';
-                          } else if (_ratingIndex == 5.0) {
+                          } else if (ratingIndex == 5.0) {
                             newBook.condition = 'Superb';
                           }
                           //Update Book List

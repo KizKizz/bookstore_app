@@ -17,7 +17,7 @@ final List<String> jobPosDropDownVal = [
   'Full Time Sales Clerk',
   'Part Time Sales Clerk',
 ];
-late String _curJobPosChoice = jobPosDropDownVal[0];
+String _curJobPosChoice = jobPosDropDownVal[0];
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -397,11 +397,11 @@ class EmployeeDatabase extends DataTableSource {
 
   //Edit Popup
   _showDialog(context, Employee curEmployee) async {
-    List<Book> _soldBooksList = [];
+    List<Book> soldBooksList = [];
     if (curEmployee.lastSoldBooks.isNotEmpty) {
-      List<String> _soldBooksIDList = curEmployee.lastSoldBooks.split(' ');
-      for (var id in _soldBooksIDList) {
-        _soldBooksList.add(mainBookListCopy.singleWhere((element) => element.id == id));
+      List<String> soldBooksIDList = curEmployee.lastSoldBooks.split(' ');
+      for (var id in soldBooksIDList) {
+        soldBooksList.add(mainBookListCopy.singleWhere((element) => element.id == id));
       }
     }
 
@@ -836,7 +836,7 @@ class EmployeeDatabase extends DataTableSource {
                                       Expanded(
                                         child: Container(
                                           height: 75 *
-                                              double.parse(_soldBooksList.length
+                                              double.parse(soldBooksList.length
                                                   .toString()),
                                           width: 400,
                                           constraints: const BoxConstraints(
@@ -849,7 +849,7 @@ class EmployeeDatabase extends DataTableSource {
                                             //controller: ScrollController(),
                                             children: [
                                               for (int i =
-                                                _soldBooksList.length - 1;
+                                                soldBooksList.length - 1;
                                                 i >= 0;
                                                 i--)
                                                 SizedBox(
@@ -877,12 +877,12 @@ class EmployeeDatabase extends DataTableSource {
                                                       leading: const Icon(Icons
                                                           .menu_book_outlined),
                                                       title: Text(
-                                                        _soldBooksList[i].title,
+                                                        soldBooksList[i].title,
                                                         style: const TextStyle(
                                                             fontSize: 15),
                                                       ),
                                                       subtitle: Text(
-                                                        '${_soldBooksList[i].authorFirstName} ${_soldBooksList[i].authorLastName}\nID: ${_soldBooksList[i].id}',
+                                                        '${soldBooksList[i].authorFirstName} ${soldBooksList[i].authorLastName}\nID: ${soldBooksList[i].id}',
                                                         style: const TextStyle(
                                                             fontSize: 14),
                                                       ),
@@ -920,7 +920,7 @@ class EmployeeDatabase extends DataTableSource {
                   ElevatedButton(
                       child: const Text('SAVE'),
                       onPressed: () {
-                        int _employeeMatchIndex =
+                        int employeeMatchIndex =
                             mainEmployeeListCopy.indexWhere(
                                 (element) => element.id == curEmployee.id);
                         //debugPrint('curafter: ${_employeeMatchIndex}');
@@ -928,8 +928,8 @@ class EmployeeDatabase extends DataTableSource {
                           curEmployee.setInfo(item);
                         }
 
-                        if (_employeeMatchIndex >= 0) {
-                          mainEmployeeListCopy[_employeeMatchIndex] =
+                        if (employeeMatchIndex >= 0) {
+                          mainEmployeeListCopy[employeeMatchIndex] =
                               curEmployee;
                         }
                         notifyListeners();

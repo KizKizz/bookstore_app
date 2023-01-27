@@ -315,7 +315,7 @@ class SalesRecordDatabase extends DataTableSource {
         //DataCell(Text(salesRecord.customerId)),
         DataCell(Text(salesRecord.salesPersonName)),
         //DataCell(Text(salesRecord.salesPersonId)),
-        DataCell(Text('\$' + salesRecord.soldPrice)),
+        DataCell(Text('\$${salesRecord.soldPrice}')),
         DataCell(Text(salesRecord.orderDate)),
         DataCell(Text(salesRecord.deliveryDate)),
       ],
@@ -544,7 +544,7 @@ class SalesRecordDatabase extends DataTableSource {
                 ElevatedButton(
                     child: const Text('SAVE'),
                     onPressed: () {
-                      int _salesRecordMatchIndex =
+                      int salesRecordMatchIndex =
                           mainSalesRecordListCopy.indexWhere((element) =>
                               element.bookId == curSalesRecord.bookId);
                       //debugPrint('curafter: ${_customerMatchIndex}');
@@ -552,8 +552,8 @@ class SalesRecordDatabase extends DataTableSource {
                         curSalesRecord.setInfo(item);
                       }
 
-                      if (_salesRecordMatchIndex >= 0) {
-                        mainSalesRecordListCopy[_salesRecordMatchIndex] =
+                      if (salesRecordMatchIndex >= 0) {
+                        mainSalesRecordListCopy[salesRecordMatchIndex] =
                             curSalesRecord;
                       }
                       notifyListeners();
