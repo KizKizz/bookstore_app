@@ -29,7 +29,7 @@ final List<String> _searchDropDownVal = [
 ];
 final searchbookController = TextEditingController();
 int checkoutDropDownRemoveIndex = -1;
-late String curBookSearchChoice = _searchDropDownVal[0];
+String curBookSearchChoice = _searchDropDownVal[0];
 List<Book> searchBookList = [];
 
 //String _searchDropDownVal = 'Title';
@@ -617,13 +617,13 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
             right: 10,
             bottom: 10,
             child: OutlinedButton(
-              child: const Text('↑ To Top ↑'),
               onPressed: () => widget.controller.animateTo(0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.grey[800]),
                   foregroundColor: MaterialStateProperty.all(Colors.white)),
+              child: const Text('↑ To Top ↑'),
             ))
         : const SizedBox();
   }
@@ -653,7 +653,7 @@ class MenuItems {
     if (booksInCart.isNotEmpty) {
       for (var book in booksInCart) {
         tempList.add(
-            MenuItem(text: book.title + ' - ' + book.id, icon: Icons.clear));
+            MenuItem(text: '${book.title} - ${book.id}', icon: Icons.clear));
       }
     }
     booksMenu = tempList;
@@ -663,7 +663,7 @@ class MenuItems {
     return Row(
       children: [
         Icon(item.icon,
-            color: Theme.of(context).textTheme.overline!.color, size: 22),
+            color: Theme.of(context).textTheme.labelSmall!.color, size: 22),
         const SizedBox(
           width: 10,
         ),
@@ -712,9 +712,9 @@ class MenuItems {
           bookFound.sold = 'Available';
         }
 
-        int _index = checkoutCartList
+        int index = checkoutCartList
             .indexWhere((element) => element.id == getBookID.last);
-        checkoutDropDownRemoveIndex = _index;
+        checkoutDropDownRemoveIndex = index;
 
         checkoutCartList.remove(checkoutCartList
             .singleWhere((element) => element.id == getBookID.last));

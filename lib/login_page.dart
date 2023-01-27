@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:bookstore_app/Data/customer_data_handler.dart';
@@ -415,7 +417,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                                                           height:
                                                                               50,
                                                                           child: ElevatedButton(
-                                                                              style: ElevatedButton.styleFrom(primary: const Color.fromRGBO(72, 125, 238, 1), padding: const EdgeInsets.only(bottom: 11)),
+                                                                              style: ElevatedButton.styleFrom(backgroundColor: const Color.fromRGBO(72, 125, 238, 1), padding: const EdgeInsets.only(bottom: 11)),
                                                                               onPressed: () async {
                                                                                 final prefs = await SharedPreferences.getInstance();
                                                                                 prefs.setBool('isLoggedinEmployee', true);
@@ -507,8 +509,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                             height: 50,
                                             child: ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    primary:
-                                                        const Color.fromRGBO(
+                                                    backgroundColor: const Color.fromRGBO(
                                                             72, 125, 238, 1),
                                                     padding:
                                                         const EdgeInsets.only(

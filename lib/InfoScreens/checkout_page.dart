@@ -148,8 +148,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         onChanged: (String text) {
           setState(() {
             _searchCustomerList = [];
-            Iterable<Customer> _foundCustomer = [];
-            _foundCustomer = mainCustomerListCopy.where((element) =>
+            Iterable<Customer> foundCustomer = [];
+            foundCustomer = mainCustomerListCopy.where((element) =>
                 element.firstName.toLowerCase().contains(text.toLowerCase()) ||
                 element.lastName.toLowerCase().contains(text.toLowerCase()) ||
                 element.id.toLowerCase().contains(text.toLowerCase()) ||
@@ -168,8 +168,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     .toLowerCase()
                     .contains(text.toLowerCase()));
 
-            if (_foundCustomer.isNotEmpty) {
-              for (var customer in _foundCustomer) {
+            if (foundCustomer.isNotEmpty) {
+              for (var customer in foundCustomer) {
                 Customer tempCustomer = Customer(
                     customer.firstName,
                     customer.lastName,
@@ -249,7 +249,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _employeesDropDownVal.clear();
       for (var employee in mainEmployeeListCopy) {
         _employeesDropDownVal.add(
-            employee.firstName + ' ' + employee.lastName + ' - ' + employee.id);
+            '${employee.firstName} ${employee.lastName} - ${employee.id}');
       }
     }
 
@@ -310,11 +310,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           if (mainEmployeeListCopy.isNotEmpty) {
                             _employeesDropDownVal.clear();
                             for (var employee in mainEmployeeListCopy) {
-                              _employeesDropDownVal.add(employee.firstName +
-                                  ' ' +
-                                  employee.lastName +
-                                  ' - ' +
-                                  employee.id);
+                              _employeesDropDownVal.add('${employee.firstName} ${employee.lastName} - ${employee.id}');
                             }
                           }
                         }
@@ -348,17 +344,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           onChanged: (value) {
                             setState(() {
                               _curEmployeeChoice = value;
-                              List<String> _getEmployeeInfo =
+                              List<String> getEmployeeInfo =
                                   value.toString().split(' - ');
-                              List<String> _getEmployeeName =
-                                  _getEmployeeInfo.first.split(' ');
+                              List<String> getEmployeeName =
+                                  getEmployeeInfo.first.split(' ');
                               curSalesperson = mainEmployeeListCopy.firstWhere(
                                   (element) =>
-                                      element.id == _getEmployeeInfo.last &&
+                                      element.id == getEmployeeInfo.last &&
                                       element.firstName ==
-                                          _getEmployeeName.first &&
+                                          getEmployeeName.first &&
                                       element.lastName ==
-                                          _getEmployeeName.last);
+                                          getEmployeeName.last);
                             });
                           },
                         );
@@ -784,7 +780,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         width: 50,
                                                         child: ElevatedButton(
                                                           style: ElevatedButton.styleFrom(
-                                                              primary: Theme.of(
+                                                              backgroundColor: Theme.of(
                                                                       context)
                                                                   .hintColor,
                                                               padding:
@@ -792,13 +788,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                           .only(
                                                                       bottom:
                                                                           9)),
-                                                          child: const Text(
-                                                            'Clear Fields',
-                                                            textAlign: TextAlign
-                                                                .justify,
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                          ),
                                                           onPressed: customerInfoControllers
                                                                   .every((element) =>
                                                                       element
@@ -823,6 +812,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                         false;
                                                                   });
                                                                 },
+                                                          child: const Text(
+                                                            'Clear Fields',
+                                                            textAlign: TextAlign
+                                                                .justify,
+                                                            style: TextStyle(
+                                                                fontSize: 15),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -846,43 +842,35 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                             .only(
                                                                         bottom:
                                                                             9)),
-                                                            child: const Text(
-                                                              'Save Customer Info',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .justify,
-                                                              style: TextStyle(
-                                                                  fontSize: 15),
-                                                            ),
                                                             onPressed:
                                                                 _isCurCustomerInfoEdited >
                                                                             0 &&
                                                                         _isCurCustomer
                                                                     ? () {
                                                                         Customer
-                                                                            _curCustomerFromData =
+                                                                            curCustomerFromData =
                                                                             mainCustomerListCopy.firstWhere((element) =>
                                                                                 element.id ==
                                                                                 curOrderingCustomer.id);
-                                                                        _curCustomerFromData.firstName =
+                                                                        curCustomerFromData.firstName =
                                                                             curOrderingCustomer.firstName;
-                                                                        _curCustomerFromData.lastName =
+                                                                        curCustomerFromData.lastName =
                                                                             curOrderingCustomer.lastName;
-                                                                        _curCustomerFromData.id =
+                                                                        curCustomerFromData.id =
                                                                             curOrderingCustomer.id;
-                                                                        _curCustomerFromData.streetAddress =
+                                                                        curCustomerFromData.streetAddress =
                                                                             curOrderingCustomer.streetAddress;
-                                                                        _curCustomerFromData.suiteNum =
+                                                                        curCustomerFromData.suiteNum =
                                                                             curOrderingCustomer.suiteNum;
-                                                                        _curCustomerFromData.city =
+                                                                        curCustomerFromData.city =
                                                                             curOrderingCustomer.city;
-                                                                        _curCustomerFromData.state =
+                                                                        curCustomerFromData.state =
                                                                             curOrderingCustomer.state;
-                                                                        _curCustomerFromData.zipCode =
+                                                                        curCustomerFromData.zipCode =
                                                                             curOrderingCustomer.zipCode;
-                                                                        _curCustomerFromData.phoneNumber =
+                                                                        curCustomerFromData.phoneNumber =
                                                                             curOrderingCustomer.phoneNumber;
-                                                                        _curCustomerFromData.email =
+                                                                        curCustomerFromData.email =
                                                                             curOrderingCustomer.email;
                                                                         setState(
                                                                             () {
@@ -891,6 +879,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                         });
                                                                       }
                                                                     : null,
+                                                            child: const Text(
+                                                              'Save Customer Info',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -914,14 +910,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                             .only(
                                                                         bottom:
                                                                             9)),
-                                                            child: const Text(
-                                                              'Save New Customer Info',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .justify,
-                                                              style: TextStyle(
-                                                                  fontSize: 15),
-                                                            ),
                                                             onPressed: _isCurCustomerInfoEdited >
                                                                         0 &&
                                                                     !_isCurCustomer &&
@@ -945,6 +933,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     });
                                                                   }
                                                                 : null,
+                                                            child: const Text(
+                                                              'Save New Customer Info',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -1207,7 +1203,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 30.00;
-                                                final _deliverTimeGet =
+                                                final deliverTimeGet =
                                                     DateTime(
                                                         now.year,
                                                         now.month,
@@ -1216,7 +1212,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         now.minute);
                                                 _deliveryDate = DateFormat(
                                                         'MM-dd-yyyy HH:mm')
-                                                    .format(_deliverTimeGet);
+                                                    .format(deliverTimeGet);
                                                 _orderStatus =
                                                     _orderStatusList[2];
                                               });
@@ -1236,7 +1232,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 20.00;
-                                                final _deliverTimeGet =
+                                                final deliverTimeGet =
                                                     DateTime(
                                                         now.year,
                                                         now.month,
@@ -1245,7 +1241,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         now.minute);
                                                 _deliveryDate = DateFormat(
                                                         'MM-dd-yyyy HH:mm')
-                                                    .format(_deliverTimeGet);
+                                                    .format(deliverTimeGet);
                                                 _orderStatus =
                                                     _orderStatusList[2];
                                               });
@@ -1265,7 +1261,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               setState(() {
                                                 _curShippingOption = value;
                                                 shippingCost = 10.00;
-                                                final _deliverTimeGet =
+                                                final deliverTimeGet =
                                                     DateTime(
                                                         now.year,
                                                         now.month,
@@ -1274,7 +1270,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         now.minute);
                                                 _deliveryDate = DateFormat(
                                                         'MM-dd-yyyy HH:mm')
-                                                    .format(_deliverTimeGet);
+                                                    .format(deliverTimeGet);
                                                 _orderStatus =
                                                     _orderStatusList[2];
                                               });
@@ -1704,9 +1700,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     subtitle: Text(
-                                      checkoutCartList[i].authorFirstName +
-                                          ' ' +
-                                          checkoutCartList[i].authorLastName,
+                                      '${checkoutCartList[i].authorFirstName} ${checkoutCartList[i].authorLastName}',
                                       // style: TextStyle(
                                       //     color: Colors.black.withOpacity(0.6)),
                                     ),
@@ -1937,7 +1931,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: 45,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).hintColor,
+                              backgroundColor: Theme.of(context).hintColor,
                               padding: const EdgeInsets.only(bottom: 9)),
                           child: const Text(
                             'Cancel',
@@ -1972,7 +1966,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: 45,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.blueAccent,
+                              backgroundColor: Colors.blueAccent,
                               padding: const EdgeInsets.only(bottom: 9)),
                           child: const Text(
                             'Submit Order',
@@ -2004,39 +1998,39 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   '',
                                   '',
                                   _curOrderId);
-                              String _allBookIDs = '',
-                                  _purchasedDates = curOrderingCustomer.purchasedDates;
-                              int _numOfBook = 0;
+                              String allBookIDs = '',
+                                  purchasedDates = curOrderingCustomer.purchasedDates;
+                              int numOfBook = 0;
                               for (var book in checkoutCartList) {
                                 book.sold = 'Sold';
-                                _numOfBook++;
+                                numOfBook++;
 
-                                if (_allBookIDs.isNotEmpty) {
-                                  _allBookIDs = _allBookIDs + ' ' + book.id;
+                                if (allBookIDs.isNotEmpty) {
+                                  allBookIDs = '$allBookIDs ${book.id}';
                                 } else {
-                                  _allBookIDs = book.id;
+                                  allBookIDs = book.id;
                                 }
 
-                                if (_purchasedDates.isEmpty) {
+                                if (purchasedDates.isEmpty) {
                                   //_bookNames = book.title;
-                                  _purchasedDates = _orderDate;
+                                  purchasedDates = _orderDate;
                                 } else {
                                   //_bookNames = _bookNames + '||' + book.title;
-                                  _purchasedDates =
-                                      _purchasedDates + '||' + _orderDate;
+                                  purchasedDates =
+                                      '$purchasedDates||$_orderDate';
                                 }
                               }
 
-                              String _allSoldPrices = '';
+                              String allSoldPrices = '';
                               for (var price in checkoutPrices) {
-                                if (_allSoldPrices.isNotEmpty) {
-                                  _allSoldPrices = _allSoldPrices + ' ' + price;
+                                if (allSoldPrices.isNotEmpty) {
+                                  allSoldPrices = '$allSoldPrices $price';
                                 } else {
-                                  _allSoldPrices = price;
+                                  allSoldPrices = price;
                                 }
                               }
-                              newOrder.bookIds = _allBookIDs;
-                              newOrder.bookSoldPrices = _allSoldPrices;
+                              newOrder.bookIds = allBookIDs;
+                              newOrder.bookSoldPrices = allSoldPrices;
 
                               //Sales record update
                               if (mainSalesRecordListCopy.isEmpty) {
@@ -2088,32 +2082,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                               curSalesperson.numBookSold =
                                   (int.parse(curSalesperson.numBookSold) +
-                                          _numOfBook)
+                                          numOfBook)
                                       .toString();
                               if (curSalesperson.lastSoldBooks.isEmpty) {
-                                curSalesperson.lastSoldBooks = _allBookIDs;
+                                curSalesperson.lastSoldBooks = allBookIDs;
                               } else {
                                 curSalesperson.lastSoldBooks +=
-                                    (' ' + _allBookIDs);
+                                    (' $allBookIDs');
                               }
 
                               curOrderingCustomer.totalPurchases = (int.parse(
                                           curOrderingCustomer.totalPurchases) +
-                                      _numOfBook)
+                                      numOfBook)
                                   .toString();
-                              curOrderingCustomer.bookPurchased += (' ' + _allBookIDs);
+                              curOrderingCustomer.bookPurchased += (' $allBookIDs');
                               curOrderingCustomer.purchasedDates =
-                                  _purchasedDates;
+                                  purchasedDates;
 
                               if (_isCurCustomer) {
-                                final _curCustomerFromData =
+                                final curCustomerFromData =
                                     mainCustomerListCopy.firstWhere((element) =>
                                         element.id == curOrderingCustomer.id);
-                                _curCustomerFromData.totalPurchases =
+                                curCustomerFromData.totalPurchases =
                                     curOrderingCustomer.totalPurchases;
-                                _curCustomerFromData.bookPurchased =
+                                curCustomerFromData.bookPurchased =
                                     curOrderingCustomer.bookPurchased;
-                                _curCustomerFromData.purchasedDates =
+                                curCustomerFromData.purchasedDates =
                                     curOrderingCustomer.purchasedDates;
                               } else {}
 
@@ -2166,7 +2160,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 //size: 150,
                 color: Theme.of(context).hintColor,
                 highlightedColor:
-                    Theme.of(context).textTheme.bodyText1!.color)),
+                    Theme.of(context).textTheme.bodyLarge!.color)),
         child: checkoutSplitView);
 
     return Scaffold(

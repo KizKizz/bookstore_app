@@ -25,7 +25,7 @@ final List<String> _searchDropDownVal = [
   'Books Sold',
   'Description',
 ];
-late String curSearchChoice = _searchDropDownVal[0];
+String curSearchChoice = _searchDropDownVal[0];
 
 class EmployeeList extends StatefulWidget {
   const EmployeeList({Key? key}) : super(key: key);
@@ -627,7 +627,7 @@ class _EmployeeListState extends State<EmployeeList> {
                                 if (employee.position == jobItem)
                                 DataRow(
                                   cells: [
-                                  DataCell(Center(child: Text(employee.firstName + ' ' + employee.lastName))),
+                                  DataCell(Center(child: Text('${employee.firstName} ${employee.lastName}'))),
                                 ]),
                               ],
                             ),),
@@ -692,13 +692,13 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
             right: 10,
             bottom: 10,
             child: OutlinedButton(
-              child: const Text('↑ To Top ↑'),
               onPressed: () => widget.controller.animateTo(0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.grey[800]),
                   foregroundColor: MaterialStateProperty.all(Colors.white)),
+              child: const Text('↑ To Top ↑'),
             ))
         : const SizedBox();
   }

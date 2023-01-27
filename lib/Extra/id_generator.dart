@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:bookstore_app/Data/data_storage_helper.dart';
 
 String idGenerator(String leadChar) {
-  int _length = 7;
-  const _chars =
+  int length = 7;
+  const chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rng = Random.secure();
+  Random rng = Random.secure();
   String newId = leadChar +
-      List.generate(_length, (index) => _chars[_rng.nextInt(_chars.length)])
+      List.generate(length, (index) => chars[rng.nextInt(chars.length)])
           .join();
   while (!idDupCheck(leadChar, newId)) {
     newId = leadChar +
-        List.generate(_length, (index) => _chars[_rng.nextInt(_chars.length)])
+        List.generate(length, (index) => chars[rng.nextInt(chars.length)])
             .join();
   }
 

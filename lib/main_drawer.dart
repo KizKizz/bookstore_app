@@ -209,8 +209,8 @@ class _MainDrawerState extends State<MainDrawer> {
 }
 
 _launchDLURLBrowser() async {
-  const url = 'https://github.com/KizKizz/KizKizz.github.io/releases';
-  if (!await launch(url)) throw 'Could not launch $url';
+  Uri url = Uri(path: 'https://github.com/KizKizz/KizKizz.github.io/releases');
+  if (!await launchUrl(url)) throw 'Could not launch $url';
 }
 
 class _SystemPadding extends StatelessWidget {

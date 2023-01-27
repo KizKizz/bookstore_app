@@ -24,7 +24,7 @@ final List<String> _searchDropDownVal = [
     'Order Status',
     'BookIDs'
   ];
-  late String _curOrderSearchChoice = _searchDropDownVal[0];
+  String _curOrderSearchChoice = _searchDropDownVal[0];
 
 class OrderList extends StatefulWidget {
   const OrderList({Key? key}) : super(key: key);

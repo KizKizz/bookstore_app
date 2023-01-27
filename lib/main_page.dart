@@ -379,7 +379,7 @@ class _MainPageState extends State<MainPage> {
                                                           color: Theme.of(
                                                                   context)
                                                               .textTheme
-                                                              .button!
+                                                              .labelLarge!
                                                               .color!
                                                               .withOpacity(0.7),
                                                         ),
@@ -394,7 +394,7 @@ class _MainPageState extends State<MainPage> {
                                                               color: Theme.of(
                                                                       context)
                                                                   .textTheme
-                                                                  .button!
+                                                                  .labelLarge!
                                                                   .color!
                                                                   .withOpacity(
                                                                       0.7)),
@@ -428,7 +428,7 @@ class _MainPageState extends State<MainPage> {
                                                           color: Theme.of(
                                                                   context)
                                                               .textTheme
-                                                              .button!
+                                                              .labelLarge!
                                                               .color!
                                                               .withOpacity(0.7),
                                                         ),
@@ -443,7 +443,7 @@ class _MainPageState extends State<MainPage> {
                                                               color: Theme.of(
                                                                       context)
                                                                   .textTheme
-                                                                  .button!
+                                                                  .labelLarge!
                                                                   .color!
                                                                   .withOpacity(
                                                                       0.7)),
@@ -484,7 +484,7 @@ class _MainPageState extends State<MainPage> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .button!
+                                                                .labelLarge!
                                                                 .color!
                                                                 .withOpacity(
                                                                     0.7),
@@ -500,7 +500,7 @@ class _MainPageState extends State<MainPage> {
                                                                 color: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .button!
+                                                                    .labelLarge!
                                                                     .color!
                                                                     .withOpacity(
                                                                         0.7)),
@@ -537,7 +537,7 @@ class _MainPageState extends State<MainPage> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .button!
+                                                                .labelLarge!
                                                                 .color!
                                                                 .withOpacity(
                                                                     0.7),
@@ -553,7 +553,7 @@ class _MainPageState extends State<MainPage> {
                                                                 color: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .button!
+                                                                    .labelLarge!
                                                                     .color!
                                                                     .withOpacity(
                                                                         0.7)),
@@ -683,13 +683,13 @@ class _MainPageState extends State<MainPage> {
                       Navigator.pop(context);
                     }),
                 ElevatedButton(
-                    child: const Text('CONFIRM'),
                     onPressed: (() async {
                       isManager = false;
                       final prefs = await SharedPreferences.getInstance();
                       // set value
                       prefs.setBool('isLoggedinManager', false);
                       prefs.setBool('isLoggedinEmployee', false);
+                      // ignore: use_build_context_synchronously
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
@@ -699,7 +699,8 @@ class _MainPageState extends State<MainPage> {
                           reverseTransitionDuration: Duration.zero,
                         ),
                       );
-                    }))
+                    }),
+                    child: const Text('CONFIRM'))
               ],
             ),
           );
