@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
 
-import 'package:bookstore_project/login_page.dart';
+import 'package:bookstore_app/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

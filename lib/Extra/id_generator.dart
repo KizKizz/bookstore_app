@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:bookstore_project/Data/data_storage_helper.dart';
+import 'package:bookstore_app/Data/data_storage_helper.dart';
 
 String idGenerator(String leadChar) {
   int _length = 7;

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/InfoScreens/checkout_page.dart';
-import 'package:bookstore_project/login_page.dart';
-import 'package:bookstore_project/state_provider.dart';
+import 'package:bookstore_app/InfoScreens/checkout_page.dart';
+import 'package:bookstore_app/login_page.dart';
+import 'package:bookstore_app/state_provider.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:bookstore_project/Data/book_data_handler.dart';
+import 'package:bookstore_app/Data/book_data_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../Data/data_storage_helper.dart';

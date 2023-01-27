@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/Data/customer_data_handler.dart';
-import 'package:bookstore_project/Data/data_storage_helper.dart';
-import 'package:bookstore_project/Data/employee_data_handler.dart';
-import 'package:bookstore_project/Data/order_data_handler.dart';
-import 'package:bookstore_project/Data/sales_record_data_handler.dart';
-import 'package:bookstore_project/main.dart';
-import 'package:bookstore_project/main_page.dart';
+import 'package:bookstore_app/Data/customer_data_handler.dart';
+import 'package:bookstore_app/Data/data_storage_helper.dart';
+import 'package:bookstore_app/Data/employee_data_handler.dart';
+import 'package:bookstore_app/Data/order_data_handler.dart';
+import 'package:bookstore_app/Data/sales_record_data_handler.dart';
+import 'package:bookstore_app/main.dart';
+import 'package:bookstore_app/main_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

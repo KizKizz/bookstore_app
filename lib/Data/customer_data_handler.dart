@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:bookstore_project/Extra/id_generator.dart';
-import 'package:bookstore_project/login_page.dart';
+import 'package:bookstore_app/Data/book_data_handler.dart';
+import 'package:bookstore_app/Extra/id_generator.dart';
+import 'package:bookstore_app/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

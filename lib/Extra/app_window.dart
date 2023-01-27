@@ -1,5 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:bookstore_project/state_provider.dart';
+import 'package:bookstore_app/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:bookstore_project/Data/order_data_handler.dart';
-import 'package:bookstore_project/Data/sales_record_data_handler.dart';
-import 'package:bookstore_project/Extra/id_generator.dart';
-import 'package:bookstore_project/InfoScreens/book_list.dart';
+import 'package:bookstore_app/Data/book_data_handler.dart';
+import 'package:bookstore_app/Data/order_data_handler.dart';
+import 'package:bookstore_app/Data/sales_record_data_handler.dart';
+import 'package:bookstore_app/Extra/id_generator.dart';
+import 'package:bookstore_app/InfoScreens/book_list.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

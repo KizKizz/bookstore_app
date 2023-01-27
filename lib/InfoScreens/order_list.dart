@@ -489,13 +489,13 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
             right: 10,
             bottom: 10,
             child: OutlinedButton(
-              child: const Text('↑ To Top ↑'),
               onPressed: () => widget.controller.animateTo(0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.grey[800]),
                   foregroundColor: MaterialStateProperty.all(Colors.white)),
+              child: const Text('↑ To Top ↑'),
             ))
         : const SizedBox();
   }

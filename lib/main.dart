@@ -1,6 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:bookstore_project/state_provider.dart';
+import 'package:bookstore_app/state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,8 +28,7 @@ void main() {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
-  static final ValueNotifier<ThemeMode> themeNotifier =
-      ValueNotifier(ThemeMode.light);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -37,9 +36,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  bool isLoggedinManager = false,
-      isLoggedinEmployee = false,
-      isDarkMode = false;
+  bool isLoggedinManager = false, isLoggedinEmployee = false, isDarkMode = false;
 
   @override
   void initState() {
@@ -78,10 +75,8 @@ class _MyAppState extends State<MyApp> {
     return temp;
   }
 
-
   void _incrementUp(PointerEvent details) {
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -111,12 +106,7 @@ class _MyAppState extends State<MyApp> {
                           color: borderColor,
                           width: 1,
                           child: Column(children: [
-                            WindowTitleBarBox(
-                                child: Row(children: const [
-                              Expanded(child: MoveWindowEX()),
-                              
-                              WindowButtons()
-                            ])),
+                            WindowTitleBarBox(child: Row(children: const [Expanded(child: MoveWindowEX()), WindowButtons()])),
                             Expanded(child: loginState())
                           ])))));
         });

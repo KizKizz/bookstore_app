@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print, avoid_renaming_method_parameters, curly_braces_in_flow_control_structures
 
-import 'package:bookstore_project/Data/book_data_handler.dart';
-import 'package:bookstore_project/Extra/id_generator.dart';
-import 'package:bookstore_project/login_page.dart';
+import 'package:bookstore_app/Data/book_data_handler.dart';
+import 'package:bookstore_app/Extra/id_generator.dart';
+import 'package:bookstore_app/login_page.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

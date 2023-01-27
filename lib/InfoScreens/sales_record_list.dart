@@ -22,7 +22,7 @@ final List<String> _searchDropDownVal = [
     'Order Date',
     'Delivery Date',
   ];
-  late String _curSearchChoice = _searchDropDownVal[0];
+  String _curSearchChoice = _searchDropDownVal[0];
 
 class SalesRecordList extends StatefulWidget {
   const SalesRecordList({Key? key}) : super(key: key);
@@ -437,13 +437,13 @@ class _ScrollUpButtonState extends State<_ScrollUpButton> {
             right: 10,
             bottom: 10,
             child: OutlinedButton(
-              child: const Text('↑ To Top ↑'),
               onPressed: () => widget.controller.animateTo(0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.grey[800]),
                   foregroundColor: MaterialStateProperty.all(Colors.white)),
+              child: const Text('↑ To Top ↑'),
             ))
         : const SizedBox();
   }

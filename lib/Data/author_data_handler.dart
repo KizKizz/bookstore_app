@@ -2,15 +2,15 @@
 
 import 'dart:convert';
 
-import 'package:bookstore_project/Data/data_storage_helper.dart';
-import 'package:bookstore_project/InfoScreens/book_list.dart';
-import 'package:bookstore_project/login_page.dart';
-import 'package:bookstore_project/main_page.dart';
+import 'package:bookstore_app/Data/data_storage_helper.dart';
+import 'package:bookstore_app/InfoScreens/book_list.dart';
+import 'package:bookstore_app/login_page.dart';
+import 'package:bookstore_app/main_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:bookstore_project/Data/book_data_handler.dart';
+import 'package:bookstore_app/Data/book_data_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../state_provider.dart';
@@ -163,7 +163,7 @@ class Author {
 
 /// Data source implementing standard Flutter's DataTableSource abstract class
 /// which is part of DataTable and PaginatedDataTable synchronous data fecthin API.
-/// This class uses static collection of data as a data store, projects it into
+/// This class uses static collection of data as a data store, apps it into
 /// DataRows, keeps track of selected items, provides sprting capability
 class AuthorDatabase extends DataTableSource {
   AuthorDatabase.empty(this.context) {
